@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { Avatar } from '../../components/Avatar'
 import { Pill } from '../../components/Pill'
 import { BattleCardPickerSheet } from './BattleCardPickerSheet'
 import { BattleCardBubble } from './BattleCardBubble'
 import { DateReadinessSheet } from './DateReadinessSheet'
+import { HingeRecommendationCard } from './HingeRecommendationCard'
 import { useAppState } from '../../state/AppStateContext'
 
 const AVAILABILITY_TAGS = ['Generally free weekday evenings', 'Weekends', 'Flexible']
@@ -18,7 +19,7 @@ export function ChatThreadScreen() {
     startBattleCard,
     acceptBattleCard,
     ignoreBattleCard,
-    answerBattleCard,
+    simulateOtherAnswered,
     requestDateReadiness,
     selectAvailabilityTag,
   } = useAppState()
@@ -30,7 +31,15 @@ export function ChatThreadScreen() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [dateSheetOpen, setDateSheetOpen] = useState(false)
   const [contextChipDismissed, setContextChipDismissed] = useState(false)
-  const [cardAnswerDraft, setCardAnswerDraft] = useState('')
+
+  // Auto-advance the mutual reveal a couple seconds after acceptance, so a
+  // live demo doesn't need a manual "simulate" click to see the full
+  // interaction play out (the debug bar can still trigger it immediately).
+  useEffect(() => {
+    if (!chat || chat.battleCard.status !== 'awaiting-other') return
+    const t = setTimeout(() => simulateOtherAnswered(chat.id), 2500)
+    return () => clearTimeout(t)
+  }, [chat, simulateOtherAnswered])
 
   if (!chat) {
     return (
@@ -40,20 +49,16 @@ export function ChatThreadScreen() {
     )
   }
 
-  const answeringCard = chat.battleCard.status === 'accepted'
   const mutualReady = chat.dateReadiness.me && chat.dateReadiness.them
   const showAvailabilityTags = mutualReady && !chat.dateReadiness.availabilityTagSelected
+  const suggestionAlreadySent =
+    !!chat.suggestedOpener && chat.messages.some((m) => m.sender === 'me' && m.text === chat.suggestedOpener)
+  const showSuggestion = !!chat.suggestedOpener && !suggestionAlreadySent
 
   const handleSend = () => {
     if (!draft.trim()) return
     sendMessage(chat.id, draft.trim())
     setDraft('')
-  }
-
-  const handleAnswerCard = () => {
-    if (!cardAnswerDraft.trim()) return
-    answerBattleCard(chat.id, cardAnswerDraft.trim())
-    setCardAnswerDraft('')
   }
 
   return (
@@ -145,62 +150,44 @@ export function ChatThreadScreen() {
               ))}
             </div>
           )}
+
+          {showSuggestion && (
+            <HingeRecommendationCard
+              suggestion={chat.suggestedOpener!}
+              onSend={() => sendMessage(chat.id, chat.suggestedOpener!)}
+            />
+          )}
         </div>
       </div>
 
       <div className="shrink-0 border-t border-hinge-grey-light px-4 py-3">
-        {answeringCard ? (
-          <div>
-            <p className="mb-2 text-prompt-q text-hinge-black">{chat.battleCard.question?.text}</p>
-            <div className="flex items-center gap-2">
-              <input
-                value={cardAnswerDraft}
-                onChange={(e) => setCardAnswerDraft(e.target.value)}
-                placeholder="Answer privately..."
-                className="min-h-11 flex-1 rounded-pill bg-hinge-grey-bg px-4 text-body text-hinge-black placeholder:text-hinge-grey focus:outline-none"
-              />
-              <button
-                type="button"
-                onClick={handleAnswerCard}
-                disabled={!cardAnswerDraft.trim()}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-hinge-black text-hinge-white disabled:opacity-30"
-                aria-label="Send answer"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="m5 12 14-7-7 14-2-5-5-2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setPickerOpen(true)}
-              aria-label="Play a card"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-[20px]"
-            >
-              🎴
-            </button>
-            <input
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              placeholder="Type a message..."
-              className="min-h-11 flex-1 rounded-pill bg-hinge-grey-bg px-4 text-body text-hinge-black placeholder:text-hinge-grey focus:outline-none"
-            />
-            <button
-              type="button"
-              onClick={handleSend}
-              disabled={!draft.trim()}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-hinge-black text-hinge-white disabled:opacity-30"
-              aria-label="Send message"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="m5 12 14-7-7 14-2-5-5-2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-              </svg>
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            aria-label="Play a card"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-[20px]"
+          >
+            🎴
+          </button>
+          <input
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder="Type a message..."
+            className="min-h-11 flex-1 rounded-pill bg-hinge-grey-bg px-4 text-body text-hinge-black placeholder:text-hinge-grey focus:outline-none"
+          />
+          <button
+            type="button"
+            onClick={handleSend}
+            disabled={!draft.trim()}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-hinge-black text-hinge-white disabled:opacity-30"
+            aria-label="Send message"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="m5 12 14-7-7 14-2-5-5-2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <BattleCardPickerSheet open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={(tier) => startBattleCard(chat.id, tier)} />

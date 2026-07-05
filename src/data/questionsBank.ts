@@ -22,18 +22,19 @@ export const QUESTIONS_BANK: Question[] = [
   { id: 'q8', text: "What's a small thing that instantly improves your day?", tone: 'light', usableAsDailyQuestion: true, usableAsBattleCard: true },
   { id: 'q9', text: "What's a fear you've worked hard to get past?", tone: 'deep', usableAsDailyQuestion: true, usableAsBattleCard: true },
   { id: 'q10', text: 'Two truths and a lie — go.', tone: 'light', usableAsDailyQuestion: true, usableAsBattleCard: true },
+  { id: 'q11', text: "What's the last thing you Googled that you'd be mildly embarrassed to explain?", tone: 'light', usableAsDailyQuestion: true, usableAsBattleCard: true },
+  { id: 'q12', text: 'Sweet, salty, or savory — and is there a food you would actually fight for?', tone: 'light', usableAsDailyQuestion: true, usableAsBattleCard: true },
+  { id: 'q13', text: "What's a hill you'll die on that is, objectively, a pretty small hill?", tone: 'light', usableAsDailyQuestion: true, usableAsBattleCard: true },
 ]
 
-// Deterministic pick by a date-seed string, so "today" always shows the same
-// question within a session without needing real persistence.
-export function getDailyQuestion(dateSeed: string): Question {
-  let hash = 0
-  for (let i = 0; i < dateSeed.length; i++) {
-    hash = (hash << 5) - hash + dateSeed.charCodeAt(i)
-    hash |= 0
-  }
-  const index = Math.abs(hash) % QUESTIONS_BANK.length
-  return QUESTIONS_BANK[index]
+// Small curated rotation for the Daily Question interstitial — randomizes on
+// each app open (rather than being locked to a deterministic per-date pick)
+// so a live demo shows variety across reloads.
+const DAILY_ROTATION_IDS = ['q1', 'q11', 'q12', 'q13']
+
+export function getRandomDailyQuestion(): Question {
+  const candidates = QUESTIONS_BANK.filter((q) => DAILY_ROTATION_IDS.includes(q.id))
+  return candidates[Math.floor(Math.random() * candidates.length)]
 }
 
 export function getBattleCardQuestions(tier: QuestionTone): Question[] {
@@ -42,4 +43,20 @@ export function getBattleCardQuestions(tier: QuestionTone): Question[] {
 
 export function todayDateSeed(): string {
   return new Date().toISOString().slice(0, 10)
+}
+
+// Fixed example exchange shown when a Battle Card invite is accepted —
+// deliberately hardcoded (not drawn from QUESTIONS_BANK) so the demo always
+// plays out the same engaging, slightly sassy interaction end-to-end.
+export const DEMO_BATTLE_CARD_QUESTION: Question = {
+  id: 'demo-sassy',
+  text: "What's the pettiest reason you've ever almost ended things with someone?",
+  tone: 'light',
+  usableAsDailyQuestion: false,
+  usableAsBattleCard: true,
+}
+
+export const DEMO_BATTLE_CARD_ANSWERS = {
+  mine: "He pronounced 'GIF' with a hard G and would not back down. I started a mental list.",
+  theirs: 'She said pineapple belongs on pizza. I forgave her. I have not forgotten.',
 }

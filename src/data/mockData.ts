@@ -353,13 +353,15 @@ export interface ChatMessage {
   kind: 'text' | 'system' | 'battle-card-invite' | 'battle-card-answer'
 }
 
-export type BattleCardStatus = 'none' | 'invited' | 'accepted' | 'awaiting-other' | 'revealed' | 'expired'
+export type BattleCardStatus = 'none' | 'invited' | 'awaiting-other' | 'revealed' | 'expired'
 
 export interface ChatThreadData {
   id: string
   matchName: string
   matchPhoto: string
   spaceOriginLabel?: string
+  /** A suggested chat opener, drawn from the shared Daily Question / prompt content pipeline. */
+  suggestedOpener?: string
   messages: ChatMessage[]
   battleCard: {
     status: BattleCardStatus
@@ -380,6 +382,7 @@ export const MOCK_CHATS: ChatThreadData[] = [
     id: 'c-plain',
     matchName: 'Riley',
     matchPhoto: placeholderPhoto('p5-a'),
+    suggestedOpener: "Alright Riley, I need to know: your pick for best pizza place, and are you ready to defend it?",
     messages: [
       { id: 'm1', sender: 'them', text: 'Hey! Loved your prompt about the fire escape coffee ritual.', kind: 'text' },
       { id: 'm2', sender: 'me', text: 'Ha, it’s basically my whole personality on weekends', kind: 'text' },

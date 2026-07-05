@@ -1,7 +1,14 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import type { NavStackEntry, Screen, TabScreen } from './navTypes'
 import { MOCK_CHATS, MOCK_SPACES, type ChatThreadData, type SpaceData } from '../data/mockData'
-import { getBattleCardQuestions, getDailyQuestion, todayDateSeed, type Question } from '../data/questionsBank'
+import {
+  DEMO_BATTLE_CARD_ANSWERS,
+  DEMO_BATTLE_CARD_QUESTION,
+  getBattleCardQuestions,
+  getRandomDailyQuestion,
+  todayDateSeed,
+  type Question,
+} from '../data/questionsBank'
 import { placeholderPhoto } from '../data/placeholders'
 import { nextId } from '../utils/id'
 
@@ -51,7 +58,6 @@ interface AppState {
   startBattleCard: (chatId: string, tier: 'light' | 'deep') => void
   acceptBattleCard: (chatId: string) => void
   ignoreBattleCard: (chatId: string) => void
-  answerBattleCard: (chatId: string, answer: string) => void
   simulateOtherAnswered: (chatId: string) => void
   requestDateReadiness: (chatId: string) => void
   simulateOtherReady: (chatId: string) => void
@@ -77,7 +83,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const [navStack, setNavStack] = useState<NavStackEntry[]>([{ screen: 'discover' }])
 
   const [dailyQuestion, setDailyQuestion] = useState<DailyQuestionState>({
-    question: getDailyQuestion(TODAY),
+    question: getRandomDailyQuestion(),
     answeredToday: false,
     streak: 6,
     lastAnsweredDate: null,
@@ -276,26 +282,36 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     )
   }, [])
 
+  // Accepting always plays out the same fixed, slightly sassy example
+  // exchange end-to-end — a deliberate demo choice so a live presentation
+  // can show the full mutual-reveal interaction with one tap.
   const acceptBattleCard = useCallback((chatId: string) => {
-    setChats((prev) => prev.map((c) => (c.id !== chatId ? c : { ...c, battleCard: { ...c.battleCard, status: 'accepted' } })))
+    setChats((prev) =>
+      prev.map((c) =>
+        c.id !== chatId
+          ? c
+          : {
+              ...c,
+              battleCard: {
+                ...c.battleCard,
+                status: 'awaiting-other',
+                question: DEMO_BATTLE_CARD_QUESTION,
+                myAnswer: DEMO_BATTLE_CARD_ANSWERS.mine,
+              },
+            }
+      )
+    )
   }, [])
 
   const ignoreBattleCard = useCallback((chatId: string) => {
     setChats((prev) => prev.map((c) => (c.id !== chatId ? c : { ...c, battleCard: { status: 'expired' } })))
   }, [])
 
-  const answerBattleCard = useCallback((chatId: string, answer: string) => {
-    setChats((prev) =>
-      prev.map((c) => (c.id !== chatId ? c : { ...c, battleCard: { ...c.battleCard, status: 'awaiting-other', myAnswer: answer } }))
-    )
-  }, [])
-
   const simulateOtherAnswered = useCallback((chatId: string) => {
     setChats((prev) =>
       prev.map((c) => {
         if (c.id !== chatId) return c
-        const theirAnswer = 'Honestly? Whatever gets us out the door fastest.'
-        return { ...c, battleCard: { ...c.battleCard, status: 'revealed', theirAnswer } }
+        return { ...c, battleCard: { ...c.battleCard, status: 'revealed', theirAnswer: DEMO_BATTLE_CARD_ANSWERS.theirs } }
       })
     )
   }, [])
@@ -370,7 +386,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       startBattleCard,
       acceptBattleCard,
       ignoreBattleCard,
-      answerBattleCard,
       simulateOtherAnswered,
       requestDateReadiness,
       simulateOtherReady,
@@ -408,7 +423,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       startBattleCard,
       acceptBattleCard,
       ignoreBattleCard,
-      answerBattleCard,
       simulateOtherAnswered,
       requestDateReadiness,
       simulateOtherReady,
