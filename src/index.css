@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --hinge-black: #1A1A1A;
+  --hinge-white: #FFFFFF;
+  --hinge-bright-white: #FFFFFF;
+  --hinge-grey: #666666;
+  --hinge-grey-light: #E8E6E2;
+  --hinge-grey-bg: #F5F4F1;
+
+  /* ACCENT COLOR FLAG: best-effort approximation per PRD Section 2.1 / Section 9.
+     Hinge's public brand docs only confirm black/white/grey as the core palette;
+     the exact accent hex used in the live app is not publicly documented.
+     Before final presentation, screenshot the live Hinge app and compare hue/
+     saturation here, and adjust this single token (it cascades everywhere).
+     This cannot be verified from within this build environment — no live
+     screenshot/scrape access, and PRD Section 7 explicitly prohibits calling
+     the real Hinge API or scraping the real app. */
+  --hinge-accent: #E15B3F;
+  --hinge-accent-soft: #FBE5DE;
+  --hinge-warn: #C75B2E;
+
+  --radius-card: 20px;
+  --radius-button: 12px;
+  --radius-pill: 9999px;
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0d0d0d;
+  color: var(--hinge-black);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hide scrollbars inside the mobile frame while keeping scroll functional */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Visible focus ring baseline for accessibility (PRD Section 7) */
+:focus-visible {
+  outline: 2px solid var(--hinge-accent);
+  outline-offset: 2px;
+}
