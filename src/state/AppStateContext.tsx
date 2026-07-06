@@ -58,6 +58,7 @@ interface AppState {
   startBattleCard: (chatId: string, tier: 'light' | 'deep') => void
   acceptBattleCard: (chatId: string) => void
   ignoreBattleCard: (chatId: string) => void
+  answerBattleCard: (chatId: string, answer: string) => void
   simulateOtherAnswered: (chatId: string) => void
   requestDateReadiness: (chatId: string) => void
   simulateOtherReady: (chatId: string) => void
@@ -67,12 +68,6 @@ interface AppState {
   toast: { message: string; visible: boolean } | null
   showToast: (message: string) => void
   dismissToast: () => void
-}
-
-const AVAILABILITY_TAG_COPY: Record<string, string> = {
-  'Generally free weekday evenings': 'generally free on weekday evenings',
-  Weekends: 'generally free on weekends',
-  Flexible: 'flexible with timing',
 }
 
 const AppStateCtx = createContext<AppState | null>(null)
@@ -282,9 +277,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     )
   }, [])
 
-  // Accepting always plays out the same fixed, slightly sassy example
-  // exchange end-to-end — a deliberate demo choice so a live presentation
-  // can show the full mutual-reveal interaction with one tap.
+  // Fired when the other side accepts my invite (via the debug bar in a live
+  // demo): the face-down card flips to 'accepted' with the fixed demo
+  // question, and the private answer input takes over the compose bar.
   const acceptBattleCard = useCallback((chatId: string) => {
     setChats((prev) =>
       prev.map((c) =>
@@ -292,13 +287,20 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
           ? c
           : {
               ...c,
-              battleCard: {
-                ...c.battleCard,
-                status: 'awaiting-other',
-                question: DEMO_BATTLE_CARD_QUESTION,
-                myAnswer: DEMO_BATTLE_CARD_ANSWERS.mine,
-              },
+              battleCard: { ...c.battleCard, status: 'accepted', question: DEMO_BATTLE_CARD_QUESTION },
+              messages: [
+                ...c.messages,
+                { id: nextId('msg'), sender: 'them', text: `${c.matchName} accepted your Battle Card 🎴`, kind: 'system' },
+              ],
             }
+      )
+    )
+  }, [])
+
+  const answerBattleCard = useCallback((chatId: string, answer: string) => {
+    setChats((prev) =>
+      prev.map((c) =>
+        c.id !== chatId ? c : { ...c, battleCard: { ...c.battleCard, status: 'awaiting-other', myAnswer: answer } }
       )
     )
   }, [])
@@ -320,35 +322,19 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setChats((prev) => prev.map((c) => (c.id !== chatId ? c : { ...c, dateReadiness: { ...c.dateReadiness, me: true } })))
   }, [])
 
+  // The mutual state renders as the MutualReadinessCard in the thread —
+  // no system message needed.
   const simulateOtherReady = useCallback((chatId: string) => {
     setChats((prev) =>
-      prev.map((c) => {
-        if (c.id !== chatId) return c
-        return {
-          ...c,
-          dateReadiness: { ...c.dateReadiness, them: true },
-          messages: [
-            ...c.messages,
-            { id: nextId('msg'), sender: 'them', text: `You're both ready to take it further 🎉`, kind: 'system' },
-          ],
-        }
-      })
+      prev.map((c) => (c.id !== chatId ? c : { ...c, dateReadiness: { ...c.dateReadiness, them: true } }))
     )
   }, [])
 
+  // Selection is displayed inside the mutual-readiness celebration card
+  // itself rather than posted as a buried system message.
   const selectAvailabilityTag = useCallback((chatId: string, tag: string) => {
     setChats((prev) =>
-      prev.map((c) => {
-        if (c.id !== chatId) return c
-        return {
-          ...c,
-          dateReadiness: { ...c.dateReadiness, availabilityTagSelected: tag },
-          messages: [
-            ...c.messages,
-            { id: nextId('msg'), sender: 'me', text: `${c.matchName} is ${AVAILABILITY_TAG_COPY[tag] ?? tag.toLowerCase()}`, kind: 'system' },
-          ],
-        }
-      })
+      prev.map((c) => (c.id !== chatId ? c : { ...c, dateReadiness: { ...c.dateReadiness, availabilityTagSelected: tag } }))
     )
   }, [])
 
@@ -386,6 +372,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       startBattleCard,
       acceptBattleCard,
       ignoreBattleCard,
+      answerBattleCard,
       simulateOtherAnswered,
       requestDateReadiness,
       simulateOtherReady,
@@ -423,6 +410,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       startBattleCard,
       acceptBattleCard,
       ignoreBattleCard,
+      answerBattleCard,
       simulateOtherAnswered,
       requestDateReadiness,
       simulateOtherReady,

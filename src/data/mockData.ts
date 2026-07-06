@@ -1,5 +1,5 @@
 import { placeholderPhoto } from './placeholders'
-import { QUESTIONS_BANK, type Question } from './questionsBank'
+import { DEMO_BATTLE_CARD_QUESTION, type Question } from './questionsBank'
 
 // --- Discover profiles (PRD Section 5: 8-10 mock profile cards) ---
 export interface MockProfile {
@@ -353,7 +353,7 @@ export interface ChatMessage {
   kind: 'text' | 'system' | 'battle-card-invite' | 'battle-card-answer'
 }
 
-export type BattleCardStatus = 'none' | 'invited' | 'awaiting-other' | 'revealed' | 'expired'
+export type BattleCardStatus = 'none' | 'invited' | 'accepted' | 'awaiting-other' | 'revealed' | 'expired'
 
 export interface ChatThreadData {
   id: string
@@ -392,6 +392,8 @@ export const MOCK_CHATS: ChatThreadData[] = [
     dateReadiness: { me: false, them: false },
   },
   {
+    // Demo chat 1: MY outgoing Battle Card invite — gamified face-down card,
+    // waiting for the other side to accept.
     id: 'c-battle-pending',
     matchName: 'Jordan',
     matchPhoto: placeholderPhoto('p2-a'),
@@ -401,34 +403,36 @@ export const MOCK_CHATS: ChatThreadData[] = [
       { id: 'm5', sender: 'me', text: 'I could not sit still the entire 4th quarter', kind: 'text' },
       { id: 'm6', sender: 'me', text: 'You invited Jordan to play a card 🎴', kind: 'battle-card-invite' },
     ],
-    battleCard: { status: 'invited', tier: 'light', question: QUESTIONS_BANK.find((q) => q.id === 'q2') },
+    battleCard: { status: 'invited', tier: 'light' },
     dateReadiness: { me: false, them: false },
   },
   {
-    id: 'c-battle-revealed',
+    // Demo chat 2: they accepted — the card is flipped face-up with the
+    // question, I answer privately, and their answer reveals on submit.
+    id: 'c-battle-accepted',
     matchName: 'Casey',
     matchPhoto: placeholderPhoto('p6-a'),
     messages: [
       { id: 'm7', sender: 'me', text: 'Ok this might be the most important question I ask you', kind: 'text' },
       { id: 'm8', sender: 'them', text: 'I am ready', kind: 'text' },
+      { id: 'm8b', sender: 'them', text: 'Casey accepted your Battle Card 🎴', kind: 'system' },
     ],
     battleCard: {
-      status: 'revealed',
-      tier: 'deep',
-      question: QUESTIONS_BANK.find((q) => q.id === 'q6'),
-      myAnswer: 'Being genuinely curious about each other’s day, even the boring parts.',
-      theirAnswer: 'Laughing easily together, and still having your own things going on too.',
+      status: 'accepted',
+      tier: 'light',
+      question: DEMO_BATTLE_CARD_QUESTION,
     },
     dateReadiness: { me: false, them: false },
   },
   {
+    // Demo chat 4: mutual date-readiness already reached — rendered as a
+    // prominent celebration card in the thread, not buried system text.
     id: 'c-date-ready',
     matchName: 'Quinn',
     matchPhoto: placeholderPhoto('p9-a'),
     messages: [
       { id: 'm9', sender: 'them', text: 'This has been a genuinely great couple of weeks of texting', kind: 'text' },
       { id: 'm10', sender: 'me', text: 'Agreed, feels like it’s time', kind: 'text' },
-      { id: 'm11', sender: 'me', text: 'You’re both ready to take it further 🎉', kind: 'system' },
     ],
     battleCard: { status: 'none' },
     dateReadiness: { me: true, them: true },

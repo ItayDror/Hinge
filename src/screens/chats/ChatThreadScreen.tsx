@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { Avatar } from '../../components/Avatar'
-import { Pill } from '../../components/Pill'
 import { BattleCardPickerSheet } from './BattleCardPickerSheet'
 import { BattleCardBubble } from './BattleCardBubble'
 import { DateReadinessSheet } from './DateReadinessSheet'
 import { HingeRecommendationCard } from './HingeRecommendationCard'
+import { MutualReadinessCard } from './MutualReadinessCard'
 import { useAppState } from '../../state/AppStateContext'
-
-const AVAILABILITY_TAGS = ['Generally free weekday evenings', 'Weekends', 'Flexible']
 
 export function ChatThreadScreen() {
   const {
@@ -17,11 +15,11 @@ export function ChatThreadScreen() {
     pop,
     sendMessage,
     startBattleCard,
-    acceptBattleCard,
-    ignoreBattleCard,
+    answerBattleCard,
     simulateOtherAnswered,
     requestDateReadiness,
     selectAvailabilityTag,
+    showToast,
   } = useAppState()
 
   const chat = chats.find((c) => c.id === currentParams?.chatId)
@@ -31,10 +29,10 @@ export function ChatThreadScreen() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [dateSheetOpen, setDateSheetOpen] = useState(false)
   const [contextChipDismissed, setContextChipDismissed] = useState(false)
+  const [cardAnswerDraft, setCardAnswerDraft] = useState('')
 
-  // Auto-advance the mutual reveal a couple seconds after acceptance, so a
-  // live demo doesn't need a manual "simulate" click to see the full
-  // interaction play out (the debug bar can still trigger it immediately).
+  // Their answer reveals shortly after mine is submitted, so the mutual-reveal
+  // payoff plays out hands-free in a live demo (debug bar can force it too).
   useEffect(() => {
     if (!chat || chat.battleCard.status !== 'awaiting-other') return
     const t = setTimeout(() => simulateOtherAnswered(chat.id), 2500)
@@ -49,8 +47,8 @@ export function ChatThreadScreen() {
     )
   }
 
+  const answeringCard = chat.battleCard.status === 'accepted'
   const mutualReady = chat.dateReadiness.me && chat.dateReadiness.them
-  const showAvailabilityTags = mutualReady && !chat.dateReadiness.availabilityTagSelected
   const suggestionAlreadySent =
     !!chat.suggestedOpener && chat.messages.some((m) => m.sender === 'me' && m.text === chat.suggestedOpener)
   const showSuggestion = !!chat.suggestedOpener && !suggestionAlreadySent
@@ -59,6 +57,12 @@ export function ChatThreadScreen() {
     if (!draft.trim()) return
     sendMessage(chat.id, draft.trim())
     setDraft('')
+  }
+
+  const handleAnswerCard = () => {
+    if (!cardAnswerDraft.trim()) return
+    answerBattleCard(chat.id, cardAnswerDraft.trim())
+    setCardAnswerDraft('')
   }
 
   return (
@@ -87,12 +91,11 @@ export function ChatThreadScreen() {
             type="button"
             onClick={() => {
               setMenuOpen(false)
-              setDateSheetOpen(true)
+              showToast('Reported. Thanks for letting us know.')
             }}
-            disabled={chat.dateReadiness.me}
-            className="block w-full rounded-btn px-3 py-2.5 text-left text-body text-hinge-black disabled:text-hinge-grey"
+            className="block w-full rounded-btn px-3 py-2.5 text-left text-body text-hinge-warn"
           >
-            {chat.dateReadiness.me ? "✓ You marked this as date-ready" : "I'm ready for a date"}
+            Report conversation
           </button>
         </div>
       )}
@@ -130,24 +133,16 @@ export function ChatThreadScreen() {
           })}
 
           {chat.battleCard.status !== 'none' && (
-            <BattleCardBubble
-              battleCard={chat.battleCard}
-              onAccept={() => acceptBattleCard(chat.id)}
-              onIgnore={() => ignoreBattleCard(chat.id)}
-            />
+            <BattleCardBubble battleCard={chat.battleCard} matchName={chat.matchName} />
           )}
 
           {mutualReady && (
-            <p className="my-1 text-center text-caption font-semibold text-hinge-grey">
-              Maybe it's time to swap numbers.
-            </p>
-          )}
-
-          {showAvailabilityTags && (
-            <div className="mt-1 flex flex-wrap gap-2">
-              {AVAILABILITY_TAGS.map((tag) => (
-                <Pill key={tag} label={tag} onClick={() => selectAvailabilityTag(chat.id, tag)} />
-              ))}
+            <div className="mt-1">
+              <MutualReadinessCard
+                matchName={chat.matchName}
+                availabilityTagSelected={chat.dateReadiness.availabilityTagSelected}
+                onSelectTag={(tag) => selectAvailabilityTag(chat.id, tag)}
+              />
             </div>
           )}
 
@@ -160,34 +155,80 @@ export function ChatThreadScreen() {
         </div>
       </div>
 
-      <div className="shrink-0 border-t border-hinge-grey-light px-4 py-3">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setPickerOpen(true)}
-            aria-label="Play a card"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-[20px]"
-          >
-            🎴
-          </button>
-          <input
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            placeholder="Type a message..."
-            className="min-h-11 flex-1 rounded-pill bg-hinge-grey-bg px-4 text-body text-hinge-black placeholder:text-hinge-grey focus:outline-none"
-          />
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={!draft.trim()}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-hinge-black text-hinge-white disabled:opacity-30"
-            aria-label="Send message"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="m5 12 14-7-7 14-2-5-5-2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-            </svg>
-          </button>
-        </div>
+      <div className="shrink-0 border-t border-hinge-grey-light px-4 pb-3 pt-2">
+        {/* Always-visible date-readiness affordance (PRD 4.4d: subtle pill
+            above the compose bar). Mutual state renders as the celebration
+            card in the thread instead. */}
+        {!mutualReady && (
+          <div className="mb-2 flex justify-center">
+            {chat.dateReadiness.me ? (
+              <span className="rounded-pill bg-hinge-grey-bg px-3.5 py-1.5 text-[12px] font-semibold text-hinge-grey">
+                ✓ You marked this as date-ready
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setDateSheetOpen(true)}
+                className="min-h-8 rounded-pill border border-hinge-accent px-3.5 py-1.5 text-[12px] font-bold text-hinge-accent active:opacity-80"
+              >
+                💫 I'm ready for a date
+              </button>
+            )}
+          </div>
+        )}
+
+        {answeringCard ? (
+          <div>
+            <p className="mb-2 text-prompt-q text-hinge-black">{chat.battleCard.question?.text}</p>
+            <div className="flex items-center gap-2">
+              <input
+                value={cardAnswerDraft}
+                onChange={(e) => setCardAnswerDraft(e.target.value)}
+                placeholder="Answer privately..."
+                className="min-h-11 flex-1 rounded-pill bg-hinge-grey-bg px-4 text-body text-hinge-black placeholder:text-hinge-grey focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={handleAnswerCard}
+                disabled={!cardAnswerDraft.trim()}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-hinge-accent text-hinge-white disabled:opacity-30"
+                aria-label="Send answer"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="m5 12 14-7-7 14-2-5-5-2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              aria-label="Play a card"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-[20px]"
+            >
+              🎴
+            </button>
+            <input
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="Type a message..."
+              className="min-h-11 flex-1 rounded-pill bg-hinge-grey-bg px-4 text-body text-hinge-black placeholder:text-hinge-grey focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={handleSend}
+              disabled={!draft.trim()}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-hinge-black text-hinge-white disabled:opacity-30"
+              aria-label="Send message"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="m5 12 14-7-7 14-2-5-5-2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
       <BattleCardPickerSheet open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={(tier) => startBattleCard(chat.id, tier)} />

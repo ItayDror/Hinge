@@ -8,8 +8,18 @@ import { useAppState } from '../state/AppStateContext'
 // this is a fallback/speed-up control, not the only path through a flow.
 export function DebugSimulateBar() {
   const [open, setOpen] = useState(false)
-  const { currentScreen, currentParams, spaces, chats, blindModeBySpacePost, advanceBlindMode, toggleSpaceWaitlist, simulateOtherAnswered, simulateOtherReady } =
-    useAppState()
+  const {
+    currentScreen,
+    currentParams,
+    spaces,
+    chats,
+    blindModeBySpacePost,
+    advanceBlindMode,
+    toggleSpaceWaitlist,
+    acceptBattleCard,
+    simulateOtherAnswered,
+    simulateOtherReady,
+  } = useAppState()
 
   const actions: { label: string; onClick: () => void }[] = []
 
@@ -33,6 +43,9 @@ export function DebugSimulateBar() {
   if (currentScreen === 'chat-thread') {
     const chat = chats.find((c) => c.id === currentParams?.chatId)
     if (chat) {
+      if (chat.battleCard.status === 'invited') {
+        actions.push({ label: `Simulate: ${chat.matchName} accepted the card`, onClick: () => acceptBattleCard(chat.id) })
+      }
       if (chat.battleCard.status === 'awaiting-other') {
         actions.push({ label: 'Simulate: they answered the card', onClick: () => simulateOtherAnswered(chat.id) })
       }
