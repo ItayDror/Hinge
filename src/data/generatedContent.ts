@@ -76,7 +76,10 @@ export function getGeneratedSpaces(): SpaceData[] {
       memberCount: members,
       activityLabel: 'active now',
       closesInDays: s.closesInDays,
-      premium: s.premiumSuggested,
+      // Demo constraint: exactly 3 spaces (the static free ones) are unlocked;
+      // all agent-generated spaces land on the Hinge+ shelf regardless of the
+      // curator's premiumSuggested hint.
+      premium: true,
       location: { name: s.location.name, radiusKm: s.location.radiusKm },
       avatarPreviewUrls: [portraitAvatar(pick(1)), portraitAvatar(pick(2)), portraitAvatar(pick(3))],
       dailyQuestion: {

@@ -7,8 +7,12 @@ import { useAppState } from '../../state/AppStateContext'
 type DeckItem = { kind: 'profile'; index: number } | { kind: 'promo'; spaceIndex: number }
 
 export function DiscoverScreen() {
-  const { spaces, push, dailyQuestion, showDailyInterstitial, showToast } = useAppState()
+  const { spaces, push, dailyQuestion, showDailyInterstitial, showToast, premiumUnlocked } = useAppState()
   const [cursor, setCursor] = useState(0)
+
+  // Only promote spaces the user can actually enter (locked ones live on the
+  // Hinge+ shelf, not in the deck).
+  const promoSpaces = useMemo(() => spaces.filter((s) => !s.premium || premiumUnlocked), [spaces, premiumUnlocked])
 
   const deck = useMemo<DeckItem[]>(() => {
     const items: DeckItem[] = []
@@ -16,13 +20,13 @@ export function DiscoverScreen() {
     MOCK_PROFILES.forEach((_, i) => {
       items.push({ kind: 'profile', index: i })
       // In-feed Space promo card every 5th card (within PRD's 4-6 range)
-      if ((i + 1) % 5 === 0 && spaces.length > 0) {
-        items.push({ kind: 'promo', spaceIndex: spaceCursor % spaces.length })
+      if ((i + 1) % 5 === 0 && promoSpaces.length > 0) {
+        items.push({ kind: 'promo', spaceIndex: spaceCursor % promoSpaces.length })
         spaceCursor += 1
       }
     })
     return items
-  }, [spaces.length])
+  }, [promoSpaces.length])
 
   const current = deck[cursor]
   const showDailyChip = !showDailyInterstitial && !dailyQuestion.answeredToday
@@ -75,8 +79,8 @@ export function DiscoverScreen() {
               })()
             ) : (
               <SpacePromoCard
-                space={spaces[current.spaceIndex]}
-                onPeek={() => push({ screen: 'space-detail', params: { spaceId: spaces[current.spaceIndex].id } })}
+                space={promoSpaces[current.spaceIndex]}
+                onPeek={() => push({ screen: 'space-detail', params: { spaceId: promoSpaces[current.spaceIndex].id } })}
               />
             )}
           </div>

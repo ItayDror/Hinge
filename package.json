@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "agent:questions": "tsx agents/question-curator/index.ts",
     "agent:spaces": "tsx agents/space-curator/index.ts",
+    "agent:report": "tsx agents/build-report.ts",
     "agent:balance": "python3 ~/x402-tavily/check_balance.py"
   },
   "dependencies": {

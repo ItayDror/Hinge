@@ -18,6 +18,7 @@ import { tavilySearch } from '../shared/tavily'
 import { generateValidated } from '../shared/validate'
 import { dedupeByText } from '../shared/dedupe'
 import { writeGenerated, writeRawArtifact } from '../shared/emit'
+import { buildReport } from '../shared/report'
 import type { SpaceProposal, TrendHit } from '../shared/types'
 import { MOCK_SPACES } from '../../src/data/mockData'
 import { CITIES, INTEREST_TAXONOMY, MAX_PER_CATEGORY, MAX_PREMIUM, TARGET_SPACES } from './config'
@@ -155,6 +156,7 @@ async function main() {
   } else {
     const path = writeGenerated('spaces.json', payload)
     console.log(`\n✅ Wrote ${selected.length} spaces → ${path}`)
+    console.log(`📄 Report refreshed → ${buildReport()}`)
   }
   for (const s of selected) {
     console.log(`   ${s.emoji} ${s.title} — ${s.category} @ ${s.location.name} (closes ${s.closesInDays}d${s.premiumSuggested ? ', premium' : ''})`)

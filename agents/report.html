@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spaces Curation Agents — Output Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  :root { --black:#1A1A1A; --grey:#666; --grey-bg:#F5F4F1; --grey-line:#E8E6E2; --accent:#E15B3F; --accent-soft:#FBE5DE; }
+  * { box-sizing: border-box; }
+  body { font-family: Inter, sans-serif; color: var(--black); background: #fff; margin: 0; padding: 40px 24px 80px; }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  h1 { font-size: 28px; margin: 0; }
+  .sub { color: var(--grey); font-size: 14px; margin-top: 6px; }
+  .pipeline { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 8px; }
+  .stage { background: var(--grey-bg); border-radius: 9999px; padding: 8px 14px; font-size: 12px; font-weight: 600; }
+  .stage::after { content: ' →'; color: var(--accent); }
+  .stage:last-child::after { content: ''; }
+  .stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 8px; }
+  .stat { background: var(--accent-soft); border-radius: 16px; padding: 14px 18px; min-width: 130px; }
+  .stat b { display: block; font-size: 24px; }
+  .stat span { font-size: 12px; color: var(--grey); }
+  h2 { font-size: 20px; margin: 40px 0 4px; }
+  .section-sub { color: var(--grey); font-size: 13px; margin: 0 0 16px; }
+  h3 { font-size: 14px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 28px 0 12px; }
+  .card { border: 1px solid var(--grey-line); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.05); }
+  .q-text { font-size: 16px; font-weight: 600; margin: 0 0 8px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chip { background: var(--grey-bg); border-radius: 9999px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
+  .chip.light { background: var(--accent-soft); color: var(--accent); }
+  .chip.deep { background: var(--black); color: #fff; }
+  .chip.premium { background: var(--black); color: #fff; }
+  .evidence, .whynow, .seedq { background: var(--grey-bg); border-radius: 12px; padding: 10px 12px; font-size: 13px; color: var(--black); margin-top: 8px; }
+  .evidence.none { color: var(--grey); font-style: italic; }
+  .evidence-label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin-bottom: 4px; }
+  .whynow { background: var(--accent-soft); }
+  a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .space-head { display: flex; gap: 12px; align-items: flex-start; }
+  .space-emoji { font-size: 30px; }
+  .space-title { font-size: 17px; font-weight: 700; margin: 0; }
+  .space-sub { font-size: 12px; color: var(--grey); margin: 3px 0 0; }
+  footer { margin-top: 48px; color: var(--grey); font-size: 12px; border-top: 1px solid var(--grey-line); padding-top: 16px; }
+  code { background: var(--grey-bg); border-radius: 6px; padding: 2px 6px; font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Spaces Curation Agents — Output Report</h1>
+  <p class="sub">Questions generated Jul 13, 2026, 6:39 PM (question-curator@1) · Spaces generated Jul 13, 2026, 6:40 PM (space-curator@1)</p>
+
+  <div class="pipeline">
+    <span class="stage">📡 Trend gathering (Exa search)</span>
+    <span class="stage">🧠 Synthesis (Claude)</span>
+    <span class="stage">✅ Schema validation</span>
+    <span class="stage">🧹 Dedupe vs banks</span>
+    <span class="stage">🏆 Rank & select</span>
+    <span class="stage">📦 Emit JSON</span>
+  </div>
+  <p class="section-sub">Every location/time question and every space must cite a real search hit — the model picks an evidence index and the pipeline maps it back to the actual URL, so sources are never fabricated.</p>
+
+  <div class="stats">
+    <div class="stat"><b>20</b><span>questions generated</span></div>
+    <div class="stat"><b>14/20</b><span>backed by trend evidence</span></div>
+    <div class="stat"><b>8</b><span>spaces proposed</span></div>
+    <div class="stat"><b>4</b><span>cities covered</span></div>
+    <div class="stat"><b>2</b><span>flagged for Hinge+</span></div>
+  </div>
+
+  <h2>Proposed Spaces</h2>
+  <p class="section-sub">Each space has two dimensions — a <b>location</b> (users whose radius covers it are eligible) and an <b>interest</b> — plus a 4–7 day close window and a themed seed question. "Why now" is the real-world hook found during trend gathering.</p>
+  <div class="card space">
+    <div class="space-head">
+      <span class="space-emoji">🎤</span>
+      <div>
+        <p class="space-title">Jay-Z's Bronx Farewell <span class="chip premium">Hinge+ suggested</span></p>
+        <p class="space-sub">Music · Yankee Stadium, New York, NY · radius 15km · closes in 4d</p>
+      </div>
+    </div>
+    <div class="whynow"><span class="evidence-label">Why now</span>Jay-Z closed his Yankee Stadium residency last night with Beyoncé, Rihanna and Usher after a chaotic lockdown stranded fans outside. <a href="https://gothamist.com/news/chaos-and-confusion-at-jay-z-finale-after-lockdown-strands-crowd-outside-yankee-stadium" target="_blank">source ↗</a></div>
+    <div class="seedq"><span class="evidence-label">Seed daily question</span>“Were you in the crowd (or locked outside) for Jay-Z's last Yankee Stadium night? What's the one moment you'll never forget?” <span class="chip light">light</span></div>
+  </div>
+<div class="card space">
+    <div class="space-head">
+      <span class="space-emoji">💧</span>
+      <div>
+        <p class="space-title">Erewhon's $12 Sacred Water</p>
+        <p class="space-sub">Food &amp; Drink · Los Angeles, CA · radius 40km · closes in 6d</p>
+      </div>
+    </div>
+    <div class="whynow"><span class="evidence-label">Why now</span>The internet is roasting Erewhon's new $12 'Sacred Water' as a 'crime' during LA's hottest stretch of the summer. <a href="https://www.thetakeout.com/2214080/erewhon-new-sacred-water-price-internet-reaction/" target="_blank">source ↗</a></div>
+    <div class="seedq"><span class="evidence-label">Seed daily question</span>“$12 'Sacred Water' — genius or crime? What's the most LA thing you've ever paid too much for?” <span class="chip light">light</span></div>
+  </div>
+<div class="card space">
+    <div class="space-head">
+      <span class="space-emoji">🎙️</span>
+      <div>
+        <p class="space-title">Mulaney Makes Wrigley History</p>
+        <p class="space-sub">Culture · Wrigley Field, Chicago, IL · radius 25km · closes in 4d</p>
+      </div>
+    </div>
+    <div class="whynow"><span class="evidence-label">Why now</span>John Mulaney made Wrigley Field history Saturday night as the first comic to headline the ballpark, a hometown milestone. <a href="https://www.spinmagazine.com/2026/07/john-mulaney-wrigley-field/" target="_blank">source ↗</a></div>
+    <div class="seedq"><span class="evidence-label">Seed daily question</span>“Mulaney just became the first comic to headline Wrigley — who's the one comedian you'd fill a stadium to see?” <span class="chip light">light</span></div>
+  </div>
+<div class="card space">
+    <div class="space-head">
+      <span class="space-emoji">☔</span>
+      <div>
+        <p class="space-title">Singin' at Zilker Hillside</p>
+        <p class="space-sub">Culture · Zilker Park, Austin, TX · radius 25km · closes in 7d</p>
+      </div>
+    </div>
+    <div class="whynow"><span class="evidence-label">Why now</span>Austin's free Zilker Summer Musical returned this week with 'Singin' in the Rain' on the Hillside Theater. <a href="https://cbsaustin.com/news/local/austins-free-zilker-summer-musical-returns-july-10-with-singin-in-the-rain" target="_blank">source ↗</a></div>
+    <div class="seedq"><span class="evidence-label">Seed daily question</span>“Blanket on the Zilker hillside for a free summer musical — what's your ideal Austin date under the stars?” <span class="chip deep">deep</span></div>
+  </div>
+<div class="card space">
+    <div class="space-head">
+      <span class="space-emoji">🐴</span>
+      <div>
+        <p class="space-title">40-Ft Trojan Horse on the UWS</p>
+        <p class="space-sub">Local Events · Upper West Side, New York, NY · radius 15km · closes in 5d</p>
+      </div>
+    </div>
+    <div class="whynow"><span class="evidence-label">Why now</span>A 40-foot Trojan Horse statue was just erected in front of an Upper West Side movie theater, drawing crowds and confusion. <a href="https://www.westsiderag.com/2026/07/13/40-foot-trojan-horse-statue-erected-in-front-of-upper-west-side-movie-theater" target="_blank">source ↗</a></div>
+    <div class="seedq"><span class="evidence-label">Seed daily question</span>“A giant Trojan Horse just showed up outside your local theater — what's the most absurd NYC street sight you've stumbled onto?” <span class="chip light">light</span></div>
+  </div>
+<div class="card space">
+    <div class="space-head">
+      <span class="space-emoji">⚾</span>
+      <div>
+        <p class="space-title">Ohtani at Dodger Stadium <span class="chip premium">Hinge+ suggested</span></p>
+        <p class="space-sub">Sports · Dodger Stadium, Los Angeles, CA · radius 40km · closes in 5d</p>
+      </div>
+    </div>
+    <div class="whynow"><span class="evidence-label">Why now</span>Shohei Ohtani mania has 10x'd sales in one area of Dodger Stadium as the Dodgers roll through their summer homestand. <a href="https://www.si.com/mlb/dodgers/onsi/shohei-ohtani-increased-sales-10x-one-area-dodger-stadium" target="_blank">source ↗</a></div>
+    <div class="seedq"><span class="evidence-label">Seed daily question</span>“Ohtani ball at the game or the Ohtani section of the store — where do you drop your money first?” <span class="chip light">light</span></div>
+  </div>
+<div class="card space">
+    <div class="space-head">
+      <span class="space-emoji">🏖️</span>
+      <div>
+        <p class="space-title">Chicago's Concrete Beach</p>
+        <p class="space-sub">Outdoors · Chicago, IL · radius 25km · closes in 5d</p>
+      </div>
+    </div>
+    <div class="whynow"><span class="evidence-label">Why now</span>A photo of Chicagoans sunbathing on the concrete lakefront went viral, triggering the internet during this week's heat wave. <a href="https://www.barstoolsports.com/blog/3573281/nothing-gets-the-internet-more-triggered-than-the-concrete-beach-in-chicago" target="_blank">source ↗</a></div>
+    <div class="seedq"><span class="evidence-label">Seed daily question</span>“The world is roasting our concrete 'beach' — where's your real go-to spot to soak up a Chicago summer day?” <span class="chip light">light</span></div>
+  </div>
+<div class="card space">
+    <div class="space-head">
+      <span class="space-emoji">🎸</span>
+      <div>
+        <p class="space-title">Kurt Vile at ACL Live</p>
+        <p class="space-sub">Music · ACL Live, Austin, TX · radius 25km · closes in 4d</p>
+      </div>
+    </div>
+    <div class="whynow"><span class="evidence-label">Why now</span>Kurt Vile and The Violators play ACL Live at the Moody Theater tonight, kicking off a hot week of Austin shows. <a href="https://www.acllive.com/event/2026-07-13-kurt-vile-the-violators-at-8-pm" target="_blank">source ↗</a></div>
+    <div class="seedq"><span class="evidence-label">Seed daily question</span>“Kurt Vile at the Moody tonight — what's the song you always want the encore to be?” <span class="chip light">light</span></div>
+  </div>
+
+  <h2>Generated Daily Questions</h2>
+  <p class="section-sub">Feeds the per-space Daily Question surface and the app-wide interstitial. Tone mix targets ~70% light / 30% deep.</p>
+  <h3>📍 Location (8)</h3><div class="card"><p class="q-text">First warm night on a Williamsburg rooftop bar — what's in your hand and who's telling the story?</p><div class="meta"><span class="chip">📍 New York, NY</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>Zoli Debuts Rooftop Bar and Deviled Crab Roll in Williamsburg | NYC Restaurant Voice July 13, 2026 Openings # Zoli Debuts Rooftop Bar and Deviled Crab Roll in Williamsburg Zoli, the seafood-focused re…
+       <a href="https://nycrestaurantvoice.com/zoli-debuts-rooftop-bar-and-deviled-crab-roll-in-williamsburg/" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">Dinner and a rooftop movie in the Arts District — what film are you picking to set the mood on a first date?</p><div class="meta"><span class="chip">📍 Los Angeles, CA</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>CineOpera Opens in L.A. Arts District With Rooftop Movies - Skip to main content - Skip to header left navigation - Skip to header right navigation - Skip to after header navigation - Skip to site foo…
+       <a href="https://lamag.com/arts-and-entertainment/a-new-restaurant-and-movie-theater-just-opened-in-the-arts-district/" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">Triple-digit LA day, plans melting by noon — what's your exact survival game plan till sunset?</p><div class="meta"><span class="chip">📍 Los Angeles, CA</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>Triple-digit heat, humidity and chance of thunderstorms raise fire concerns across Southern California - ABC7 Los Angeles - WEATHER # Extreme heat, humidity and chance of thunderstorms raise fire conc…
+       <a href="https://abc7.com/post/triple-digit-heat-humidity-chance-thunderstorms-raise-fire-concerns-southern-california/19498306/" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">When another heat wave bakes the city, what's the small neighbor-helping-neighbor moment you've seen or pulled off?</p><div class="meta"><span class="chip">📍 Chicago, IL</span><span class="chip deep">deep</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>42 Parks On South, West Sides Getting Improved Air Conditioning To Help Battle Heat Waves The fieldhouse at Douglass Park. Credit: Michael Liptrot/Block Club Chicago CHICAGO — Residents in Chicago’s m…
+       <a href="https://blockclubchicago.org/2026/07/13/42-park-fieldhouses-on-south-west-sides-getting-improved-air-conditioning-to-help-battle-heat-waves/" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">Free concert on the Pritzker lawn — front-of-stage superfan or blanket-and-snacks in the back?</p><div class="meta"><span class="chip">📍 Chicago, IL</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>7/13/2026 - Chicago Daily Calendar | EventGuide ### Festivals | 6:30 pm-9:00 pm | Millennium Park Summer Music Series Jay Pritzker Pavilion at Millennium Park. A free outdoor concert series held at th…
+       <a href="https://eventguide.com/chicago/days/2026/07/13.htm" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">A great show at the Moody on a random Monday — what makes a weeknight concert actually worth it?</p><div class="meta"><span class="chip">📍 Austin, TX</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>Kurt Vile and The Violators - ACL Live at The Moody Theater ACL Live at The Moody Theater ACL Live &amp; Live Nation Present # Kurt Vile and The Violators https://www.axs.com/events/1399992/kurt-vile-and-…
+       <a href="https://www.acllive.com/event/2026-07-13-kurt-vile-the-violators-at-8-pm" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">A new spot just opened on the East Side — does 'first to try it' or 'wait for the reviews' say more about how you live?</p><div class="meta"><span class="chip">📍 Austin, TX</span><span class="chip deep">deep</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>Austin Oyster Co. Brings Fresh Seafood (and Vibes) to the East Side - Austin Monthly Magazine With the arrival of Austin Oyster Co.’s new brick-and-mortar space, diners can explore the New England coa…
+       <a href="https://www.austinmonthly.com/austin-oyster-co-brings-fresh-seafood-and-vibes-to-the-east-side/" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">Stuck outside a sold-out stadium show while the biggest concert of the year plays without you — comedy or full-on tragedy?</p><div class="meta"><span class="chip">📍 New York, NY</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>Chaos and confusion at Jay-Z finale after lockdown strands crowd outside Yankee Stadium - Gothamist News # Chaos and confusion at Jay-Z finale after lockdown strands crowd outside Yankee Stadium --- -…
+       <a href="https://gothamist.com/news/chaos-and-confusion-at-jay-z-finale-after-lockdown-strands-crowd-outside-yankee-stadium" target="_blank">source ↗</a></div></div>
+<h3>🕐 Time-relevant (6)</h3><div class="card"><p class="q-text">All-Star break honesty: actually watching the game, or just here for the Home Run Derby and the snacks?</p><div class="meta"><span class="chip">🗓 2026-07-13..2026-08-10</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>MLB All-Star Week 2026 Schedule | MLB.com # MLB All-Star Week Schedule - MLB All-Star Week - Monday, July 13 - Tuesday, July 14 ## All-Star Week VIP Experiences https://onlocationexp.com/mlb/all-star-…
+       <a href="https://www.mlb.com/all-star/schedule" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">If your life got a surprise-guest moment like Rihanna walking out mid-show, who's stepping onto your stage?</p><div class="meta"><span class="chip">🗓 2026-07-13..2026-08-10</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>Jay-Z Closes Yankee Stadium Residency With Beyoncé, Rihanna and Usher Jay-Z Closes Yankee Stadium Residency With Beyoncé, Rihanna and Usher “We’re going to go until like 5 a.m., so don’t be scared,” s…
+       <a href="https://variety.com/2026/music/news/jay-z-closes-yankee-stadium-residency-beyonce-rihanna-usher-1236809402/" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">There's a $12 'sacred water' selling out somewhere right now — what gloriously overpriced thing would you secretly try?</p><div class="meta"><span class="chip">🗓 2026-07-13..2026-08-10</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span># ‘This country is a hot mess’: New $12 ‘sacred water’ at Erewhon sparks debate - Yahoo Style Canada Published: 2026-07-13T18:11:21+00:00 Source: ca.style.yahoo.com (ca.style.yahoo.com) Language: en #…
+       <a href="https://ca.style.yahoo.com/country-hot-mess-12-sacred-181121931.html" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">We're halfway through summer — the one thing you still want this season to hand you before it's over?</p><div class="meta"><span class="chip">🗓 2026-07-13..2026-08-10</span><span class="chip deep">deep</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>NYC Events in July 2026: Calendar to July 4, music events, and free festivals Photograph: Shutterstock Photograph: Shutterstock # NYC events in July 2026 Start making your Independence Day plans and c…
+       <a href="https://www.timeout.com/newyork/events-calendar/july-events-calendar" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">Mid-July outdoor movie night — full picnic spread or show up empty-handed and mooch off the blanket next to you?</p><div class="meta"><span class="chip">🗓 2026-07-13..2026-08-10</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span>Paramount+ Movie Nights at Bryant Park Skip to main content We use cookies, pixels, and other trackers to improve website experience, analyze site traffic, and deliver more relevant advertising. Some …
+       <a href="https://bryantpark.org/calendar/event/movie-nights/2026-07-13" target="_blank">source ↗</a></div></div>
+<div class="card"><p class="q-text">Peak summer-festival season is here — food-first, music-first, or shameless people-watching-first?</p><div class="meta"><span class="chip">🗓 2026-07-13..2026-08-10</span><span class="chip light">light</span></div><div class="evidence"><span class="evidence-label">Trend evidence</span># Things to do in Chicago this weekend: July 10 – 12 – NBC Chicago Published: 2026-07-10T17:44:50-05:00 Source: nbcchicago.com (nbcchicago.com) Language: en ## Story Things to do in Chicago this weeke…
+       <a href="https://www.nbcchicago.com/news/local/taste-of-chicago-john-mulaney-windy-city-smokeout-things-to-do-this-weekend/3959687/" target="_blank">source ↗</a></div></div>
+<h3>💬 General interest (6)</h3><div class="card"><p class="q-text">A compliment you got once that quietly reshaped how you see yourself — what was it?</p><div class="meta"><span class="chip deep">deep</span></div><div class="evidence none">No external evidence — evergreen question</div></div>
+<div class="card"><p class="q-text">The most unhinged thing in your camera roll from the last month — describe it, don't show it?</p><div class="meta"><span class="chip light">light</span></div><div class="evidence none">No external evidence — evergreen question</div></div>
+<div class="card"><p class="q-text">What's something you're slowly learning to stop apologizing for?</p><div class="meta"><span class="chip deep">deep</span></div><div class="evidence none">No external evidence — evergreen question</div></div>
+<div class="card"><p class="q-text">Your group chat is named after one inside joke about you — what's the joke?</p><div class="meta"><span class="chip light">light</span></div><div class="evidence none">No external evidence — evergreen question</div></div>
+<div class="card"><p class="q-text">What does 'a good day' look like for you now that it wouldn't have five years ago?</p><div class="meta"><span class="chip deep">deep</span></div><div class="evidence none">No external evidence — evergreen question</div></div>
+<div class="card"><p class="q-text">The petty grudge you're still holding against an inanimate object or app — go?</p><div class="meta"><span class="chip light">light</span></div><div class="evidence none">No external evidence — evergreen question</div></div>
+
+  <footer>
+    Regenerate anytime: <code>npm run agent:questions</code> · <code>npm run agent:spaces</code> · this report rebuilds automatically after each run (or via <code>npm run agent:report</code>).
+    Search: Exa (primary) with optional Tavily via x402 micropayments (<code>--tavily</code>). LLM: Claude Code CLI, headless.
+  </footer>
+</div>
+</body>
+</html>

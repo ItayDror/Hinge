@@ -16,6 +16,7 @@ import { tavilySearch } from '../shared/tavily'
 import { generateValidated } from '../shared/validate'
 import { dedupeByText } from '../shared/dedupe'
 import { writeGenerated, writeRawArtifact } from '../shared/emit'
+import { buildReport } from '../shared/report'
 import type { GeneratedQuestion, TrendHit } from '../shared/types'
 import { QUESTIONS_BANK } from '../../src/data/questionsBank'
 import { SEED_QUESTIONS } from './seedBank'
@@ -66,6 +67,7 @@ function emit(questions: GeneratedQuestion[], dryRun: boolean) {
   } else {
     const path = writeGenerated('questions.json', payload)
     console.log(`\n✅ Wrote ${questions.length} questions → ${path}`)
+    console.log(`📄 Report refreshed → ${buildReport()}`)
   }
 }
 
