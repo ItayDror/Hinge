@@ -3,6 +3,7 @@ import { DiscoverScreen } from './screens/discover/DiscoverScreen'
 import { LikesYouScreen } from './screens/likes/LikesYouScreen'
 import { SpacesHomeScreen } from './screens/spaces/SpacesHomeScreen'
 import { SpaceDetailScreen } from './screens/spaces/SpaceDetailScreen'
+import { SpaceQuestionScreen } from './screens/spaces/SpaceQuestionScreen'
 import { ChatListScreen } from './screens/chats/ChatListScreen'
 import { ChatThreadScreen } from './screens/chats/ChatThreadScreen'
 import { ProfileScreen } from './screens/profile/ProfileScreen'
@@ -19,6 +20,8 @@ export function ScreenRouter() {
       return <SpacesHomeScreen />
     case 'space-detail':
       return <SpaceDetailScreen />
+    case 'space-question':
+      return <SpaceQuestionScreen />
     case 'chats':
       return <ChatListScreen />
     case 'chat-thread':

@@ -11,6 +11,7 @@ import { useAppState } from '../../state/AppStateContext'
 export function ChatThreadScreen() {
   const {
     chats,
+    spaces,
     currentParams,
     pop,
     sendMessage,
@@ -23,6 +24,7 @@ export function ChatThreadScreen() {
   } = useAppState()
 
   const chat = chats.find((c) => c.id === currentParams?.chatId)
+  const sharedSpace = chat?.sharedSpaceId ? spaces.find((s) => s.id === chat.sharedSpaceId) : undefined
 
   const [draft, setDraft] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -106,6 +108,14 @@ export function ChatThreadScreen() {
           <button type="button" onClick={() => setContextChipDismissed(true)} aria-label="Dismiss" className="text-hinge-grey">
             ✕
           </button>
+        </div>
+      )}
+
+      {sharedSpace && !chat.spaceOriginLabel && (
+        <div className="mx-5 mb-2 flex shrink-0 items-center gap-2 rounded-pill bg-hinge-grey-bg px-3 py-1.5">
+          <span className="truncate text-[12px] font-semibold text-hinge-black">
+            {sharedSpace.emoji} You're both in {sharedSpace.title}
+          </span>
         </div>
       )}
 

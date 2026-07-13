@@ -59,13 +59,20 @@ export function DiscoverScreen() {
         {current ? (
           <div className="h-full">
             {current.kind === 'profile' ? (
-              <ProfileCard
-                photoUrl={MOCK_PROFILES[current.index].photos[0]}
-                name={MOCK_PROFILES[current.index].name}
-                age={MOCK_PROFILES[current.index].age}
-                promptQuestion={MOCK_PROFILES[current.index].prompt.question}
-                promptAnswer={MOCK_PROFILES[current.index].prompt.answer}
-              />
+              (() => {
+                const profile = MOCK_PROFILES[current.index]
+                const sharedSpace = profile.sharedSpaceId ? spaces.find((s) => s.id === profile.sharedSpaceId) : undefined
+                return (
+                  <ProfileCard
+                    photoUrl={profile.photoUrl}
+                    name={profile.name}
+                    age={profile.age}
+                    promptQuestion={profile.prompt.question}
+                    promptAnswer={profile.prompt.answer}
+                    sharedSpaceLabel={sharedSpace ? `${sharedSpace.emoji} Also in ${sharedSpace.title}` : undefined}
+                  />
+                )
+              })()
             ) : (
               <SpacePromoCard
                 space={spaces[current.spaceIndex]}

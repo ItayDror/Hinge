@@ -39,7 +39,7 @@ export function PostComposerSheet({ open, onClose, spaceTitle, postsToday, onSub
           {text.length}/{CHAR_LIMIT}
         </span>
       </div>
-      <p className="mt-2 text-caption text-hinge-grey">Posting as courtside_kt — your real name stays private here</p>
+      <p className="mt-2 text-caption text-hinge-grey">Posting as you — your profile stays locked until someone likes your content</p>
       {rateLimited && (
         <p className="mt-2 rounded-card bg-hinge-grey-bg p-3 text-caption text-hinge-grey">
           You've hit today's post limit for this space — try again tomorrow

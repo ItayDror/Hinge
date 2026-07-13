@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-13T22:39:51.037Z",
+  "generator": "question-curator@1",
+  "questions": [
+    {
+      "id": "gq-20260713-02",
+      "text": "First warm night on a Williamsburg rooftop bar — what's in your hand and who's telling the story?",
+      "kind": "location",
+      "geo": "New York, NY",
+      "timeWindow": null,
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "Zoli Debuts Rooftop Bar and Deviled Crab Roll in Williamsburg | NYC Restaurant Voice July 13, 2026 Openings # Zoli Debuts Rooftop Bar and Deviled Crab Roll in Williamsburg Zoli, the seafood-focused restaurant from chef Ned Baldwin, has added a rooftop bar to its space on North 7th Street in Williams",
+        "url": "https://nycrestaurantvoice.com/zoli-debuts-rooftop-bar-and-deviled-crab-roll-in-williamsburg/"
+      }
+    },
+    {
+      "id": "gq-20260713-03",
+      "text": "Dinner and a rooftop movie in the Arts District — what film are you picking to set the mood on a first date?",
+      "kind": "location",
+      "geo": "Los Angeles, CA",
+      "timeWindow": null,
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "CineOpera Opens in L.A. Arts District With Rooftop Movies - Skip to main content - Skip to header left navigation - Skip to header right navigation - Skip to after header navigation - Skip to site footer # A New Restaurant and Movie Theater Just Opened in the Arts District CineOpera transforms the f",
+        "url": "https://lamag.com/arts-and-entertainment/a-new-restaurant-and-movie-theater-just-opened-in-the-arts-district/"
+      }
+    },
+    {
+      "id": "gq-20260713-04",
+      "text": "Triple-digit LA day, plans melting by noon — what's your exact survival game plan till sunset?",
+      "kind": "location",
+      "geo": "Los Angeles, CA",
+      "timeWindow": null,
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "Triple-digit heat, humidity and chance of thunderstorms raise fire concerns across Southern California - ABC7 Los Angeles - WEATHER # Extreme heat, humidity and chance of thunderstorms raise fire concerns across SoCal By Mónica De Anda Monday, July 13, 2026 12:53PM LOS ANGELES (KABC) -- Triple-digit",
+        "url": "https://abc7.com/post/triple-digit-heat-humidity-chance-thunderstorms-raise-fire-concerns-southern-california/19498306/"
+      }
+    },
+    {
+      "id": "gq-20260713-05",
+      "text": "When another heat wave bakes the city, what's the small neighbor-helping-neighbor moment you've seen or pulled off?",
+      "kind": "location",
+      "geo": "Chicago, IL",
+      "timeWindow": null,
+      "tone": "deep",
+      "sourceTrend": {
+        "snippet": "42 Parks On South, West Sides Getting Improved Air Conditioning To Help Battle Heat Waves The fieldhouse at Douglass Park. Credit: Michael Liptrot/Block Club Chicago CHICAGO — Residents in Chicago’s most heat-vulnerable neighborhoods will soon have additional and improved cooling options as the city",
+        "url": "https://blockclubchicago.org/2026/07/13/42-park-fieldhouses-on-south-west-sides-getting-improved-air-conditioning-to-help-battle-heat-waves/"
+      }
+    },
+    {
+      "id": "gq-20260713-06",
+      "text": "Free concert on the Pritzker lawn — front-of-stage superfan or blanket-and-snacks in the back?",
+      "kind": "location",
+      "geo": "Chicago, IL",
+      "timeWindow": null,
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "7/13/2026 - Chicago Daily Calendar | EventGuide ### Festivals | 6:30 pm-9:00 pm | Millennium Park Summer Music Series Jay Pritzker Pavilion at Millennium Park. A free outdoor concert series held at the Jay Pritzker Pavilion in Millennium Park, showcasing... | | --- | --- | ### The Arts | 7:00 pm | R",
+        "url": "https://eventguide.com/chicago/days/2026/07/13.htm"
+      }
+    },
+    {
+      "id": "gq-20260713-07",
+      "text": "A great show at the Moody on a random Monday — what makes a weeknight concert actually worth it?",
+      "kind": "location",
+      "geo": "Austin, TX",
+      "timeWindow": null,
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "Kurt Vile and The Violators - ACL Live at The Moody Theater ACL Live at The Moody Theater ACL Live & Live Nation Present # Kurt Vile and The Violators https://www.axs.com/events/1399992/kurt-vile-and-the-violators-tickets?skin=acllive ## with Being Dead Date On Sale - Monday July 13, 2026 8:00 PM - ",
+        "url": "https://www.acllive.com/event/2026-07-13-kurt-vile-the-violators-at-8-pm"
+      }
+    },
+    {
+      "id": "gq-20260713-08",
+      "text": "A new spot just opened on the East Side — does 'first to try it' or 'wait for the reviews' say more about how you live?",
+      "kind": "location",
+      "geo": "Austin, TX",
+      "timeWindow": null,
+      "tone": "deep",
+      "sourceTrend": {
+        "snippet": "Austin Oyster Co. Brings Fresh Seafood (and Vibes) to the East Side - Austin Monthly Magazine With the arrival of Austin Oyster Co.’s new brick-and-mortar space, diners can explore the New England coast, where the raw bar rules and the lobster roll is king. | Photos by Matt Conant Restaurants ## Aus",
+        "url": "https://www.austinmonthly.com/austin-oyster-co-brings-fresh-seafood-and-vibes-to-the-east-side/"
+      }
+    },
+    {
+      "id": "gq-20260713-09",
+      "text": "All-Star break honesty: actually watching the game, or just here for the Home Run Derby and the snacks?",
+      "kind": "time",
+      "geo": null,
+      "timeWindow": "2026-07-13..2026-08-10",
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "MLB All-Star Week 2026 Schedule | MLB.com # MLB All-Star Week Schedule - MLB All-Star Week - Monday, July 13 - Tuesday, July 14 ## All-Star Week VIP Experiences https://onlocationexp.com/mlb/all-star-game-tickets?utm_source=mlb.com&utm_medium=referral&utm_campaign=mlb_all_star_game-schedule_page Thi",
+        "url": "https://www.mlb.com/all-star/schedule"
+      }
+    },
+    {
+      "id": "gq-20260713-10",
+      "text": "If your life got a surprise-guest moment like Rihanna walking out mid-show, who's stepping onto your stage?",
+      "kind": "time",
+      "geo": null,
+      "timeWindow": "2026-07-13..2026-08-10",
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "Jay-Z Closes Yankee Stadium Residency With Beyoncé, Rihanna and Usher Jay-Z Closes Yankee Stadium Residency With Beyoncé, Rihanna and Usher “We’re going to go until like 5 a.m., so don’t be scared,” said Jay-Z not long after he started the third and final show of his Yankee Stadium residency on Sund",
+        "url": "https://variety.com/2026/music/news/jay-z-closes-yankee-stadium-residency-beyonce-rihanna-usher-1236809402/"
+      }
+    },
+    {
+      "id": "gq-20260713-11",
+      "text": "There's a $12 'sacred water' selling out somewhere right now — what gloriously overpriced thing would you secretly try?",
+      "kind": "time",
+      "geo": null,
+      "timeWindow": "2026-07-13..2026-08-10",
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "# ‘This country is a hot mess’: New $12 ‘sacred water’ at Erewhon sparks debate - Yahoo Style Canada Published: 2026-07-13T18:11:21+00:00 Source: ca.style.yahoo.com (ca.style.yahoo.com) Language: en ## Story ‘This country is a hot mess’: New $12 ‘sacred water’ at Erewhon sparks debate - Yahoo Style ",
+        "url": "https://ca.style.yahoo.com/country-hot-mess-12-sacred-181121931.html"
+      }
+    },
+    {
+      "id": "gq-20260713-12",
+      "text": "We're halfway through summer — the one thing you still want this season to hand you before it's over?",
+      "kind": "time",
+      "geo": null,
+      "timeWindow": "2026-07-13..2026-08-10",
+      "tone": "deep",
+      "sourceTrend": {
+        "snippet": "NYC Events in July 2026: Calendar to July 4, music events, and free festivals Photograph: Shutterstock Photograph: Shutterstock # NYC events in July 2026 Start making your Independence Day plans and check out the other amazing NYC events in July. Thursday June 25 2026 Share Copy Link Edited by Chris",
+        "url": "https://www.timeout.com/newyork/events-calendar/july-events-calendar"
+      }
+    },
+    {
+      "id": "gq-20260713-13",
+      "text": "Mid-July outdoor movie night — full picnic spread or show up empty-handed and mooch off the blanket next to you?",
+      "kind": "time",
+      "geo": null,
+      "timeWindow": "2026-07-13..2026-08-10",
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "Paramount+ Movie Nights at Bryant Park Skip to main content We use cookies, pixels, and other trackers to improve website experience, analyze site traffic, and deliver more relevant advertising. Some trackers are offered by third parties, which collect your personal data so they can provide services",
+        "url": "https://bryantpark.org/calendar/event/movie-nights/2026-07-13"
+      }
+    },
+    {
+      "id": "gq-20260713-14",
+      "text": "Peak summer-festival season is here — food-first, music-first, or shameless people-watching-first?",
+      "kind": "time",
+      "geo": null,
+      "timeWindow": "2026-07-13..2026-08-10",
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "# Things to do in Chicago this weekend: July 10 – 12 – NBC Chicago Published: 2026-07-10T17:44:50-05:00 Source: nbcchicago.com (nbcchicago.com) Language: en ## Story Things to do in Chicago this weekend: July 10 – 12 – NBC Chicago Skip to content [![NBC Chicago](https://media.nbcchicago.com/2024/08/",
+        "url": "https://www.nbcchicago.com/news/local/taste-of-chicago-john-mulaney-windy-city-smokeout-things-to-do-this-weekend/3959687/"
+      }
+    },
+    {
+      "id": "gq-20260713-01",
+      "text": "Stuck outside a sold-out stadium show while the biggest concert of the year plays without you — comedy or full-on tragedy?",
+      "kind": "location",
+      "geo": "New York, NY",
+      "timeWindow": null,
+      "tone": "light",
+      "sourceTrend": {
+        "snippet": "Chaos and confusion at Jay-Z finale after lockdown strands crowd outside Yankee Stadium - Gothamist News # Chaos and confusion at Jay-Z finale after lockdown strands crowd outside Yankee Stadium --- --- Never miss a story Email address By submitting your information, you're agreeing to receive commu",
+        "url": "https://gothamist.com/news/chaos-and-confusion-at-jay-z-finale-after-lockdown-strands-crowd-outside-yankee-stadium"
+      }
+    },
+    {
+      "id": "gq-20260713-15",
+      "text": "A compliment you got once that quietly reshaped how you see yourself — what was it?",
+      "kind": "general",
+      "geo": null,
+      "timeWindow": null,
+      "tone": "deep",
+      "sourceTrend": null
+    },
+    {
+      "id": "gq-20260713-16",
+      "text": "The most unhinged thing in your camera roll from the last month — describe it, don't show it?",
+      "kind": "general",
+      "geo": null,
+      "timeWindow": null,
+      "tone": "light",
+      "sourceTrend": null
+    },
+    {
+      "id": "gq-20260713-17",
+      "text": "What's something you're slowly learning to stop apologizing for?",
+      "kind": "general",
+      "geo": null,
+      "timeWindow": null,
+      "tone": "deep",
+      "sourceTrend": null
+    },
+    {
+      "id": "gq-20260713-18",
+      "text": "Your group chat is named after one inside joke about you — what's the joke?",
+      "kind": "general",
+      "geo": null,
+      "timeWindow": null,
+      "tone": "light",
+      "sourceTrend": null
+    },
+    {
+      "id": "gq-20260713-19",
+      "text": "What does 'a good day' look like for you now that it wouldn't have five years ago?",
+      "kind": "general",
+      "geo": null,
+      "timeWindow": null,
+      "tone": "deep",
+      "sourceTrend": null
+    },
+    {
+      "id": "gq-20260713-20",
+      "text": "The petty grudge you're still holding against an inanimate object or app — go?",
+      "kind": "general",
+      "geo": null,
+      "timeWindow": null,
+      "tone": "light",
+      "sourceTrend": null
+    }
+  ]
+}

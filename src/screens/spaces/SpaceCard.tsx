@@ -24,7 +24,10 @@ export function SpaceCard({ space, onOpen, onJoinWaitlist }: SpaceCardProps) {
                 ? `${space.waitlistCount} people interested · opens at ${space.waitlistThreshold}`
                 : `${space.memberCount.toLocaleString()} in this space · ${space.activityLabel}`}
             </p>
-            {space.endingLabel && !isWaitlist && <p className="mt-0.5 text-caption text-hinge-grey">{space.endingLabel}</p>}
+            <p className="mt-0.5 text-caption font-semibold text-hinge-warn">
+              ⏳ Closes in {space.closesInDays} days{space.endingLabel ? ` · ${space.endingLabel}` : ''}
+            </p>
+            {space.whyNow && <p className="mt-0.5 text-caption italic text-hinge-grey">{space.whyNow}</p>}
           </div>
           <div className="flex -space-x-2">
             {space.avatarPreviewUrls.map((url, i) => (

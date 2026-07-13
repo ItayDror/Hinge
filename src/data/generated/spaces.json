@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-13T22:40:57.095Z",
+  "generator": "space-curator@1",
+  "spaces": [
+    {
+      "id": "gs-20260713-new-york-jay-z-s-bronx-farewell",
+      "title": "Jay-Z's Bronx Farewell",
+      "emoji": "🎤",
+      "category": "Music",
+      "location": {
+        "name": "Yankee Stadium, New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 15
+      },
+      "closesInDays": 4,
+      "premiumSuggested": true,
+      "seedDailyQuestion": {
+        "text": "Were you in the crowd (or locked outside) for Jay-Z's last Yankee Stadium night? What's the one moment you'll never forget?",
+        "tone": "light"
+      },
+      "whyNow": "Jay-Z closed his Yankee Stadium residency last night with Beyoncé, Rihanna and Usher after a chaotic lockdown stranded fans outside.",
+      "sourceUrls": [
+        "https://gothamist.com/news/chaos-and-confusion-at-jay-z-finale-after-lockdown-strands-crowd-outside-yankee-stadium"
+      ]
+    },
+    {
+      "id": "gs-20260713-los-angeles-erewhon-s-12-sacred-water",
+      "title": "Erewhon's $12 Sacred Water",
+      "emoji": "💧",
+      "category": "Food & Drink",
+      "location": {
+        "name": "Los Angeles, CA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "radiusKm": 40
+      },
+      "closesInDays": 6,
+      "premiumSuggested": false,
+      "seedDailyQuestion": {
+        "text": "$12 'Sacred Water' — genius or crime? What's the most LA thing you've ever paid too much for?",
+        "tone": "light"
+      },
+      "whyNow": "The internet is roasting Erewhon's new $12 'Sacred Water' as a 'crime' during LA's hottest stretch of the summer.",
+      "sourceUrls": [
+        "https://www.thetakeout.com/2214080/erewhon-new-sacred-water-price-internet-reaction/"
+      ]
+    },
+    {
+      "id": "gs-20260713-chicago-mulaney-makes-wrigley-history",
+      "title": "Mulaney Makes Wrigley History",
+      "emoji": "🎙️",
+      "category": "Culture",
+      "location": {
+        "name": "Wrigley Field, Chicago, IL",
+        "lat": 41.8781,
+        "lng": -87.6298,
+        "radiusKm": 25
+      },
+      "closesInDays": 4,
+      "premiumSuggested": false,
+      "seedDailyQuestion": {
+        "text": "Mulaney just became the first comic to headline Wrigley — who's the one comedian you'd fill a stadium to see?",
+        "tone": "light"
+      },
+      "whyNow": "John Mulaney made Wrigley Field history Saturday night as the first comic to headline the ballpark, a hometown milestone.",
+      "sourceUrls": [
+        "https://www.spinmagazine.com/2026/07/john-mulaney-wrigley-field/"
+      ]
+    },
+    {
+      "id": "gs-20260713-austin-singin-at-zilker-hillside",
+      "title": "Singin' at Zilker Hillside",
+      "emoji": "☔",
+      "category": "Culture",
+      "location": {
+        "name": "Zilker Park, Austin, TX",
+        "lat": 30.2672,
+        "lng": -97.7431,
+        "radiusKm": 25
+      },
+      "closesInDays": 7,
+      "premiumSuggested": false,
+      "seedDailyQuestion": {
+        "text": "Blanket on the Zilker hillside for a free summer musical — what's your ideal Austin date under the stars?",
+        "tone": "deep"
+      },
+      "whyNow": "Austin's free Zilker Summer Musical returned this week with 'Singin' in the Rain' on the Hillside Theater.",
+      "sourceUrls": [
+        "https://cbsaustin.com/news/local/austins-free-zilker-summer-musical-returns-july-10-with-singin-in-the-rain"
+      ]
+    },
+    {
+      "id": "gs-20260713-new-york-40-ft-trojan-horse-on-the-uws",
+      "title": "40-Ft Trojan Horse on the UWS",
+      "emoji": "🐴",
+      "category": "Local Events",
+      "location": {
+        "name": "Upper West Side, New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 15
+      },
+      "closesInDays": 5,
+      "premiumSuggested": false,
+      "seedDailyQuestion": {
+        "text": "A giant Trojan Horse just showed up outside your local theater — what's the most absurd NYC street sight you've stumbled onto?",
+        "tone": "light"
+      },
+      "whyNow": "A 40-foot Trojan Horse statue was just erected in front of an Upper West Side movie theater, drawing crowds and confusion.",
+      "sourceUrls": [
+        "https://www.westsiderag.com/2026/07/13/40-foot-trojan-horse-statue-erected-in-front-of-upper-west-side-movie-theater"
+      ]
+    },
+    {
+      "id": "gs-20260713-los-angeles-ohtani-at-dodger-stadium",
+      "title": "Ohtani at Dodger Stadium",
+      "emoji": "⚾",
+      "category": "Sports",
+      "location": {
+        "name": "Dodger Stadium, Los Angeles, CA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "radiusKm": 40
+      },
+      "closesInDays": 5,
+      "premiumSuggested": true,
+      "seedDailyQuestion": {
+        "text": "Ohtani ball at the game or the Ohtani section of the store — where do you drop your money first?",
+        "tone": "light"
+      },
+      "whyNow": "Shohei Ohtani mania has 10x'd sales in one area of Dodger Stadium as the Dodgers roll through their summer homestand.",
+      "sourceUrls": [
+        "https://www.si.com/mlb/dodgers/onsi/shohei-ohtani-increased-sales-10x-one-area-dodger-stadium"
+      ]
+    },
+    {
+      "id": "gs-20260713-chicago-chicago-s-concrete-beach",
+      "title": "Chicago's Concrete Beach",
+      "emoji": "🏖️",
+      "category": "Outdoors",
+      "location": {
+        "name": "Chicago, IL",
+        "lat": 41.8781,
+        "lng": -87.6298,
+        "radiusKm": 25
+      },
+      "closesInDays": 5,
+      "premiumSuggested": false,
+      "seedDailyQuestion": {
+        "text": "The world is roasting our concrete 'beach' — where's your real go-to spot to soak up a Chicago summer day?",
+        "tone": "light"
+      },
+      "whyNow": "A photo of Chicagoans sunbathing on the concrete lakefront went viral, triggering the internet during this week's heat wave.",
+      "sourceUrls": [
+        "https://www.barstoolsports.com/blog/3573281/nothing-gets-the-internet-more-triggered-than-the-concrete-beach-in-chicago"
+      ]
+    },
+    {
+      "id": "gs-20260713-austin-kurt-vile-at-acl-live",
+      "title": "Kurt Vile at ACL Live",
+      "emoji": "🎸",
+      "category": "Music",
+      "location": {
+        "name": "ACL Live, Austin, TX",
+        "lat": 30.2672,
+        "lng": -97.7431,
+        "radiusKm": 25
+      },
+      "closesInDays": 4,
+      "premiumSuggested": false,
+      "seedDailyQuestion": {
+        "text": "Kurt Vile at the Moody tonight — what's the song you always want the encore to be?",
+        "tone": "light"
+      },
+      "whyNow": "Kurt Vile and The Violators play ACL Live at the Moody Theater tonight, kicking off a hot week of Austin shows.",
+      "sourceUrls": [
+        "https://www.acllive.com/event/2026-07-13-kurt-vile-the-violators-at-8-pm"
+      ]
+    }
+  ]
+}

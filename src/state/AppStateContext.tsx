@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import type { NavStackEntry, Screen, TabScreen } from './navTypes'
-import { MOCK_CHATS, MOCK_SPACES, type ChatThreadData, type SpaceData } from '../data/mockData'
+import { MOCK_CHATS, MOCK_SPACES, personById, portraitAvatar, type ChatThreadData, type SpaceData } from '../data/mockData'
 import {
   DEMO_BATTLE_CARD_ANSWERS,
   DEMO_BATTLE_CARD_QUESTION,
@@ -9,6 +9,7 @@ import {
   todayDateSeed,
   type Question,
 } from '../data/questionsBank'
+import { getGeneratedQuestions, getGeneratedSpaces } from '../data/generatedContent'
 import { placeholderPhoto } from '../data/placeholders'
 import { nextId } from '../utils/id'
 
@@ -46,6 +47,18 @@ interface AppState {
   addPost: (spaceId: string, text: string) => void
   reportPost: (spaceId: string, postId: string, reason: string) => void
 
+  // space daily question + contextual discovery
+  likedPeople: string[]
+  myAnswerBySpace: Record<string, string>
+  likeSpaceAnswer: (spaceId: string, answerId: string) => void
+  commentOnSpaceAnswer: (spaceId: string, answerId: string, text: string) => void
+  matchFromAnswer: (personId: string, personName: string) => void
+  answerSpaceQuestion: (spaceId: string, text: string) => void
+
+  // premium
+  premiumUnlocked: boolean
+  unlockPremium: () => void
+
   blindModeBySpacePost: Record<string, BlindModeState>
   openBlindMode: (spaceId: string, postId: string) => void
   revealBlindMode: (key: string) => void
@@ -77,17 +90,26 @@ const TODAY = todayDateSeed()
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const [navStack, setNavStack] = useState<NavStackEntry[]>([{ screen: 'discover' }])
 
-  const [dailyQuestion, setDailyQuestion] = useState<DailyQuestionState>({
-    question: getRandomDailyQuestion(),
-    answeredToday: false,
-    streak: 6,
-    lastAnsweredDate: null,
+  const [dailyQuestion, setDailyQuestion] = useState<DailyQuestionState>(() => {
+    // Prefer agent-generated questions (question-curator pipeline) when a
+    // generated file exists; fall back to the static rotation.
+    const generated = getGeneratedQuestions()
+    const question = generated.length > 0 ? generated[Math.floor(Math.random() * generated.length)] : getRandomDailyQuestion()
+    return { question, answeredToday: false, streak: 6, lastAnsweredDate: null }
   })
   const [showDailyInterstitial, setShowDailyInterstitial] = useState(true)
 
-  const [spaces, setSpaces] = useState<SpaceData[]>(() => structuredClone(MOCK_SPACES))
+  // Agent-generated spaces (space-curator pipeline) render alongside the
+  // static fixtures; when no generated file exists this is just MOCK_SPACES.
+  const [spaces, setSpaces] = useState<SpaceData[]>(() => [
+    ...structuredClone(MOCK_SPACES),
+    ...getGeneratedSpaces(),
+  ])
   const [postsToday, setPostsToday] = useState<Record<string, number>>({})
   const [blindModeBySpacePost, setBlindModeBySpacePost] = useState<Record<string, BlindModeState>>({})
+  const [likedPeople, setLikedPeople] = useState<string[]>([])
+  const [myAnswerBySpace, setMyAnswerBySpace] = useState<Record<string, string>>({})
+  const [premiumUnlocked, setPremiumUnlocked] = useState(false)
 
   const [chats, setChats] = useState<ChatThreadData[]>(() => structuredClone(MOCK_CHATS))
 
@@ -177,7 +199,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
                 posts: [
                   {
                     id: nextId('post'),
-                    authorHandle: 'courtside_kt',
+                    personId: 'me',
                     text,
                     likeCount: 0,
                     liked: false,
@@ -207,6 +229,82 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     [showToast]
   )
 
+  // --- space daily question + contextual discovery ---
+  const likeSpaceAnswer = useCallback((spaceId: string, answerId: string) => {
+    setSpaces((prev) =>
+      prev.map((s) =>
+        s.id !== spaceId
+          ? s
+          : {
+              ...s,
+              dailyQuestion: {
+                ...s.dailyQuestion,
+                answers: s.dailyQuestion.answers.map((a) =>
+                  a.id === answerId
+                    ? { ...a, likedByMe: !a.likedByMe, likeCount: a.likeCount + (a.likedByMe ? -1 : 1) }
+                    : a
+                ),
+              },
+            }
+      )
+    )
+  }, [])
+
+  const commentOnSpaceAnswer = useCallback((spaceId: string, answerId: string, text: string) => {
+    setSpaces((prev) =>
+      prev.map((s) =>
+        s.id !== spaceId
+          ? s
+          : {
+              ...s,
+              dailyQuestion: {
+                ...s.dailyQuestion,
+                answers: s.dailyQuestion.answers.map((a) =>
+                  a.id === answerId
+                    ? { ...a, comments: [...a.comments, { id: nextId('ac'), personId: 'me', text }] }
+                    : a
+                ),
+              },
+            }
+      )
+    )
+  }, [])
+
+  // A like sent through someone's answer — the contextual-discovery unlock.
+  const matchFromAnswer = useCallback(
+    (personId: string, personName: string) => {
+      setLikedPeople((prev) => (prev.includes(personId) ? prev : [...prev, personId]))
+      showToast(`Like sent to ${personName} with their answer 💌`)
+    },
+    [showToast]
+  )
+
+  const answerSpaceQuestion = useCallback((spaceId: string, text: string) => {
+    setMyAnswerBySpace((prev) => ({ ...prev, [spaceId]: text }))
+    setSpaces((prev) =>
+      prev.map((s) =>
+        s.id !== spaceId
+          ? s
+          : {
+              ...s,
+              dailyQuestion: {
+                ...s.dailyQuestion,
+                answers: [
+                  { id: nextId('ans'), personId: 'me', text, likeCount: 0, likedByMe: false, comments: [] },
+                  ...s.dailyQuestion.answers,
+                ],
+              },
+            }
+      )
+    )
+  }, [])
+
+  // --- premium ---
+  const unlockPremium = useCallback(() => {
+    setPremiumUnlocked(true)
+    showToast('Welcome to Hinge+ 🖤')
+  }, [showToast])
+
   // --- blind mode ---
   const openBlindMode = useCallback((spaceId: string, postId: string) => {
     const key = `${spaceId}:${postId}`
@@ -229,15 +327,15 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       if (existing) return existing.id
 
       const chatId = `blind-${spaceId}-${postId}`
-      const name = post?.revealedName ?? post?.authorHandle ?? 'Your match'
-      const photo = placeholderPhoto(post?.revealedPhotoSeed ?? postId)
+      const person = post ? personById(post.personId) : undefined
       const spaceLabel = space ? `${space.emoji} You both showed up for ${space.title}` : undefined
 
       setChats((prev) => [
         {
           id: chatId,
-          matchName: name,
-          matchPhoto: photo,
+          personId: person?.id ?? 'unknown',
+          matchName: person?.name ?? 'Your match',
+          matchPhoto: person ? portraitAvatar(person) : placeholderPhoto(postId),
           spaceOriginLabel: spaceLabel,
           messages: [],
           battleCard: { status: 'none' },
@@ -361,6 +459,16 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       addPost,
       reportPost,
 
+      likedPeople,
+      myAnswerBySpace,
+      likeSpaceAnswer,
+      commentOnSpaceAnswer,
+      matchFromAnswer,
+      answerSpaceQuestion,
+
+      premiumUnlocked,
+      unlockPremium,
+
       blindModeBySpacePost,
       openBlindMode,
       revealBlindMode,
@@ -400,6 +508,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       likePost,
       addPost,
       reportPost,
+      likedPeople,
+      myAnswerBySpace,
+      likeSpaceAnswer,
+      commentOnSpaceAnswer,
+      matchFromAnswer,
+      answerSpaceQuestion,
+      premiumUnlocked,
+      unlockPremium,
       blindModeBySpacePost,
       openBlindMode,
       revealBlindMode,

@@ -7,9 +7,11 @@ interface ProfileCardProps {
   promptQuestion?: string
   promptAnswer?: string
   variant?: 'deck' | 'compact'
+  /** e.g. "🏀 Also in Knicks in 5" — shared-space context chip over the photo. */
+  sharedSpaceLabel?: string
 }
 
-export function ProfileCard({ photoUrl, name, age, promptQuestion, promptAnswer, variant = 'deck' }: ProfileCardProps) {
+export function ProfileCard({ photoUrl, name, age, promptQuestion, promptAnswer, variant = 'deck', sharedSpaceLabel }: ProfileCardProps) {
   if (variant === 'compact') {
     return (
       <div className="w-36 shrink-0 overflow-hidden rounded-card bg-hinge-white shadow-card">
@@ -28,6 +30,11 @@ export function ProfileCard({ photoUrl, name, age, promptQuestion, promptAnswer,
   return (
     <div className={clsx('relative h-full w-full overflow-hidden rounded-card bg-hinge-black shadow-card')}>
       <img src={photoUrl} alt={name} className="absolute inset-0 h-full w-full object-cover" />
+      {sharedSpaceLabel && (
+        <span className="absolute left-4 top-4 rounded-pill bg-hinge-accent-soft px-3 py-1.5 text-[12px] font-bold text-hinge-black shadow-card">
+          {sharedSpaceLabel}
+        </span>
+      )}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent px-5 pb-6 pt-16">
         <p className="text-profile-name text-hinge-white">
           {name}, {age}

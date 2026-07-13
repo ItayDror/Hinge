@@ -1,6 +1,6 @@
 export type TabScreen = 'discover' | 'likes' | 'spaces' | 'chats' | 'profile'
 
-export type Screen = TabScreen | 'space-detail' | 'chat-thread'
+export type Screen = TabScreen | 'space-detail' | 'space-question' | 'chat-thread'
 
 export interface NavStackEntry {
   screen: Screen
