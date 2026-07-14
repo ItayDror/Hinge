@@ -21,7 +21,7 @@ export function MutualReadinessCard({ matchName, availabilityTagSelected, onSele
   return (
     <div className="rounded-card bg-hinge-accent-soft p-5 text-center shadow-card">
       <span className="text-[32px]">🎉</span>
-      <p className="mt-2 text-[18px] font-bold text-hinge-black">You're both ready for a date</p>
+      <p className="mt-2 font-serif text-[22px] font-semibold text-hinge-black">You're both ready for a date</p>
       <p className="mt-1 text-caption text-hinge-grey">
         You and {matchName} each said you're ready to take this further.
       </p>

@@ -12,7 +12,7 @@ export function SpaceCard({ space, onOpen, onJoinWaitlist }: SpaceCardProps) {
   const isWaitlist = space.status === 'waitlist'
 
   return (
-    <div className="rounded-card bg-hinge-white p-4 shadow-card">
+    <div className="rounded-card border border-hinge-grey-light bg-hinge-white p-4">
       <button type="button" onClick={onOpen} className="w-full text-left" disabled={isWaitlist}>
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -45,7 +45,7 @@ export function SpaceCard({ space, onOpen, onJoinWaitlist }: SpaceCardProps) {
         <button
           type="button"
           onClick={onJoinWaitlist}
-          className="mt-3 min-h-11 w-full rounded-btn border border-hinge-black py-2.5 text-button-label text-hinge-black"
+          className="mt-3 min-h-11 w-full rounded-pill border border-hinge-black py-2.5 text-button-label text-hinge-black"
         >
           Join waitlist
         </button>

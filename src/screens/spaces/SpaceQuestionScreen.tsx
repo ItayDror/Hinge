@@ -93,10 +93,10 @@ export function SpaceQuestionScreen() {
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
         {/* Question card — the Battle Card motif, permanently face-up here */}
-        <div className="rounded-2xl border-2 border-hinge-accent bg-hinge-white p-4 shadow-card">
+        <div className="rounded-card bg-hinge-white p-5 shadow-card">
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-hinge-accent">🎴 Today in {space.title}</p>
-          <p className="mt-2 text-[19px] font-semibold leading-snug text-hinge-black">{space.dailyQuestion.question.text}</p>
-          <p className="mt-2 text-caption text-hinge-grey">
+          <p className="mt-2.5 font-serif text-serif-answer text-hinge-black">{space.dailyQuestion.question.text}</p>
+          <p className="mt-3 text-caption text-hinge-grey">
             {space.dailyQuestion.answers.length} answers · like, comment, or send a like through an answer you love
           </p>
         </div>
@@ -143,7 +143,7 @@ export function SpaceQuestionScreen() {
             const liked = likedPeople.includes(answer.personId)
             const expanded = expandedAnswerId === answer.id
             return (
-              <div key={answer.id} className="rounded-card bg-hinge-grey-bg p-4">
+              <div key={answer.id} className="rounded-card border border-hinge-grey-light bg-hinge-white p-4">
                 <div className="flex items-start justify-between gap-2">
                   <button
                     type="button"
@@ -162,7 +162,7 @@ export function SpaceQuestionScreen() {
                       type="button"
                       onClick={() => (liked ? undefined : matchFromAnswer(answer.personId, author.name))}
                       disabled={liked}
-                      className="rounded-pill bg-hinge-white px-3 py-1.5 text-[12px] font-bold text-hinge-accent shadow-card disabled:opacity-60"
+                      className="rounded-pill bg-hinge-accent-soft px-3.5 py-1.5 text-[12px] font-bold text-hinge-accent disabled:opacity-60"
                     >
                       {liked ? 'Liked 💌' : 'Match'}
                     </button>
@@ -175,10 +175,10 @@ export function SpaceQuestionScreen() {
                     onClick={() => likeSpaceAnswer(space.id, answer.id)}
                     className="flex items-center gap-1 text-caption font-semibold text-hinge-grey"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill={answer.likedByMe ? '#E15B3F' : 'none'}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill={answer.likedByMe ? 'var(--hinge-accent)' : 'none'}>
                       <path
                         d="M12 20.5s-7.5-4.7-10-9.4C.6 8 2 4.5 5.4 3.6 8 2.9 10.4 4 12 6.3 13.6 4 16 2.9 18.6 3.6 22 4.5 23.4 8 22 11.1c-2.5 4.7-10 9.4-10 9.4Z"
-                        stroke={answer.likedByMe ? '#E15B3F' : 'currentColor'}
+                        stroke={answer.likedByMe ? 'var(--hinge-accent)' : 'currentColor'}
                         strokeWidth="1.6"
                       />
                     </svg>
@@ -220,7 +220,7 @@ export function SpaceQuestionScreen() {
                         value={commentDraft}
                         onChange={(e) => setCommentDraft(e.target.value)}
                         placeholder="Add a comment..."
-                        className="min-h-9 flex-1 rounded-pill bg-hinge-white px-3 text-caption text-hinge-black placeholder:text-hinge-grey focus:outline-none"
+                        className="min-h-9 flex-1 rounded-pill bg-hinge-section px-3 text-caption text-hinge-black placeholder:text-hinge-grey focus:outline-none"
                       />
                       <button
                         type="button"

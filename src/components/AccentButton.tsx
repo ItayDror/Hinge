@@ -8,8 +8,8 @@ interface AccentButtonProps {
   size?: 'sm' | 'md'
 }
 
-// Reserve for the single highest-priority action per screen (PRD 2.5) —
-// accent color is used sparingly per Hinge's own "color <=10% of surface" rule.
+// Plum pill — reserve for the single highest-priority action per screen
+// (Reveal my side, Send a message, Match back). Hinge uses its plum sparingly.
 export function AccentButton({ label, onClick, disabled, fullWidth = false, size = 'md' }: AccentButtonProps) {
   return (
     <button
@@ -17,8 +17,8 @@ export function AccentButton({ label, onClick, disabled, fullWidth = false, size
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        'min-h-11 rounded-btn bg-hinge-accent text-hinge-white transition-opacity',
-        size === 'sm' ? 'px-4 py-2 text-[14px] font-bold' : 'px-6 py-3 text-button-label',
+        'rounded-pill bg-hinge-accent text-hinge-white transition-opacity',
+        size === 'sm' ? 'min-h-9 px-4 py-2 text-[14px] font-bold' : 'min-h-12 px-7 py-3.5 text-button-label',
         fullWidth ? 'w-full' : 'inline-flex items-center justify-center',
         disabled ? 'opacity-30' : 'active:opacity-80'
       )}

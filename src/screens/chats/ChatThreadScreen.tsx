@@ -189,7 +189,7 @@ export function ChatThreadScreen() {
 
         {answeringCard ? (
           <div>
-            <p className="mb-2 text-prompt-q text-hinge-black">{chat.battleCard.question?.text}</p>
+            <p className="mb-2 font-serif text-[18px] leading-snug text-hinge-black">{chat.battleCard.question?.text}</p>
             <div className="flex items-center gap-2">
               <input
                 value={cardAnswerDraft}

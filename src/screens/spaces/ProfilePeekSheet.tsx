@@ -31,11 +31,13 @@ export function ProfilePeekSheet({ personId, onClose, contextAnswer }: ProfilePe
             {person.name}, {person.age}
           </p>
           {contextAnswer && (
-            <p className="rounded-card bg-hinge-grey-bg px-4 py-2 text-caption text-hinge-grey">“{contextAnswer}”</p>
+            <p className="rounded-card bg-hinge-section px-4 py-2 font-serif text-[15px] italic text-hinge-black">
+              “{contextAnswer}”
+            </p>
           )}
-          <div className="w-full rounded-card bg-hinge-grey-bg p-3 text-left">
-            <p className="text-prompt-q text-hinge-grey">{person.prompt.question}</p>
-            <p className="mt-0.5 text-[17px] text-hinge-black">{person.prompt.answer}</p>
+          <div className="w-full rounded-card bg-hinge-white p-4 text-left shadow-card">
+            <p className="text-[14px] font-semibold text-hinge-black">{person.prompt.question}</p>
+            <p className="mt-2 font-serif text-[20px] leading-snug text-hinge-black">{person.prompt.answer}</p>
           </div>
           <p className="text-caption font-semibold text-hinge-accent">You liked their answer — profile unlocked ✓</p>
         </div>
@@ -56,9 +58,9 @@ export function ProfilePeekSheet({ personId, onClose, contextAnswer }: ProfilePe
             their profile.
           </p>
           {contextAnswer && (
-            <div className="w-full rounded-card bg-hinge-grey-bg p-3 text-left">
+            <div className="w-full rounded-card bg-hinge-white p-4 text-left shadow-card">
               <p className="text-caption font-semibold text-hinge-grey">Their answer</p>
-              <p className="mt-0.5 text-body text-hinge-black">“{contextAnswer}”</p>
+              <p className="mt-1.5 font-serif text-[18px] leading-snug text-hinge-black">“{contextAnswer}”</p>
             </div>
           )}
           <AccentButton

@@ -8,7 +8,7 @@ import { AppStateProvider, useAppState } from './state/AppStateContext'
 import { TAB_SCREENS, type TabScreen } from './state/navTypes'
 
 function Shell() {
-  const { currentScreen, goToTab, toast, dismissToast, spaces } = useAppState()
+  const { currentScreen, goToTab, toast, dismissToast, spaces, chats } = useAppState()
   const isTabScreen = (TAB_SCREENS as string[]).includes(currentScreen)
   const spacesHasActivity = spaces.some((s) => s.status === 'active')
 
@@ -16,7 +16,13 @@ function Shell() {
     <MobileFrame>
       <ScreenRouter />
       {isTabScreen && (
-        <BottomNav active={currentScreen as TabScreen} onNavigate={goToTab} spacesHasActivity={spacesHasActivity} />
+        <BottomNav
+          active={currentScreen as TabScreen}
+          onNavigate={goToTab}
+          spacesHasActivity={spacesHasActivity}
+          likesCount={1}
+          chatsCount={chats.length}
+        />
       )}
       {toast && <ToastBanner message={toast.message} visible={toast.visible} onDismiss={dismissToast} />}
       <DailyQuestionInterstitial />

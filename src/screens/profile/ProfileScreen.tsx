@@ -28,21 +28,21 @@ export function ProfileScreen() {
         <KnowYouMeter streak={dailyQuestion.streak} />
       </div>
 
-      <div className="mt-4 rounded-card bg-hinge-grey-bg p-4">
+      <div className="mt-4 rounded-card bg-hinge-white p-4 shadow-card">
         <p className="text-caption font-semibold text-hinge-grey">Today's question</p>
         {dailyQuestion.answeredToday ? (
           <p className="mt-2 text-body text-hinge-black">You already answered today — nice streak keeping. 🔥</p>
         ) : (
           <>
-            <p className="mt-1 text-prompt-q text-hinge-black">{dailyQuestion.question.text}</p>
+            <p className="mt-2 font-serif text-[20px] leading-snug text-hinge-black">{dailyQuestion.question.text}</p>
             <textarea
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               placeholder="Type your answer..."
               rows={1}
-              className="mt-3 max-h-24 w-full resize-none rounded-card bg-hinge-white p-3 text-body text-hinge-black placeholder:text-hinge-grey focus:outline-none"
+              className="mt-3 max-h-24 w-full resize-none rounded-card bg-hinge-section p-3 text-body text-hinge-black placeholder:text-hinge-grey focus:outline-none"
             />
-            <div className="mt-3 flex rounded-pill bg-hinge-white p-1">
+            <div className="mt-3 flex rounded-pill bg-hinge-section p-1">
               {(['private', 'public'] as const).map((v) => (
                 <button
                   key={v}

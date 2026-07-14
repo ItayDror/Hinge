@@ -8,6 +8,7 @@ interface PrimaryButtonProps {
   type?: 'button' | 'submit'
 }
 
+/** Real-Hinge primary CTA: fully-rounded black pill ("Apply sorting", "Continue"). */
 export function PrimaryButton({ label, onClick, disabled, fullWidth = true, type = 'button' }: PrimaryButtonProps) {
   return (
     <button
@@ -15,7 +16,7 @@ export function PrimaryButton({ label, onClick, disabled, fullWidth = true, type
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        'min-h-11 rounded-btn bg-hinge-black px-6 py-3 text-button-label text-hinge-white transition-opacity',
+        'min-h-12 rounded-pill bg-hinge-black px-7 py-3.5 text-button-label text-hinge-white transition-opacity',
         fullWidth ? 'w-full' : 'inline-flex items-center justify-center',
         disabled ? 'opacity-30' : 'active:opacity-80'
       )}

@@ -12,7 +12,7 @@ export function MobileFrame({ children }: MobileFrameProps) {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-[#0d0d0d] p-6">
       <div
-        className="relative flex flex-col overflow-hidden rounded-[48px] border-[10px] border-[#0d0d0d] bg-hinge-white shadow-2xl"
+        className="relative flex flex-col overflow-hidden rounded-[48px] border-[10px] border-[#0d0d0d] bg-hinge-bg shadow-2xl"
         style={{ width: FRAME_WIDTH, height: FRAME_HEIGHT }}
       >
         {/* notch */}

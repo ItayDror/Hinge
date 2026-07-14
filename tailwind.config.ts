@@ -5,6 +5,8 @@ export default {
   theme: {
     extend: {
       colors: {
+        'hinge-bg': 'var(--hinge-bg)',
+        'hinge-section': 'var(--hinge-section)',
         'hinge-black': 'var(--hinge-black)',
         'hinge-white': 'var(--hinge-white)',
         'hinge-grey': 'var(--hinge-grey)',
@@ -12,16 +14,19 @@ export default {
         'hinge-grey-bg': 'var(--hinge-grey-bg)',
         'hinge-accent': 'var(--hinge-accent)',
         'hinge-accent-soft': 'var(--hinge-accent-soft)',
+        'hinge-sage': 'var(--hinge-sage)',
         'hinge-warn': 'var(--hinge-warn)',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        serif: ['Fraunces', 'Georgia', 'serif'],
       },
       fontSize: {
-        'screen-title': ['28px', { fontWeight: '700', lineHeight: '1.2' }],
-        'profile-name': ['24px', { fontWeight: '700', lineHeight: '1.25' }],
+        'screen-title': ['32px', { fontWeight: '700', lineHeight: '1.15', letterSpacing: '-0.01em' }],
+        'profile-name': ['32px', { fontWeight: '700', lineHeight: '1.15', letterSpacing: '-0.01em' }],
         'prompt-q': ['15px', { fontWeight: '600', lineHeight: '1.4' }],
-        'prompt-a': ['20px', { fontWeight: '400', lineHeight: '1.35' }],
+        'prompt-a': ['26px', { fontWeight: '500', lineHeight: '1.2', letterSpacing: '-0.01em' }],
+        'serif-answer': ['26px', { fontWeight: '500', lineHeight: '1.18', letterSpacing: '-0.01em' }],
         body: ['15px', { fontWeight: '400', lineHeight: '1.5' }],
         caption: ['13px', { fontWeight: '400', lineHeight: '1.4' }],
         'button-label': ['16px', { fontWeight: '700', lineHeight: '1.2' }],
@@ -33,6 +38,7 @@ export default {
       },
       boxShadow: {
         card: 'var(--shadow-card)',
+        float: 'var(--shadow-float)',
       },
       spacing: {
         4.5: '18px',

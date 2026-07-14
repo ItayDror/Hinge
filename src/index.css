@@ -1,33 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
+  /* Palette sampled directly from real Hinge app screenshots (photos/) —
+     Hinge's brand plum, warm near-white background, and section greys. */
+  --hinge-bg: #FFFEFC;
+  --hinge-section: #F1F0EE;
   --hinge-black: #1A1A1A;
   --hinge-white: #FFFFFF;
-  --hinge-bright-white: #FFFFFF;
-  --hinge-grey: #666666;
+  --hinge-grey: #737373;
   --hinge-grey-light: #E8E6E2;
-  --hinge-grey-bg: #F5F4F1;
+  --hinge-grey-bg: #F1F0EE;
+  --hinge-accent: #602D5C; /* plum — sampled from like-hearts / verified / match badges */
+  --hinge-accent-soft: #F2EAF4;
+  --hinge-sage: #B0C6C5; /* Boost pill */
+  --hinge-warn: #602D5C; /* deprecated alias — plum now */
 
-  /* ACCENT COLOR FLAG: best-effort approximation per PRD Section 2.1 / Section 9.
-     Hinge's public brand docs only confirm black/white/grey as the core palette;
-     the exact accent hex used in the live app is not publicly documented.
-     Before final presentation, screenshot the live Hinge app and compare hue/
-     saturation here, and adjust this single token (it cascades everywhere).
-     This cannot be verified from within this build environment — no live
-     screenshot/scrape access, and PRD Section 7 explicitly prohibits calling
-     the real Hinge API or scraping the real app. */
-  --hinge-accent: #E15B3F;
-  --hinge-accent-soft: #FBE5DE;
-  --hinge-warn: #C75B2E;
-
-  --radius-card: 20px;
-  --radius-button: 12px;
+  --radius-card: 16px;
+  --radius-button: 9999px;
   --radius-pill: 9999px;
-  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0 4px 14px rgba(0, 0, 0, 0.16);
 }
 
 * {

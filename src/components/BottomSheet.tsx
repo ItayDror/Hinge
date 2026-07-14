@@ -40,7 +40,7 @@ export function BottomSheet({ open, onClose, children, title }: BottomSheetProps
       />
       <div
         className={clsx(
-          'relative z-10 max-h-[85%] overflow-y-auto rounded-t-[24px] bg-hinge-white px-5 pb-6 pt-2.5 shadow-2xl',
+          'relative z-10 max-h-[85%] overflow-y-auto rounded-t-[24px] bg-hinge-bg px-5 pb-6 pt-2.5 shadow-2xl',
           'animate-[sheet-up_0.22s_ease-out]'
         )}
         style={{ transform: `translateY(${dragY}px)` }}

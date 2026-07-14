@@ -1,35 +1,48 @@
 import { Avatar } from '../../components/Avatar'
-import { AccentButton } from '../../components/AccentButton'
 import type { SpaceData } from '../../data/mockData'
 
 interface SpacePromoCardProps {
   space: SpaceData
   onPeek: () => void
+  onSkip?: () => void
 }
 
-export function SpacePromoCard({ space, onPeek }: SpacePromoCardProps) {
+/** In-feed Space promo — restyled to the real design language: white card,
+ *  plum small-caps label, serif headline, black pill CTA. */
+export function SpacePromoCard({ space, onPeek, onSkip }: SpacePromoCardProps) {
   return (
-    <button
-      type="button"
-      onClick={onPeek}
-      className="flex h-full w-full flex-col justify-between rounded-card bg-hinge-accent-soft p-6 text-left shadow-card"
-    >
-      <div>
-        <span className="text-3xl">{space.emoji}</span>
-        <p className="mt-4 text-[22px] font-bold leading-snug text-hinge-black">
-          {space.memberCount.toLocaleString()} people near you are talking about {space.title}
+    <div className="overflow-hidden rounded-card bg-hinge-white shadow-card">
+      <div className="bg-hinge-accent-soft px-5 py-2.5">
+        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-hinge-accent">Happening near you</p>
+      </div>
+      <div className="p-5">
+        <p className="font-serif text-serif-answer text-hinge-black">
+          {space.memberCount.toLocaleString()} people are talking about {space.title} {space.emoji}
         </p>
-      </div>
-      <div>
-        <div className="mb-4 flex -space-x-2">
-          {space.avatarPreviewUrls.map((url, i) => (
-            <span key={i} className="rounded-pill ring-2 ring-hinge-accent-soft">
-              <Avatar name={`member-${i}`} photoUrl={url} size="sm" />
-            </span>
-          ))}
+        <div className="mt-4 flex items-center justify-between">
+          <div className="flex -space-x-2">
+            {space.avatarPreviewUrls.map((url, i) => (
+              <span key={i} className="rounded-pill ring-2 ring-hinge-white">
+                <Avatar name={`member-${i}`} photoUrl={url} size="sm" />
+              </span>
+            ))}
+          </div>
+          <div className="flex items-center gap-3">
+            {onSkip && (
+              <button type="button" onClick={onSkip} className="text-[14px] font-semibold text-hinge-grey">
+                Not now
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={onPeek}
+              className="rounded-pill bg-hinge-black px-5 py-2.5 text-[14px] font-bold text-hinge-white active:opacity-80"
+            >
+              Peek in
+            </button>
+          </div>
         </div>
-        <AccentButton label="Peek in" onClick={onPeek} />
       </div>
-    </button>
+    </div>
   )
 }

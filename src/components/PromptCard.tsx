@@ -1,21 +1,33 @@
 import clsx from 'clsx'
+import { CircleButton, HeartIcon } from './CircleButton'
 
 interface PromptCardProps {
   question: string
   answer: string
   tone?: 'soft-bg' | 'plain'
+  /** Show the real-Hinge floating heart circle inside the card. */
+  onHeart?: () => void
+  hearted?: boolean
 }
 
-export function PromptCard({ question, answer, tone = 'soft-bg' }: PromptCardProps) {
+/** Real-Hinge prompt card: white, small sans label, big serif answer. */
+export function PromptCard({ question, answer, tone = 'soft-bg', onHeart, hearted }: PromptCardProps) {
   return (
     <div
       className={clsx(
-        'rounded-card p-4',
-        tone === 'soft-bg' ? 'bg-hinge-grey-bg shadow-card' : 'bg-transparent'
+        'relative rounded-card p-5 pb-6',
+        tone === 'soft-bg' ? 'bg-hinge-white shadow-card' : 'bg-transparent'
       )}
     >
-      <p className="text-prompt-q text-hinge-grey">{question}</p>
-      <p className="mt-1 text-prompt-a text-hinge-black">{answer}</p>
+      <p className="text-[14px] font-semibold text-hinge-black">{question}</p>
+      <p className="mt-3 font-serif text-serif-answer text-hinge-black">{answer}</p>
+      {onHeart && (
+        <div className="mt-4 flex justify-end">
+          <CircleButton ariaLabel="Like this answer" size="sm" onClick={onHeart}>
+            <HeartIcon size={20} filled={hearted} />
+          </CircleButton>
+        </div>
+      )}
     </div>
   )
 }

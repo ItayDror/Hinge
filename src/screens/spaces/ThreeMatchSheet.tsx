@@ -43,10 +43,10 @@ export function ThreeMatchSheet({ open, onClose, spaceTitle, candidates }: Three
                 aria-label={liked ? 'Liked' : `Like ${person.name}`}
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-pill bg-hinge-white shadow-card disabled:opacity-100"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill={liked ? '#E15B3F' : 'none'}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill={liked ? 'var(--hinge-accent)' : 'none'}>
                   <path
                     d="M12 20.5s-7.5-4.7-10-9.4C.6 8 2 4.5 5.4 3.6 8 2.9 10.4 4 12 6.3 13.6 4 16 2.9 18.6 3.6 22 4.5 23.4 8 22 11.1c-2.5 4.7-10 9.4-10 9.4Z"
-                    stroke="#E15B3F"
+                    stroke="var(--hinge-accent)"
                     strokeWidth="1.8"
                   />
                 </svg>

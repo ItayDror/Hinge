@@ -103,22 +103,22 @@ export function SpaceDetailScreen() {
         <button
           type="button"
           onClick={() => push({ screen: 'space-question', params: { spaceId: space.id } })}
-          className="w-full rounded-card bg-hinge-accent-soft p-4 text-left shadow-card"
+          className="w-full rounded-card bg-hinge-white p-4 text-left shadow-card"
         >
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-hinge-accent text-[22px] font-black text-hinge-white">
+          <div className="flex items-start gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-hinge-accent-soft text-[20px] font-black text-hinge-accent">
               ?
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-hinge-accent">Today's question</p>
-              <p className="truncate text-[15px] font-semibold text-hinge-black">{space.dailyQuestion.question.text}</p>
+              <p className="mt-1 font-serif text-[19px] leading-snug text-hinge-black">{space.dailyQuestion.question.text}</p>
             </div>
           </div>
-          <div className="mt-2.5 flex items-center justify-between">
+          <div className="mt-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
                 {answerAvatars.map((a, i) => (
-                  <span key={i} className="rounded-pill ring-2 ring-hinge-accent-soft">
+                  <span key={i} className="rounded-pill ring-2 ring-hinge-white">
                     <Avatar name={a.name} photoUrl={a.photoUrl} size="sm" />
                   </span>
                 ))}
@@ -135,7 +135,7 @@ export function SpaceDetailScreen() {
           {visiblePosts.map((post) => {
             const author = postAuthor(post.personId)
             return (
-              <div key={post.id} className="rounded-card bg-hinge-grey-bg p-4">
+              <div key={post.id} className="rounded-card border border-hinge-grey-light bg-hinge-white p-4">
                 <div className="flex items-start justify-between gap-2">
                   <button
                     type="button"
@@ -164,10 +164,10 @@ export function SpaceDetailScreen() {
                     onClick={() => handleLike(post)}
                     className="flex items-center gap-1 text-caption font-semibold text-hinge-grey"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill={post.liked ? '#E15B3F' : 'none'}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill={post.liked ? 'var(--hinge-accent)' : 'none'}>
                       <path
                         d="M12 20.5s-7.5-4.7-10-9.4C.6 8 2 4.5 5.4 3.6 8 2.9 10.4 4 12 6.3 13.6 4 16 2.9 18.6 3.6 22 4.5 23.4 8 22 11.1c-2.5 4.7-10 9.4-10 9.4Z"
-                        stroke={post.liked ? '#E15B3F' : 'currentColor'}
+                        stroke={post.liked ? 'var(--hinge-accent)' : 'currentColor'}
                         strokeWidth="1.6"
                       />
                     </svg>

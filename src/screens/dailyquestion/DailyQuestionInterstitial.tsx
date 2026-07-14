@@ -21,7 +21,7 @@ export function DailyQuestionInterstitial() {
   return (
     <BottomSheet open={open} onClose={() => { skipDailyQuestion(); dismissDailyInterstitial() }}>
       <p className="text-caption font-semibold text-hinge-grey">Today's question</p>
-      <p className="mt-1 text-prompt-q text-hinge-black">{dailyQuestion.question.text}</p>
+      <p className="mt-2 font-serif text-serif-answer text-hinge-black">{dailyQuestion.question.text}</p>
 
       <textarea
         value={answer}

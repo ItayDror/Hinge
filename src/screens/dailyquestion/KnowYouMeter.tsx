@@ -11,7 +11,7 @@ export function KnowYouMeter({ streak }: KnowYouMeterProps) {
   const filled = Math.min(streak, 10)
 
   return (
-    <div className="rounded-card bg-hinge-grey-bg p-4">
+    <div className="rounded-card bg-hinge-white p-4 shadow-card">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <p className="text-[13px] font-bold text-hinge-black">How well we know you</p>

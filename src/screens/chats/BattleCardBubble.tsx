@@ -44,9 +44,9 @@ export function BattleCardBubble({ battleCard, matchName }: BattleCardBubbleProp
 
   if (battleCard.status === 'accepted') {
     return (
-      <div className="w-64 self-center rounded-2xl border-2 border-hinge-accent bg-hinge-white p-4 shadow-card">
+      <div className="w-72 self-center rounded-card border border-hinge-accent/30 bg-hinge-white p-4 shadow-card">
         <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-hinge-accent">🎴 Battle Card</p>
-        <p className="mt-2 text-prompt-q text-hinge-black">{battleCard.question?.text}</p>
+        <p className="mt-2 font-serif text-[20px] leading-snug text-hinge-black">{battleCard.question?.text}</p>
         <p className="mt-2 text-caption text-hinge-grey">
           Answer below — {matchName}'s answer stays hidden until you do.
         </p>

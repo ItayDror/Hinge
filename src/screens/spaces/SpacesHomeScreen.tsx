@@ -3,6 +3,7 @@ import { Pill } from '../../components/Pill'
 import { Avatar } from '../../components/Avatar'
 import { SpaceCard } from './SpaceCard'
 import { PremiumSheet } from './PremiumSheet'
+import { UpgradeBanner } from '../../components/UpgradeBanner'
 import { useAppState } from '../../state/AppStateContext'
 import type { SpaceData } from '../../data/mockData'
 
@@ -10,7 +11,7 @@ const CATEGORIES = ['All', 'Sports', 'Local Events', 'Culture', 'Tech']
 
 function LockedSpaceCard({ space, onTap }: { space: SpaceData; onTap: () => void }) {
   return (
-    <button type="button" onClick={onTap} className="w-full rounded-card bg-hinge-white p-4 text-left shadow-card">
+    <button type="button" onClick={onTap} className="w-full rounded-card border border-hinge-grey-light bg-hinge-white p-4 text-left">
       <div className="flex items-start justify-between gap-3 opacity-60">
         <div>
           <p className="text-[17px] font-bold text-hinge-black">
@@ -96,7 +97,7 @@ export function SpacesHomeScreen() {
               <button
                 type="button"
                 onClick={() => setPaywallOpen(true)}
-                className="rounded-pill bg-hinge-accent px-3.5 py-1.5 text-[12px] font-bold text-hinge-white"
+                className="rounded-pill bg-hinge-black px-4 py-2 text-[13px] font-bold text-hinge-white"
               >
                 Upgrade
               </button>
@@ -105,6 +106,9 @@ export function SpacesHomeScreen() {
               {lockedSpaces.map((space) => (
                 <LockedSpaceCard key={space.id} space={space} onTap={() => setPaywallOpen(true)} />
               ))}
+            </div>
+            <div className="mt-4">
+              <UpgradeBanner copy="With Hinge+, unlock every Space before it closes" onUpgrade={() => setPaywallOpen(true)} />
             </div>
           </div>
         )}
