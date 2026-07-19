@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Avatar } from '../../components/Avatar'
 import { PostComposerSheet } from './PostComposerSheet'
 import { ReportSheet } from './ReportSheet'
-import { BlindModeSheet } from './BlindModeSheet'
 import { ProfilePeekSheet } from './ProfilePeekSheet'
 import { personById, portraitAvatar } from '../../data/people'
 import { placeholderPhoto } from '../../data/placeholders'
@@ -25,7 +24,6 @@ export function SpaceDetailScreen() {
     addPost,
     likePost,
     reportPost,
-    openBlindMode,
     hasContributed,
     engagedPeople,
     replyToPost,
@@ -36,7 +34,6 @@ export function SpaceDetailScreen() {
   const [expandedPostId, setExpandedPostId] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [reportTarget, setReportTarget] = useState<SpacePost | null>(null)
-  const [blindModePost, setBlindModePost] = useState<SpacePost | null>(null)
   const [peekPersonId, setPeekPersonId] = useState<string | null>(null)
   const [replyDraft, setReplyDraft] = useState('')
 
@@ -54,10 +51,6 @@ export function SpaceDetailScreen() {
 
   const handleLike = (post: SpacePost) => {
     likePost(space.id, post.id)
-    if (post.isMutualSeed && !post.liked) {
-      openBlindMode(space.id, post.id)
-      setBlindModePost(post)
-    }
   }
 
   const answerCount = space.dailyQuestion.answers.length
@@ -275,7 +268,6 @@ export function SpaceDetailScreen() {
         onSubmit={(reason) => reportTarget && reportPost(space.id, reportTarget.id, reason)}
       />
 
-      {blindModePost && <BlindModeSheet space={space} post={blindModePost} onClose={() => setBlindModePost(null)} />}
       <ProfilePeekSheet personId={peekPersonId} space={space} onClose={() => setPeekPersonId(null)} />
     </div>
   )

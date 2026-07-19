@@ -44,7 +44,6 @@ export interface SpacePost {
   replyCount: number
   replies: SpaceReply[]
   reported: boolean
-  isMutualSeed?: boolean
 }
 
 export interface SpaceAnswerComment {
@@ -166,7 +165,6 @@ export const MOCK_SPACES: SpaceData[] = [
           { id: 'r2', personId: 'james', text: 'literally screaming' },
         ],
         reported: false,
-        isMutualSeed: true,
       },
       {
         id: 'post-2',
@@ -387,7 +385,6 @@ export const MOCK_SPACES: SpaceData[] = [
           { id: 'rc2', personId: 'alex', text: 'in, hoping for an encore this time' },
         ],
         reported: false,
-        isMutualSeed: true,
       },
       {
         id: 'post-c2',

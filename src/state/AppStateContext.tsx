@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import type { NavStackEntry, Screen, TabScreen } from './navTypes'
-import { MOCK_CHATS, MOCK_SPACES, personById, portraitAvatar, type ChatThreadData, type SpaceData } from '../data/mockData'
+import { MOCK_CHATS, MOCK_SPACES, type ChatThreadData, type SpaceData } from '../data/mockData'
 import {
   DEMO_BATTLE_CARD_ANSWERS,
   DEMO_BATTLE_CARD_QUESTION,
@@ -10,10 +10,7 @@ import {
   type Question,
 } from '../data/questionsBank'
 import { getGeneratedQuestions, getGeneratedSpaces } from '../data/generatedContent'
-import { placeholderPhoto } from '../data/placeholders'
 import { nextId } from '../utils/id'
-
-export type BlindModeState = 'pending' | 'waiting' | 'matched'
 
 interface DailyQuestionState {
   question: Question
@@ -62,12 +59,6 @@ interface AppState {
   premiumUnlocked: boolean
   unlockPremium: () => void
 
-  blindModeBySpacePost: Record<string, BlindModeState>
-  openBlindMode: (spaceId: string, postId: string) => void
-  revealBlindMode: (key: string) => void
-  advanceBlindMode: (key: string) => void
-  matchFromBlindMode: (spaceId: string, postId: string) => string // returns new chatId
-
   // chats
   chats: ChatThreadData[]
   sendMessage: (chatId: string, text: string) => void
@@ -109,7 +100,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     ...getGeneratedSpaces(),
   ])
   const [postsToday, setPostsToday] = useState<Record<string, number>>({})
-  const [blindModeBySpacePost, setBlindModeBySpacePost] = useState<Record<string, BlindModeState>>({})
   const [engagedPeople, setEngagedPeople] = useState<string[]>([])
   const [likedProfiles, setLikedProfiles] = useState<string[]>([])
   const [myAnswerBySpace, setMyAnswerBySpace] = useState<Record<string, string>>({})
@@ -362,49 +352,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     showToast('Welcome to Hinge+ 🖤')
   }, [showToast])
 
-  // --- blind mode ---
-  const openBlindMode = useCallback((spaceId: string, postId: string) => {
-    const key = `${spaceId}:${postId}`
-    setBlindModeBySpacePost((prev) => (prev[key] ? prev : { ...prev, [key]: 'pending' }))
-  }, [])
-
-  const revealBlindMode = useCallback((key: string) => {
-    setBlindModeBySpacePost((prev) => ({ ...prev, [key]: 'waiting' }))
-  }, [])
-
-  const advanceBlindMode = useCallback((key: string) => {
-    setBlindModeBySpacePost((prev) => ({ ...prev, [key]: 'matched' }))
-  }, [])
-
-  const matchFromBlindMode = useCallback(
-    (spaceId: string, postId: string) => {
-      const space = spaces.find((s) => s.id === spaceId)
-      const post = space?.posts.find((p) => p.id === postId)
-      const existing = chats.find((c) => c.id === `blind-${spaceId}-${postId}`)
-      if (existing) return existing.id
-
-      const chatId = `blind-${spaceId}-${postId}`
-      const person = post ? personById(post.personId) : undefined
-      const spaceLabel = space ? `${space.emoji} You both showed up for ${space.title}` : undefined
-
-      setChats((prev) => [
-        {
-          id: chatId,
-          personId: person?.id ?? 'unknown',
-          matchName: person?.name ?? 'Your match',
-          matchPhoto: person ? portraitAvatar(person) : placeholderPhoto(postId),
-          spaceOriginLabel: spaceLabel,
-          messages: [],
-          battleCard: { status: 'none' },
-          dateReadiness: { me: false, them: false },
-        },
-        ...prev,
-      ])
-      return chatId
-    },
-    [spaces, chats]
-  )
-
   // --- chats ---
   const sendMessage = useCallback((chatId: string, text: string) => {
     setChats((prev) =>
@@ -529,12 +476,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       premiumUnlocked,
       unlockPremium,
 
-      blindModeBySpacePost,
-      openBlindMode,
-      revealBlindMode,
-      advanceBlindMode,
-      matchFromBlindMode,
-
       chats,
       sendMessage,
       startBattleCard,
@@ -579,11 +520,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       answerSpaceQuestion,
       premiumUnlocked,
       unlockPremium,
-      blindModeBySpacePost,
-      openBlindMode,
-      revealBlindMode,
-      advanceBlindMode,
-      matchFromBlindMode,
       chats,
       sendMessage,
       startBattleCard,

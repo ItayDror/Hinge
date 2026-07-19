@@ -13,8 +13,6 @@ export function DebugSimulateBar() {
     currentParams,
     spaces,
     chats,
-    blindModeBySpacePost,
-    advanceBlindMode,
     toggleSpaceWaitlist,
     acceptBattleCard,
     simulateOtherAnswered,
@@ -22,17 +20,6 @@ export function DebugSimulateBar() {
   } = useAppState()
 
   const actions: { label: string; onClick: () => void }[] = []
-
-  if (currentScreen === 'space-detail') {
-    const space = spaces.find((s) => s.id === currentParams?.spaceId)
-    if (space) {
-      Object.entries(blindModeBySpacePost)
-        .filter(([key, state]) => key.startsWith(`${space.id}:`) && state === 'waiting')
-        .forEach(([key]) => {
-          actions.push({ label: 'Simulate: they revealed too', onClick: () => advanceBlindMode(key) })
-        })
-    }
-  }
 
   spaces
     .filter((s) => s.status === 'waitlist')
