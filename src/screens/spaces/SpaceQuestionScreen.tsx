@@ -18,26 +18,26 @@ export function SpaceQuestionScreen() {
     spaces,
     currentParams,
     pop,
-    likedPeople,
+    engagedPeople,
+    hasContributed,
     myAnswerBySpace,
     likeSpaceAnswer,
     commentOnSpaceAnswer,
-    matchFromAnswer,
     answerSpaceQuestion,
   } = useAppState()
 
   const space = spaces.find((s) => s.id === currentParams?.spaceId)
 
   const [draft, setDraft] = useState('')
-  const [peekPersonId, setPeekPersonId] = useState<string | null>(null)
-  const [peekContext, setPeekContext] = useState<string | undefined>()
+  const [peek, setPeek] = useState<{ personId: string; answerId?: string; answerText?: string } | null>(null)
   const [expandedAnswerId, setExpandedAnswerId] = useState<string | null>(null)
   const [commentDraft, setCommentDraft] = useState('')
   const [matchSheetOpen, setMatchSheetOpen] = useState(false)
 
   const myAnswer = space ? myAnswerBySpace[space.id] : undefined
+  const contributed = space ? hasContributed(space.id) : false
 
-  // The 3-match curation: top-liked answers by people I haven't liked yet.
+  // The 3-match curation: top-liked answers by other people.
   const matchCandidates = useMemo<SpaceAnswer[]>(() => {
     if (!space) return []
     return space.dailyQuestion.answers
@@ -62,10 +62,9 @@ export function SpaceQuestionScreen() {
     )
   }
 
-  const openPeek = (personId: string, context?: string) => {
+  const openPerson = (personId: string, answerId?: string, answerText?: string) => {
     if (personId === 'me') return
-    setPeekPersonId(personId)
-    setPeekContext(context)
+    setPeek({ personId, answerId, answerText })
   }
 
   const handleSubmit = () => {
@@ -91,15 +90,22 @@ export function SpaceQuestionScreen() {
         <span className="w-10" />
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
+      <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto px-5 pb-6">
         {/* Question card — the Battle Card motif, permanently face-up here */}
         <div className="rounded-card bg-hinge-white p-5 shadow-card">
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-hinge-accent">🎴 Today in {space.title}</p>
           <p className="mt-2.5 font-serif text-serif-answer text-hinge-black">{space.dailyQuestion.question.text}</p>
           <p className="mt-3 text-caption text-hinge-grey">
-            {space.dailyQuestion.answers.length} answers · like, comment, or send a like through an answer you love
+            {space.dailyQuestion.answers.length} answers · like or comment on someone to open their profile
           </p>
         </div>
+
+        {/* Contribution nudge — profiles stay locked space-wide until you join in */}
+        {!contributed && (
+          <div className="mt-3 rounded-pill bg-hinge-accent-soft px-4 py-2.5 text-center text-[13px] font-semibold text-hinge-accent">
+            You're browsing quietly — answer below to unlock profiles 💬
+          </div>
+        )}
 
         {/* My answer composer / suggested-matches re-entry chip */}
         {myAnswer ? (
@@ -140,31 +146,27 @@ export function SpaceQuestionScreen() {
           {space.dailyQuestion.answers.map((answer) => {
             const author = answerAuthor(answer.personId)
             const isMe = answer.personId === 'me'
-            const liked = likedPeople.includes(answer.personId)
+            const engaged = engagedPeople.includes(answer.personId)
             const expanded = expandedAnswerId === answer.id
             return (
               <div key={answer.id} className="rounded-card border border-hinge-grey-light bg-hinge-white p-4">
                 <div className="flex items-start justify-between gap-2">
                   <button
                     type="button"
-                    onClick={() => openPeek(answer.personId, answer.text)}
+                    onClick={() => openPerson(answer.personId, answer.id, answer.text)}
                     className="flex items-center gap-2 text-left"
                     disabled={isMe}
                   >
-                    <Avatar name={author.name} photoUrl={author.photoUrl} size="sm" />
-                    <p className="text-[14px] font-bold text-hinge-black">
-                      {author.name}
-                      {liked && !isMe && <span className="ml-1 text-hinge-accent">✓</span>}
-                    </p>
+                    <Avatar name={author.name} photoUrl={author.photoUrl} size="sm" ringColor={engaged && !isMe ? 'accent' : 'none'} />
+                    <p className="text-[14px] font-bold text-hinge-black">{author.name}</p>
                   </button>
-                  {!isMe && (
+                  {!isMe && engaged && contributed && (
                     <button
                       type="button"
-                      onClick={() => (liked ? undefined : matchFromAnswer(answer.personId, author.name))}
-                      disabled={liked}
-                      className="rounded-pill bg-hinge-accent-soft px-3.5 py-1.5 text-[12px] font-bold text-hinge-accent disabled:opacity-60"
+                      onClick={() => openPerson(answer.personId, answer.id, answer.text)}
+                      className="rounded-pill bg-hinge-accent-soft px-3.5 py-1.5 text-[12px] font-bold text-hinge-accent"
                     >
-                      {liked ? 'Liked 💌' : 'Match'}
+                      View profile
                     </button>
                   )}
                 </div>
@@ -205,7 +207,7 @@ export function SpaceQuestionScreen() {
                         <div key={c.id}>
                           <button
                             type="button"
-                            onClick={() => openPeek(c.personId)}
+                            onClick={() => openPerson(c.personId)}
                             disabled={c.personId === 'me'}
                             className="text-[13px] font-bold text-hinge-black"
                           >
@@ -242,12 +244,25 @@ export function SpaceQuestionScreen() {
         </div>
       </div>
 
-      <ProfilePeekSheet personId={peekPersonId} onClose={() => setPeekPersonId(null)} contextAnswer={peekContext} />
+      {peek && (
+        <ProfilePeekSheet
+          personId={peek.personId}
+          space={space}
+          onClose={() => setPeek(null)}
+          contextAnswerId={peek.answerId}
+          contextAnswerText={peek.answerText}
+        />
+      )}
       <ThreeMatchSheet
         open={matchSheetOpen}
         onClose={() => setMatchSheetOpen(false)}
         spaceTitle={space.title}
         candidates={matchCandidates}
+        spaceId={space.id}
+        onOpenPerson={(personId, answerId, answerText) => {
+          setMatchSheetOpen(false)
+          openPerson(personId, answerId, answerText)
+        }}
       />
     </div>
   )

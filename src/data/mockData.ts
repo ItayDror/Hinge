@@ -636,22 +636,23 @@ export const MOCK_SPACES: SpaceData[] = [
   },
 ]
 
-// --- Likes You (feature: regular likes vs likes from Spaces) ---
+// --- Likes You: ONLY profile likes appear here. People who merely liked or
+// commented on my posts do NOT — a like has to be sent on the profile itself.
+// Space-originated profile likes keep their origin ("Liked you via <space>").
 export interface MockLike {
   id: string
   personId: string
   type: 'regular' | 'space'
+  /** For space-originated profile likes: where they met me. */
   spaceId?: string
-  /** For space likes: the answer of MINE they liked (quoted for context). */
-  likedAnswerText?: string
 }
 
 export const MOCK_LIKES: MockLike[] = [
-  { id: 'like-1', personId: 'kendall', type: 'space', spaceId: 's-knicks', likedAnswerText: 'Courtside Tuesday. I want to hear the sneakers squeak.' },
+  { id: 'like-1', personId: 'kendall', type: 'space', spaceId: 's-knicks' },
   { id: 'like-2', personId: 'sofia', type: 'regular' },
-  { id: 'like-3', personId: 'val', type: 'space', spaceId: 's-summerfest', likedAnswerText: 'The encore nobody expects. Chaos is the setlist.' },
+  { id: 'like-3', personId: 'val', type: 'space', spaceId: 's-summerfest' },
   { id: 'like-4', personId: 'james', type: 'regular' },
-  { id: 'like-5', personId: 'noah', type: 'space', spaceId: 's-july4', likedAnswerText: 'Rooftop, one sparkler, zero plans after.' },
+  { id: 'like-5', personId: 'noah', type: 'space', spaceId: 's-july4' },
   { id: 'like-6', personId: 'leo', type: 'regular' },
 ]
 

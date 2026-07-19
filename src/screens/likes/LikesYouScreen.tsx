@@ -56,9 +56,7 @@ export function LikesYouScreen() {
               onClick={() => setSelected(like)}
               className="rounded-card bg-hinge-white p-4 text-left shadow-card"
             >
-              <SpeechBubbleTag
-                text={space ? `Liked your answer in ${space.title} ${space.emoji}` : 'Liked your photo'}
-              />
+              <SpeechBubbleTag text={space ? `Liked you via ${space.title} ${space.emoji}` : 'Liked your photo'} />
               <p className="mb-3 mt-3 text-[22px] font-bold text-hinge-black">{person.name}</p>
               <img
                 src={portraitCard(person)}
@@ -102,21 +100,15 @@ export function LikesYouScreen() {
                 <p className="text-[22px] font-bold text-hinge-black">
                   {person.name}, {person.age}
                 </p>
-                {space && selected.likedAnswerText ? (
-                  <div className="w-full rounded-card bg-hinge-white p-4 text-left shadow-card">
-                    <p className="text-caption font-semibold text-hinge-accent">
-                      {space.emoji} Liked your answer in {space.title}
-                    </p>
-                    <p className="mt-2 font-serif text-[20px] leading-snug text-hinge-black">
-                      “{selected.likedAnswerText}”
-                    </p>
-                  </div>
-                ) : (
-                  <div className="w-full rounded-card bg-hinge-white p-4 text-left shadow-card">
-                    <p className="text-[14px] font-semibold text-hinge-black">{person.prompt.question}</p>
-                    <p className="mt-2 font-serif text-[20px] leading-snug text-hinge-black">{person.prompt.answer}</p>
-                  </div>
+                {space && (
+                  <span className="rounded-pill bg-hinge-accent-soft px-3 py-1.5 text-[12px] font-bold text-hinge-accent">
+                    {space.emoji} Liked you via {space.title}
+                  </span>
                 )}
+                <div className="w-full rounded-card bg-hinge-white p-4 text-left shadow-card">
+                  <p className="text-[14px] font-semibold text-hinge-black">{person.prompt.question}</p>
+                  <p className="mt-2 font-serif text-[20px] leading-snug text-hinge-black">{person.prompt.answer}</p>
+                </div>
                 <AccentButton
                   label="Match back 💌"
                   fullWidth

@@ -47,12 +47,15 @@ interface AppState {
   addPost: (spaceId: string, text: string) => void
   reportPost: (spaceId: string, postId: string, reason: string) => void
 
-  // space daily question + contextual discovery
-  likedPeople: string[]
+  // space daily question + contextual discovery (contribute → engage → profile)
+  engagedPeople: string[]
+  likedProfiles: string[]
   myAnswerBySpace: Record<string, string>
+  hasContributed: (spaceId: string) => boolean
   likeSpaceAnswer: (spaceId: string, answerId: string) => void
   commentOnSpaceAnswer: (spaceId: string, answerId: string, text: string) => void
-  matchFromAnswer: (personId: string, personName: string) => void
+  replyToPost: (spaceId: string, postId: string, text: string) => void
+  likeProfile: (personId: string, personName: string) => void
   answerSpaceQuestion: (spaceId: string, text: string) => void
 
   // premium
@@ -107,7 +110,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   ])
   const [postsToday, setPostsToday] = useState<Record<string, number>>({})
   const [blindModeBySpacePost, setBlindModeBySpacePost] = useState<Record<string, BlindModeState>>({})
-  const [likedPeople, setLikedPeople] = useState<string[]>([])
+  const [engagedPeople, setEngagedPeople] = useState<string[]>([])
+  const [likedProfiles, setLikedProfiles] = useState<string[]>([])
   const [myAnswerBySpace, setMyAnswerBySpace] = useState<Record<string, string>>({})
   const [premiumUnlocked, setPremiumUnlocked] = useState(false)
 
@@ -172,20 +176,32 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     [showToast]
   )
 
-  const likePost = useCallback((spaceId: string, postId: string) => {
-    setSpaces((prev) =>
-      prev.map((s) =>
-        s.id !== spaceId
-          ? s
-          : {
-              ...s,
-              posts: s.posts.map((p) =>
-                p.id === postId ? { ...p, liked: !p.liked, likeCount: p.likeCount + (p.liked ? -1 : 1) } : p
-              ),
-            }
-      )
-    )
+  // Engagement (liking/commenting on someone's content) is the per-person
+  // unlock currency for viewing profiles. Once earned it persists — unliking
+  // doesn't revoke it.
+  const engageWith = useCallback((personId: string) => {
+    if (personId === 'me') return
+    setEngagedPeople((prev) => (prev.includes(personId) ? prev : [...prev, personId]))
   }, [])
+
+  const likePost = useCallback(
+    (spaceId: string, postId: string) => {
+      setSpaces((prev) =>
+        prev.map((s) => {
+          if (s.id !== spaceId) return s
+          const post = s.posts.find((p) => p.id === postId)
+          if (post && !post.liked) engageWith(post.personId)
+          return {
+            ...s,
+            posts: s.posts.map((p) =>
+              p.id === postId ? { ...p, liked: !p.liked, likeCount: p.likeCount + (p.liked ? -1 : 1) } : p
+            ),
+          }
+        })
+      )
+    },
+    [engageWith]
+  )
 
   const addPost = useCallback(
     (spaceId: string, text: string) => {
@@ -230,53 +246,94 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   )
 
   // --- space daily question + contextual discovery ---
-  const likeSpaceAnswer = useCallback((spaceId: string, answerId: string) => {
-    setSpaces((prev) =>
-      prev.map((s) =>
-        s.id !== spaceId
-          ? s
-          : {
-              ...s,
-              dailyQuestion: {
-                ...s.dailyQuestion,
-                answers: s.dailyQuestion.answers.map((a) =>
-                  a.id === answerId
-                    ? { ...a, likedByMe: !a.likedByMe, likeCount: a.likeCount + (a.likedByMe ? -1 : 1) }
-                    : a
-                ),
-              },
-            }
+  const likeSpaceAnswer = useCallback(
+    (spaceId: string, answerId: string) => {
+      setSpaces((prev) =>
+        prev.map((s) => {
+          if (s.id !== spaceId) return s
+          const answer = s.dailyQuestion.answers.find((a) => a.id === answerId)
+          if (answer && !answer.likedByMe) engageWith(answer.personId)
+          return {
+            ...s,
+            dailyQuestion: {
+              ...s.dailyQuestion,
+              answers: s.dailyQuestion.answers.map((a) =>
+                a.id === answerId
+                  ? { ...a, likedByMe: !a.likedByMe, likeCount: a.likeCount + (a.likedByMe ? -1 : 1) }
+                  : a
+              ),
+            },
+          }
+        })
       )
-    )
-  }, [])
+    },
+    [engageWith]
+  )
 
-  const commentOnSpaceAnswer = useCallback((spaceId: string, answerId: string, text: string) => {
-    setSpaces((prev) =>
-      prev.map((s) =>
-        s.id !== spaceId
-          ? s
-          : {
-              ...s,
-              dailyQuestion: {
-                ...s.dailyQuestion,
-                answers: s.dailyQuestion.answers.map((a) =>
-                  a.id === answerId
-                    ? { ...a, comments: [...a.comments, { id: nextId('ac'), personId: 'me', text }] }
-                    : a
-                ),
-              },
-            }
+  const commentOnSpaceAnswer = useCallback(
+    (spaceId: string, answerId: string, text: string) => {
+      setSpaces((prev) =>
+        prev.map((s) => {
+          if (s.id !== spaceId) return s
+          const answer = s.dailyQuestion.answers.find((a) => a.id === answerId)
+          if (answer) engageWith(answer.personId)
+          return {
+            ...s,
+            dailyQuestion: {
+              ...s.dailyQuestion,
+              answers: s.dailyQuestion.answers.map((a) =>
+                a.id === answerId
+                  ? { ...a, comments: [...a.comments, { id: nextId('ac'), personId: 'me', text }] }
+                  : a
+              ),
+            },
+          }
+        })
       )
-    )
-  }, [])
+    },
+    [engageWith]
+  )
 
-  // A like sent through someone's answer — the contextual-discovery unlock.
-  const matchFromAnswer = useCallback(
+  const replyToPost = useCallback(
+    (spaceId: string, postId: string, text: string) => {
+      setSpaces((prev) =>
+        prev.map((s) => {
+          if (s.id !== spaceId) return s
+          const post = s.posts.find((p) => p.id === postId)
+          if (post) engageWith(post.personId)
+          return {
+            ...s,
+            posts: s.posts.map((p) =>
+              p.id === postId
+                ? { ...p, replyCount: p.replyCount + 1, replies: [...p.replies, { id: nextId('r'), personId: 'me', text }] }
+                : p
+            ),
+          }
+        })
+      )
+    },
+    [engageWith]
+  )
+
+  // A like on the actual profile (from the profile pop) — this is what would
+  // surface in the other person's "Likes You".
+  const likeProfile = useCallback(
     (personId: string, personName: string) => {
-      setLikedPeople((prev) => (prev.includes(personId) ? prev : [...prev, personId]))
-      showToast(`Like sent to ${personName} with their answer 💌`)
+      setLikedProfiles((prev) => (prev.includes(personId) ? prev : [...prev, personId]))
+      showToast(`Like sent to ${personName} 💌`)
     },
     [showToast]
+  )
+
+  // Contribution gate: you unlock profile-viewing in a space by writing
+  // something there (an answer or a post).
+  const hasContributed = useCallback(
+    (spaceId: string) => {
+      const s = spaces.find((sp) => sp.id === spaceId)
+      if (!s) return false
+      return s.dailyQuestion.answers.some((a) => a.personId === 'me') || s.posts.some((p) => p.personId === 'me')
+    },
+    [spaces]
   )
 
   const answerSpaceQuestion = useCallback((spaceId: string, text: string) => {
@@ -459,11 +516,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       addPost,
       reportPost,
 
-      likedPeople,
+      engagedPeople,
+      likedProfiles,
       myAnswerBySpace,
+      hasContributed,
       likeSpaceAnswer,
       commentOnSpaceAnswer,
-      matchFromAnswer,
+      replyToPost,
+      likeProfile,
       answerSpaceQuestion,
 
       premiumUnlocked,
@@ -508,11 +568,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       likePost,
       addPost,
       reportPost,
-      likedPeople,
+      engagedPeople,
+      likedProfiles,
       myAnswerBySpace,
+      hasContributed,
       likeSpaceAnswer,
       commentOnSpaceAnswer,
-      matchFromAnswer,
+      replyToPost,
+      likeProfile,
       answerSpaceQuestion,
       premiumUnlocked,
       unlockPremium,

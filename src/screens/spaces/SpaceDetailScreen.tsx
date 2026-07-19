@@ -16,7 +16,20 @@ function postAuthor(personId: string): { name: string; photoUrl: string } {
 }
 
 export function SpaceDetailScreen() {
-  const { spaces, currentParams, pop, push, postsToday, addPost, likePost, reportPost, openBlindMode } = useAppState()
+  const {
+    spaces,
+    currentParams,
+    pop,
+    push,
+    postsToday,
+    addPost,
+    likePost,
+    reportPost,
+    openBlindMode,
+    hasContributed,
+    engagedPeople,
+    replyToPost,
+  } = useAppState()
   const space = spaces.find((s) => s.id === currentParams?.spaceId)
 
   const [composerOpen, setComposerOpen] = useState(false)
@@ -25,6 +38,7 @@ export function SpaceDetailScreen() {
   const [reportTarget, setReportTarget] = useState<SpacePost | null>(null)
   const [blindModePost, setBlindModePost] = useState<SpacePost | null>(null)
   const [peekPersonId, setPeekPersonId] = useState<string | null>(null)
+  const [replyDraft, setReplyDraft] = useState('')
 
   if (!space) {
     return (
@@ -131,9 +145,16 @@ export function SpaceDetailScreen() {
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-24">
+        {/* Contribution nudge — profiles stay locked space-wide until you join in */}
+        {!hasContributed(space.id) && (
+          <div className="mb-3 rounded-pill bg-hinge-accent-soft px-4 py-2.5 text-center text-[13px] font-semibold text-hinge-accent">
+            You're browsing quietly — answer or post to unlock profiles 💬
+          </div>
+        )}
         <div className="flex flex-col gap-3">
           {visiblePosts.map((post) => {
             const author = postAuthor(post.personId)
+            const engaged = engagedPeople.includes(post.personId)
             return (
               <div key={post.id} className="rounded-card border border-hinge-grey-light bg-hinge-white p-4">
                 <div className="flex items-start justify-between gap-2">
@@ -142,7 +163,12 @@ export function SpaceDetailScreen() {
                     onClick={() => post.personId !== 'me' && setPeekPersonId(post.personId)}
                     className="flex items-center gap-2 text-left"
                   >
-                    <Avatar name={author.name} photoUrl={author.photoUrl} size="sm" />
+                    <Avatar
+                      name={author.name}
+                      photoUrl={author.photoUrl}
+                      size="sm"
+                      ringColor={engaged && post.personId !== 'me' ? 'accent' : 'none'}
+                    />
                     <div>
                       <p className="text-[14px] font-bold text-hinge-black">{author.name}</p>
                       <p className="text-caption text-hinge-grey">{post.timestampLabel}</p>
@@ -173,17 +199,18 @@ export function SpaceDetailScreen() {
                     </svg>
                     {post.likeCount}
                   </button>
-                  {post.replyCount > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setExpandedPostId((id) => (id === post.id ? null : post.id))}
-                      className="text-caption font-semibold text-hinge-grey"
-                    >
-                      {post.replyCount} {post.replyCount === 1 ? 'reply' : 'replies'}
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setExpandedPostId((id) => (id === post.id ? null : post.id))
+                      setReplyDraft('')
+                    }}
+                    className="text-caption font-semibold text-hinge-grey"
+                  >
+                    {post.replyCount === 0 ? 'Reply' : `${post.replyCount} ${post.replyCount === 1 ? 'reply' : 'replies'}`}
+                  </button>
                 </div>
-                {expandedPostId === post.id && post.replies.length > 0 && (
+                {expandedPostId === post.id && (
                   <div className="mt-3 flex flex-col gap-2 border-l-2 border-hinge-grey-light pl-3">
                     {post.replies.map((r) => {
                       const replier = postAuthor(r.personId)
@@ -194,6 +221,27 @@ export function SpaceDetailScreen() {
                         </div>
                       )
                     })}
+                    {post.personId !== 'me' && (
+                      <div className="mt-1 flex items-center gap-2">
+                        <input
+                          value={replyDraft}
+                          onChange={(e) => setReplyDraft(e.target.value)}
+                          placeholder={`Reply to ${author.name}...`}
+                          className="min-h-9 flex-1 rounded-pill bg-hinge-section px-3 text-caption text-hinge-black placeholder:text-hinge-grey focus:outline-none"
+                        />
+                        <button
+                          type="button"
+                          disabled={!replyDraft.trim()}
+                          onClick={() => {
+                            replyToPost(space.id, post.id, replyDraft.trim())
+                            setReplyDraft('')
+                          }}
+                          className="text-caption font-bold text-hinge-accent disabled:opacity-30"
+                        >
+                          Post
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -228,7 +276,7 @@ export function SpaceDetailScreen() {
       />
 
       {blindModePost && <BlindModeSheet space={space} post={blindModePost} onClose={() => setBlindModePost(null)} />}
-      <ProfilePeekSheet personId={peekPersonId} onClose={() => setPeekPersonId(null)} />
+      <ProfilePeekSheet personId={peekPersonId} space={space} onClose={() => setPeekPersonId(null)} />
     </div>
   )
 }
