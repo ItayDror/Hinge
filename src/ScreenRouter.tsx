@@ -7,6 +7,7 @@ import { SpaceQuestionScreen } from './screens/spaces/SpaceQuestionScreen'
 import { ChatListScreen } from './screens/chats/ChatListScreen'
 import { ChatThreadScreen } from './screens/chats/ChatThreadScreen'
 import { ProfileScreen } from './screens/profile/ProfileScreen'
+import { StandoutsScreen } from './screens/standouts/StandoutsScreen'
 
 export function ScreenRouter() {
   const { currentScreen } = useAppState()
@@ -14,6 +15,8 @@ export function ScreenRouter() {
   switch (currentScreen) {
     case 'discover':
       return <DiscoverScreen />
+    case 'standouts':
+      return <StandoutsScreen />
     case 'likes':
       return <LikesYouScreen />
     case 'spaces':

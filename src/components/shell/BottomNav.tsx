@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import type { TabScreen } from '../../state/navTypes'
-import { placeholderPhoto } from '../../data/placeholders'
 
 interface BottomNavProps {
   active: TabScreen
@@ -10,12 +9,24 @@ interface BottomNavProps {
   chatsCount?: number
 }
 
-// Real-Hinge bottom nav: solid black bar, icon-only (no labels), plum count
-// badges, avatar photo for the profile slot. Our one structural addition —
-// the Spaces tab — sits center with a spark glyph + plum activity dot.
+// Real-Hinge bottom nav order: feed, standouts, spaces, liked you, messages —
+// solid black bar, icon-only (no labels), plum count badges. Our one
+// structural addition — the Spaces tab — sits center with a spark glyph +
+// plum activity dot.
 const HMark = () => (
   <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
     <path d="M6 3v18M18 3v18M6 12c4-4.2 8-4.2 12 0" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+  </svg>
+)
+
+const StarIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M12 3.5 14.6 9.2 20.7 9.9 16.1 13.9 17.5 20 12 16.8 6.5 20 7.9 13.9 3.3 9.9 9.4 9.2 12 3.5Z"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+    />
   </svg>
 )
 
@@ -56,7 +67,10 @@ const NavChat = () => (
 function Badge({ count }: { count: number }) {
   if (count <= 0) return null
   return (
-    <span className="absolute -right-1.5 -top-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-pill bg-hinge-accent px-1 text-[10px] font-bold text-hinge-white" style={{ height: 18 }}>
+    <span
+      className="absolute -right-1.5 -top-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-pill bg-hinge-accent px-1 text-[10px] font-bold text-hinge-white"
+      style={{ height: 18 }}
+    >
       {count}
     </span>
   )
@@ -88,30 +102,15 @@ export function BottomNav({ active, onNavigate, spacesHasActivity, likesCount = 
     <nav className="shrink-0 bg-hinge-black px-3 pb-3 pt-2">
       <div className="flex items-center justify-between">
         {slot('discover', <HMark />, 'Discover')}
-        {slot('likes', <NavHeart />, 'Likes You', <Badge count={likesCount} />)}
+        {slot('standouts', <StarIcon />, 'Standouts')}
         {slot(
           'spaces',
           <SparkIcon />,
           'Spaces',
           spacesHasActivity ? <span className="absolute -right-1 -top-0.5 h-2 w-2 rounded-pill bg-hinge-accent" /> : undefined
         )}
-        {slot('chats', <NavChat />, 'Matches', <Badge count={chatsCount} />)}
-        <button
-          type="button"
-          onClick={() => onNavigate('profile')}
-          aria-label="Profile"
-          aria-current={active === 'profile' ? 'page' : undefined}
-          className="relative flex h-12 flex-1 items-center justify-center"
-        >
-          <span
-            className={clsx(
-              'h-7 w-7 overflow-hidden rounded-pill',
-              active === 'profile' ? 'ring-2 ring-white' : 'ring-1 ring-[#555]'
-            )}
-          >
-            <img src={placeholderPhoto('me-avatar', 60, 60)} alt="Profile" className="h-full w-full object-cover" />
-          </span>
-        </button>
+        {slot('likes', <NavHeart />, 'Likes You', <Badge count={likesCount} />)}
+        {slot('chats', <NavChat />, 'Messages', <Badge count={chatsCount} />)}
       </div>
     </nav>
   )
