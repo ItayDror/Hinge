@@ -316,12 +316,16 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   )
 
   // Contribution gate: you unlock profile-viewing in a space by writing
-  // something there (an answer or a post).
+  // ANYTHING there — an answer, a post, a comment on someone's answer, or a
+  // reply to someone's post. Any of these takes you out of "quiet mode".
   const hasContributed = useCallback(
     (spaceId: string) => {
       const s = spaces.find((sp) => sp.id === spaceId)
       if (!s) return false
-      return s.dailyQuestion.answers.some((a) => a.personId === 'me') || s.posts.some((p) => p.personId === 'me')
+      return (
+        s.dailyQuestion.answers.some((a) => a.personId === 'me' || a.comments.some((c) => c.personId === 'me')) ||
+        s.posts.some((p) => p.personId === 'me' || p.replies.some((r) => r.personId === 'me'))
+      )
     },
     [spaces]
   )
