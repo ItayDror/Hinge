@@ -64,7 +64,8 @@ export function getGeneratedSpaces(): SpaceData[] {
   if (!file || !Array.isArray(file.spaces)) return []
   return file.spaces.map((s) => {
     const h = hashId(s.id)
-    const members = 40 + (h % 860)
+    // Groups are capped at 150 members.
+    const members = 40 + (h % 111)
     const posterPool = PEOPLE.slice() // deterministic picks from the registry
     const pick = (n: number) => posterPool[(h + n * 7) % posterPool.length]
     return {
