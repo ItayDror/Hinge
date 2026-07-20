@@ -32,6 +32,7 @@ interface AppState {
   dailyQuestion: DailyQuestionState
   showDailyInterstitial: boolean
   dismissDailyInterstitial: () => void
+  reopenDailyInterstitial: () => void
   answerDailyQuestion: (answer: string, visibility: 'private' | 'public') => void
   skipDailyQuestion: () => void
 
@@ -124,6 +125,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   // --- daily question ---
   const dismissDailyInterstitial = useCallback(() => setShowDailyInterstitial(false), [])
+  const reopenDailyInterstitial = useCallback(() => setShowDailyInterstitial(true), [])
   const answerDailyQuestion = useCallback(
     (_answer: string, _visibility: 'private' | 'public') => {
       setDailyQuestion((dq) => ({
@@ -456,6 +458,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       dailyQuestion,
       showDailyInterstitial,
       dismissDailyInterstitial,
+      reopenDailyInterstitial,
       answerDailyQuestion,
       skipDailyQuestion,
 
@@ -504,6 +507,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       dailyQuestion,
       showDailyInterstitial,
       dismissDailyInterstitial,
+      reopenDailyInterstitial,
       answerDailyQuestion,
       skipDailyQuestion,
       spaces,

@@ -17,7 +17,8 @@ function secondPhoto(photoId: string): string {
 }
 
 export function DiscoverScreen() {
-  const { spaces, push, dailyQuestion, showDailyInterstitial, showToast, premiumUnlocked } = useAppState()
+  const { spaces, push, dailyQuestion, showDailyInterstitial, reopenDailyInterstitial, showToast, premiumUnlocked } =
+    useAppState()
   const [cursor, setCursor] = useState(0)
 
   // Only promote spaces the user can actually enter (locked ones live on the
@@ -55,7 +56,7 @@ export function DiscoverScreen() {
         <div className="px-5 pb-2">
           <button
             type="button"
-            onClick={() => showToast('Opening today’s question…')}
+            onClick={reopenDailyInterstitial}
             className="w-full rounded-pill bg-hinge-accent-soft px-4 py-2 text-left text-[13px] font-semibold text-hinge-accent"
           >
             Today's question is waiting — tap to answer
