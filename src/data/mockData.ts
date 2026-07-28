@@ -1,5 +1,4 @@
-import { PEOPLE, personById, portraitAvatar, portraitCard, type Person } from './people'
-import { DEMO_BATTLE_CARD_QUESTION, type Question } from './questionsBank'
+import { PEOPLE, feedPeople, personById, portraitAvatar, portraitCard, type Person } from './people'
 
 // --- Discover profiles (PRD Section 5) — derived from the shared people registry ---
 export interface MockProfile {
@@ -12,20 +11,16 @@ export interface MockProfile {
   sharedSpaceId?: string
 }
 
-const DECK_PERSON_IDS = ['maya', 'jordan', 'alex', 'sam', 'riley', 'casey', 'morgan', 'taylor', 'quinn', 'drew']
-
-export const MOCK_PROFILES: MockProfile[] = DECK_PERSON_IDS.map((pid) => {
-  const p = personById(pid)
-  return {
-    id: `profile-${p.id}`,
-    personId: p.id,
-    name: p.name,
-    age: p.age,
-    photoUrl: portraitCard(p),
-    prompt: p.prompt,
-    sharedSpaceId: p.sharedSpaceId,
-  }
-})
+// The feed is single-gender (see FEED_GENDER in people.ts).
+export const MOCK_PROFILES: MockProfile[] = feedPeople().map((p) => ({
+  id: `profile-${p.id}`,
+  personId: p.id,
+  name: p.name,
+  age: p.age,
+  photoUrl: portraitCard(p),
+  prompt: p.prompt,
+  sharedSpaceId: p.sharedSpaceId,
+}))
 
 // --- Spaces (PRD Section 4.2 / 5) ---
 export interface SpaceReply {
@@ -645,47 +640,32 @@ export interface MockLike {
 }
 
 export const MOCK_LIKES: MockLike[] = [
-  { id: 'like-1', personId: 'kendall', type: 'space', spaceId: 's-knicks' },
-  { id: 'like-2', personId: 'sofia', type: 'regular' },
-  { id: 'like-3', personId: 'val', type: 'space', spaceId: 's-summerfest' },
-  { id: 'like-4', personId: 'james', type: 'regular' },
-  { id: 'like-5', personId: 'noah', type: 'space', spaceId: 's-july4' },
-  { id: 'like-6', personId: 'leo', type: 'regular' },
+  { id: 'like-1', personId: 'james', type: 'space', spaceId: 's-knicks' },
+  { id: 'like-2', personId: 'noah', type: 'regular' },
+  { id: 'like-3', personId: 'sam', type: 'space', spaceId: 's-summerfest' },
+  { id: 'like-4', personId: 'leo', type: 'regular' },
+  { id: 'like-5', personId: 'drew', type: 'space', spaceId: 's-july4' },
+  { id: 'like-6', personId: 'alex', type: 'regular' },
 ]
 
-// --- Chats (PRD Section 4.4 / 5) ---
+// --- Chats: pure conversation. The only extra signal is where you met. ---
 export interface ChatMessage {
   id: string
   sender: 'me' | 'them'
   text: string
-  kind: 'text' | 'system' | 'battle-card-invite' | 'battle-card-answer'
+  kind: 'text' | 'system'
 }
-
-export type BattleCardStatus = 'none' | 'invited' | 'accepted' | 'awaiting-other' | 'revealed' | 'expired'
 
 export interface ChatThreadData {
   id: string
   personId: string
   matchName: string
   matchPhoto: string
+  /** "🏀 You matched in Knicks in 5" — set when the match came from a Space. */
   spaceOriginLabel?: string
-  /** Space both people are members of (shared-space chip), independent of match origin. */
+  /** Space both people are members of, independent of match origin. */
   sharedSpaceId?: string
-  /** A suggested chat opener, drawn from the shared Daily Question / prompt content pipeline. */
-  suggestedOpener?: string
   messages: ChatMessage[]
-  battleCard: {
-    status: BattleCardStatus
-    tier?: 'light' | 'deep'
-    question?: Question
-    myAnswer?: string
-    theirAnswer?: string
-  }
-  dateReadiness: {
-    me: boolean
-    them: boolean
-    availabilityTagSelected?: string
-  }
 }
 
 function chatPerson(pid: string): Pick<ChatThreadData, 'personId' | 'matchName' | 'matchPhoto'> {
@@ -693,62 +673,29 @@ function chatPerson(pid: string): Pick<ChatThreadData, 'personId' | 'matchName' 
   return { personId: p.id, matchName: p.name, matchPhoto: portraitAvatar(p) }
 }
 
+// Two conversations that already came out of Spaces — so Messages isn't
+// empty before you complete the flow yourself.
 export const MOCK_CHATS: ChatThreadData[] = [
   {
-    id: 'c-plain',
-    ...chatPerson('riley'),
-    sharedSpaceId: 's-summerfest',
-    suggestedOpener: "Alright Riley, I need to know: your pick for best pizza place, and are you ready to defend it?",
-    messages: [
-      { id: 'm1', sender: 'them', text: 'Hey! Loved your prompt about the fire escape coffee ritual.', kind: 'text' },
-      { id: 'm2', sender: 'me', text: 'Ha, it’s basically my whole personality on weekends', kind: 'text' },
-      { id: 'm3', sender: 'them', text: 'Same energy honestly. What neighborhood are you in?', kind: 'text' },
-    ],
-    battleCard: { status: 'none' },
-    dateReadiness: { me: false, them: false },
-  },
-  {
-    // Demo chat 1: MY outgoing Battle Card invite — gamified face-down card,
-    // waiting for the other side to accept.
-    id: 'c-battle-pending',
+    id: 'c-jordan',
     ...chatPerson('jordan'),
-    spaceOriginLabel: '🏀 You both showed up for Knicks in 5',
+    spaceOriginLabel: '🏀 You matched in Knicks in 5',
+    sharedSpaceId: 's-knicks',
     messages: [
-      { id: 'm4', sender: 'them', text: 'Okay that game last night was unreal', kind: 'text' },
-      { id: 'm5', sender: 'me', text: 'I could not sit still the entire 4th quarter', kind: 'text' },
-      { id: 'm6', sender: 'me', text: 'You invited Jordan to play a card 🎴', kind: 'battle-card-invite' },
+      { id: 'm1', sender: 'me', text: 'Your take on the 4th quarter collapse was the only sane one in that space', kind: 'text' },
+      { id: 'm2', sender: 'them', text: 'Finally someone gets it 😅 I was getting cooked in the replies', kind: 'text' },
+      { id: 'm3', sender: 'them', text: 'Are you watching game 5 anywhere or at home?', kind: 'text' },
     ],
-    battleCard: { status: 'invited', tier: 'light' },
-    dateReadiness: { me: false, them: false },
   },
   {
-    // Demo chat 2: they accepted — the card is flipped face-up with the
-    // question, I answer privately, and their answer reveals on submit.
-    id: 'c-battle-accepted',
-    ...chatPerson('casey'),
+    id: 'c-sam',
+    ...chatPerson('sam'),
+    spaceOriginLabel: '🎶 You matched in Summer Concert Series',
+    sharedSpaceId: 's-summerfest',
     messages: [
-      { id: 'm7', sender: 'me', text: 'Ok this might be the most important question I ask you', kind: 'text' },
-      { id: 'm8', sender: 'them', text: 'I am ready', kind: 'text' },
-      { id: 'm8b', sender: 'them', text: 'Casey accepted your Battle Card 🎴', kind: 'system' },
+      { id: 'm4', sender: 'me', text: 'Okay the sax answer won me over, not gonna lie', kind: 'text' },
+      { id: 'm5', sender: 'them', text: 'It is genuinely my whole personality. Who are you seeing Friday?', kind: 'text' },
     ],
-    battleCard: {
-      status: 'accepted',
-      tier: 'light',
-      question: DEMO_BATTLE_CARD_QUESTION,
-    },
-    dateReadiness: { me: false, them: false },
-  },
-  {
-    // Demo chat 4: mutual date-readiness already reached — rendered as a
-    // prominent celebration card in the thread, not buried system text.
-    id: 'c-date-ready',
-    ...chatPerson('quinn'),
-    messages: [
-      { id: 'm9', sender: 'them', text: 'This has been a genuinely great couple of weeks of texting', kind: 'text' },
-      { id: 'm10', sender: 'me', text: 'Agreed, feels like it’s time', kind: 'text' },
-    ],
-    battleCard: { status: 'none' },
-    dateReadiness: { me: true, them: true },
   },
 ]
 

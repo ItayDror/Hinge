@@ -1,25 +1,20 @@
 import { useState } from 'react'
 import { personById, portraitCard } from '../../data/people'
 import { UpgradeBanner } from '../../components/UpgradeBanner'
+import { LikeSheet } from '../../components/LikeSheet'
 import { PremiumSheet } from '../spaces/PremiumSheet'
 import { StandoutProfileSheet } from './StandoutProfileSheet'
 import { useAppState } from '../../state/AppStateContext'
 
-// A curated set of people who aren't already surfaced in the main Discover
-// deck, chats, or Likes You — Standouts is meant to feel like a distinct,
-// hand-picked shortlist.
-const STANDOUT_PERSON_IDS = ['priya', 'zoe', 'elena', 'marcus']
+// A curated shortlist that follows the feed's gender preference, kept
+// distinct from the people already surfaced in Discover / Messages.
+const STANDOUT_PERSON_IDS = ['marcus', 'noah', 'taylor', 'leo']
 
 export function StandoutsScreen() {
-  const { showToast, premiumUnlocked, unlockPremium } = useAppState()
-  const [likedIds, setLikedIds] = useState<string[]>([])
+  const { likeProfile, likedProfiles, premiumUnlocked, unlockPremium } = useAppState()
   const [openPersonId, setOpenPersonId] = useState<string | null>(null)
+  const [likeTarget, setLikeTarget] = useState<string | null>(null)
   const [paywallOpen, setPaywallOpen] = useState(false)
-
-  const like = (personId: string, name: string) => {
-    setLikedIds((prev) => (prev.includes(personId) ? prev : [...prev, personId]))
-    showToast(`Like sent to ${name} 💌`)
-  }
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col">
@@ -32,7 +27,7 @@ export function StandoutsScreen() {
         <div className="grid grid-cols-2 gap-3">
           {STANDOUT_PERSON_IDS.map((personId) => {
             const person = personById(personId)
-            const liked = likedIds.includes(personId)
+            const liked = likedProfiles.includes(personId)
             return (
               <button
                 key={personId}
@@ -74,11 +69,19 @@ export function StandoutsScreen() {
       {openPersonId && (
         <StandoutProfileSheet
           personId={openPersonId}
-          liked={likedIds.includes(openPersonId)}
-          onLike={() => like(openPersonId, personById(openPersonId).name)}
+          liked={likedProfiles.includes(openPersonId)}
+          onLike={() => setLikeTarget(openPersonId)}
           onClose={() => setOpenPersonId(null)}
         />
       )}
+      <LikeSheet
+        personId={likeTarget}
+        onClose={() => setLikeTarget(null)}
+        onSend={(message) => {
+          if (likeTarget) likeProfile(likeTarget, personById(likeTarget).name, undefined, message)
+          setOpenPersonId(null)
+        }}
+      />
       <PremiumSheet open={paywallOpen} onClose={() => setPaywallOpen(false)} onUpgrade={unlockPremium} />
     </div>
   )

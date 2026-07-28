@@ -4,6 +4,7 @@ import { PromptCard } from '../../components/PromptCard'
 import { VitalsCard } from '../../components/VitalsCard'
 import { FilterBar } from '../../components/FilterBar'
 import { CircleButton, XIcon } from '../../components/CircleButton'
+import { LikeSheet } from '../../components/LikeSheet'
 import { SpacePromoCard } from './SpacePromoCard'
 import { MOCK_PROFILES } from '../../data/mockData'
 import { personById } from '../../data/people'
@@ -17,9 +18,9 @@ function secondPhoto(photoId: string): string {
 }
 
 export function DiscoverScreen() {
-  const { spaces, push, dailyQuestion, showDailyInterstitial, reopenDailyInterstitial, showToast, premiumUnlocked } =
-    useAppState()
+  const { spaces, push, likeProfile, premiumUnlocked } = useAppState()
   const [cursor, setCursor] = useState(0)
+  const [likeTarget, setLikeTarget] = useState<string | null>(null)
 
   // Only promote spaces the user can actually enter (locked ones live on the
   // Hinge+ shelf, not in the deck).
@@ -40,29 +41,12 @@ export function DiscoverScreen() {
   }, [promoSpaces.length])
 
   const current = deck[cursor]
-  const showDailyChip = !showDailyInterstitial && !dailyQuestion.answeredToday
 
   const advance = () => setCursor((c) => Math.min(c + 1, deck.length))
-  const like = (name: string) => {
-    showToast(`Like sent to ${name} 💌`)
-    advance()
-  }
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col">
       <FilterBar />
-
-      {showDailyChip && (
-        <div className="px-5 pb-2">
-          <button
-            type="button"
-            onClick={reopenDailyInterstitial}
-            className="w-full rounded-pill bg-hinge-accent-soft px-4 py-2 text-left text-[13px] font-semibold text-hinge-accent"
-          >
-            Today's question is waiting — tap to answer
-          </button>
-        </div>
-      )}
 
       <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto px-5 pb-28">
         {current ? (
@@ -105,17 +89,17 @@ export function DiscoverScreen() {
                     )}
                   </div>
 
-                  <PhotoCard photoUrl={profile.photoUrl} alt={profile.name} onHeart={() => like(profile.name)} />
+                  <PhotoCard photoUrl={profile.photoUrl} alt={profile.name} onHeart={() => setLikeTarget(profile.personId)} />
 
                   <PromptCard
                     question={profile.prompt.question}
                     answer={profile.prompt.answer}
-                    onHeart={() => like(profile.name)}
+                    onHeart={() => setLikeTarget(profile.personId)}
                   />
 
                   <VitalsCard person={person} />
 
-                  <PhotoCard photoUrl={secondPhoto(person.photoId)} alt={profile.name} onHeart={() => like(profile.name)} />
+                  <PhotoCard photoUrl={secondPhoto(person.photoId)} alt={profile.name} onHeart={() => setLikeTarget(profile.personId)} />
                 </div>
               )
             })()
@@ -144,6 +128,15 @@ export function DiscoverScreen() {
           </CircleButton>
         </div>
       )}
+
+      <LikeSheet
+        personId={likeTarget}
+        onClose={() => setLikeTarget(null)}
+        onSend={(message) => {
+          if (likeTarget) likeProfile(likeTarget, personById(likeTarget).name, undefined, message)
+          advance()
+        }}
+      />
     </div>
   )
 }

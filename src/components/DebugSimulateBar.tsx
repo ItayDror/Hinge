@@ -1,46 +1,26 @@
 import { useState } from 'react'
+import { personById } from '../data/people'
 import { useAppState } from '../state/AppStateContext'
 
 // Presenter-facing control panel — deliberately styled unlike Hinge tokens so
-// it's never mistaken for real product UI. Lets a live demo jump past
-// "waiting for the other person" states without needing a second device.
-// The same underlying actions also auto-advance on a timer where noted, so
-// this is a fallback/speed-up control, not the only path through a flow.
+// it's never mistaken for real product UI. Space likes already auto-reciprocate
+// after a few seconds; this lets a live demo fire the beat immediately.
 export function DebugSimulateBar() {
   const [open, setOpen] = useState(false)
-  const {
-    currentScreen,
-    currentParams,
-    spaces,
-    chats,
-    toggleSpaceWaitlist,
-    acceptBattleCard,
-    simulateOtherAnswered,
-    simulateOtherReady,
-  } = useAppState()
+  const { spaces, pendingLikes, matchWith, toggleSpaceWaitlist } = useAppState()
 
   const actions: { label: string; onClick: () => void }[] = []
+
+  pendingLikes.forEach((like) => {
+    const name = personById(like.personId).name
+    actions.push({ label: `Simulate: ${name} liked you back`, onClick: () => matchWith(like.personId) })
+  })
 
   spaces
     .filter((s) => s.status === 'waitlist')
     .forEach((s) => {
       actions.push({ label: `Simulate: cross waitlist threshold (${s.title})`, onClick: () => toggleSpaceWaitlist(s.id) })
     })
-
-  if (currentScreen === 'chat-thread') {
-    const chat = chats.find((c) => c.id === currentParams?.chatId)
-    if (chat) {
-      if (chat.battleCard.status === 'invited') {
-        actions.push({ label: `Simulate: ${chat.matchName} accepted the card`, onClick: () => acceptBattleCard(chat.id) })
-      }
-      if (chat.battleCard.status === 'awaiting-other') {
-        actions.push({ label: 'Simulate: they answered the card', onClick: () => simulateOtherAnswered(chat.id) })
-      }
-      if (chat.dateReadiness.me && !chat.dateReadiness.them) {
-        actions.push({ label: "Simulate: they're ready too", onClick: () => simulateOtherReady(chat.id) })
-      }
-    }
-  }
 
   return (
     <div className="fixed bottom-3 right-3 z-50 font-mono">
@@ -53,7 +33,7 @@ export function DebugSimulateBar() {
             </button>
           </div>
           {actions.length === 0 ? (
-            <p className="text-[11px] text-neutral-500">No simulate actions for this screen.</p>
+            <p className="text-[11px] text-neutral-500">No simulate actions right now.</p>
           ) : (
             <div className="flex flex-col gap-1.5">
               {actions.map((a) => (

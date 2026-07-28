@@ -3,6 +3,7 @@ import { Pill } from '../../components/Pill'
 import { Avatar } from '../../components/Avatar'
 import { SpaceCard } from './SpaceCard'
 import { PremiumSheet } from './PremiumSheet'
+import { SpacesIntroSheet } from './SpacesIntroSheet'
 import { UpgradeBanner } from '../../components/UpgradeBanner'
 import { useAppState } from '../../state/AppStateContext'
 import type { SpaceData } from '../../data/mockData'
@@ -40,7 +41,8 @@ function LockedSpaceCard({ space, onTap }: { space: SpaceData; onTap: () => void
 }
 
 export function SpacesHomeScreen() {
-  const { spaces, push, joinWaitlist, premiumUnlocked, unlockPremium } = useAppState()
+  const { spaces, push, joinWaitlist, premiumUnlocked, unlockPremium, spacesIntroSeen, markSpacesIntroSeen } =
+    useAppState()
   const [category, setCategory] = useState('All')
   const [location, setLocation] = useState<'New York, NY' | 'Boise, ID'>('New York, NY')
   const [paywallOpen, setPaywallOpen] = useState(false)
@@ -54,10 +56,11 @@ export function SpacesHomeScreen() {
   const lockedSpaces = premiumUnlocked ? [] : spaces.filter((s) => s.premium && matchesFilters(s))
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="relative flex min-h-0 flex-1 flex-col">
       <div className="shrink-0 px-5 pb-2 pt-1">
         <h1 className="text-screen-title text-hinge-black">Spaces</h1>
         <p className="mt-0.5 text-body text-hinge-grey">Conversations happening near you</p>
+        <p className="mt-1 text-[12px] text-hinge-grey">🛡 Moderated by Hinge · report anything, anytime</p>
       </div>
 
       <div className="no-scrollbar shrink-0 overflow-x-auto px-5 pb-3">
@@ -115,6 +118,7 @@ export function SpacesHomeScreen() {
       </div>
 
       <PremiumSheet open={paywallOpen} onClose={() => setPaywallOpen(false)} onUpgrade={unlockPremium} />
+      {!spacesIntroSeen && <SpacesIntroSheet onClose={markSpacesIntroSeen} />}
     </div>
   )
 }

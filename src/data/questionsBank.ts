@@ -27,36 +27,6 @@ export const QUESTIONS_BANK: Question[] = [
   { id: 'q13', text: "What's a hill you'll die on that is, objectively, a pretty small hill?", tone: 'light', usableAsDailyQuestion: true, usableAsBattleCard: true },
 ]
 
-// Small curated rotation for the Daily Question interstitial — randomizes on
-// each app open (rather than being locked to a deterministic per-date pick)
-// so a live demo shows variety across reloads.
-const DAILY_ROTATION_IDS = ['q1', 'q11', 'q12', 'q13']
-
-export function getRandomDailyQuestion(): Question {
-  const candidates = QUESTIONS_BANK.filter((q) => DAILY_ROTATION_IDS.includes(q.id))
-  return candidates[Math.floor(Math.random() * candidates.length)]
-}
-
-export function getBattleCardQuestions(tier: QuestionTone): Question[] {
-  return QUESTIONS_BANK.filter((q) => q.tone === tier && q.usableAsBattleCard)
-}
-
 export function todayDateSeed(): string {
   return new Date().toISOString().slice(0, 10)
-}
-
-// Fixed example exchange shown when a Battle Card invite is accepted —
-// deliberately hardcoded (not drawn from QUESTIONS_BANK) so the demo always
-// plays out the same engaging, slightly sassy interaction end-to-end.
-export const DEMO_BATTLE_CARD_QUESTION: Question = {
-  id: 'demo-sassy',
-  text: "What's the pettiest reason you've ever almost ended things with someone?",
-  tone: 'light',
-  usableAsDailyQuestion: false,
-  usableAsBattleCard: true,
-}
-
-export const DEMO_BATTLE_CARD_ANSWERS = {
-  mine: "He pronounced 'GIF' with a hard G and would not back down. I started a mental list.",
-  theirs: 'She said pineapple belongs on pizza. I forgave her. I have not forgotten.',
 }

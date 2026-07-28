@@ -1,22 +1,21 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { NavStackEntry, Screen, TabScreen } from './navTypes'
 import { MOCK_CHATS, MOCK_SPACES, type ChatThreadData, type SpaceData } from '../data/mockData'
-import {
-  DEMO_BATTLE_CARD_ANSWERS,
-  DEMO_BATTLE_CARD_QUESTION,
-  getBattleCardQuestions,
-  getRandomDailyQuestion,
-  todayDateSeed,
-  type Question,
-} from '../data/questionsBank'
-import { getGeneratedQuestions, getGeneratedSpaces } from '../data/generatedContent'
+import { personById, portraitAvatar } from '../data/people'
+import { getGeneratedSpaces } from '../data/generatedContent'
 import { nextId } from '../utils/id'
 
-interface DailyQuestionState {
-  question: Question
-  answeredToday: boolean
-  streak: number
-  lastAnsweredDate: string | null
+/** A like I've sent that hasn't been reciprocated yet. */
+export interface PendingLike {
+  personId: string
+  spaceId?: string
+  message?: string
+}
+
+export interface NewMatch {
+  personId: string
+  spaceId?: string
+  chatId: string
 }
 
 interface AppState {
@@ -28,14 +27,6 @@ interface AppState {
   pop: () => void
   goToTab: (screen: TabScreen) => void
 
-  // daily question
-  dailyQuestion: DailyQuestionState
-  showDailyInterstitial: boolean
-  dismissDailyInterstitial: () => void
-  reopenDailyInterstitial: () => void
-  answerDailyQuestion: (answer: string, visibility: 'private' | 'public') => void
-  skipDailyQuestion: () => void
-
   // spaces
   spaces: SpaceData[]
   postsToday: Record<string, number>
@@ -45,16 +36,26 @@ interface AppState {
   addPost: (spaceId: string, text: string) => void
   reportPost: (spaceId: string, postId: string, reason: string) => void
 
-  // space daily question + contextual discovery (contribute → engage → profile)
+  // spaces intro (shown once per session)
+  spacesIntroSeen: boolean
+  markSpacesIntroSeen: () => void
+
+  // contextual discovery (contribute → engage → profile)
   engagedPeople: string[]
-  likedProfiles: string[]
   myAnswerBySpace: Record<string, string>
   hasContributed: (spaceId: string) => boolean
   likeSpaceAnswer: (spaceId: string, answerId: string) => void
   commentOnSpaceAnswer: (spaceId: string, answerId: string, text: string) => void
   replyToPost: (spaceId: string, postId: string, text: string) => void
-  likeProfile: (personId: string, personName: string) => void
   answerSpaceQuestion: (spaceId: string, text: string) => void
+
+  // like → match → chat
+  pendingLikes: PendingLike[]
+  likedProfiles: string[]
+  likeProfile: (personId: string, personName: string, spaceId?: string, message?: string) => void
+  matchWith: (personId: string) => void
+  newMatch: NewMatch | null
+  dismissNewMatch: () => void
 
   // premium
   premiumUnlocked: boolean
@@ -63,14 +64,6 @@ interface AppState {
   // chats
   chats: ChatThreadData[]
   sendMessage: (chatId: string, text: string) => void
-  startBattleCard: (chatId: string, tier: 'light' | 'deep') => void
-  acceptBattleCard: (chatId: string) => void
-  ignoreBattleCard: (chatId: string) => void
-  answerBattleCard: (chatId: string, answer: string) => void
-  simulateOtherAnswered: (chatId: string) => void
-  requestDateReadiness: (chatId: string) => void
-  simulateOtherReady: (chatId: string) => void
-  selectAvailabilityTag: (chatId: string, tag: string) => void
 
   // toast
   toast: { message: string; visible: boolean } | null
@@ -80,19 +73,11 @@ interface AppState {
 
 const AppStateCtx = createContext<AppState | null>(null)
 
-const TODAY = todayDateSeed()
+/** How long before someone likes you back (the demo's reciprocal-like beat). */
+const RECIPROCAL_LIKE_MS = 4000
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const [navStack, setNavStack] = useState<NavStackEntry[]>([{ screen: 'discover' }])
-
-  const [dailyQuestion, setDailyQuestion] = useState<DailyQuestionState>(() => {
-    // Prefer agent-generated questions (question-curator pipeline) when a
-    // generated file exists; fall back to the static rotation.
-    const generated = getGeneratedQuestions()
-    const question = generated.length > 0 ? generated[Math.floor(Math.random() * generated.length)] : getRandomDailyQuestion()
-    return { question, answeredToday: false, streak: 6, lastAnsweredDate: null }
-  })
-  const [showDailyInterstitial, setShowDailyInterstitial] = useState(true)
 
   // Agent-generated spaces (space-curator pipeline) render alongside the
   // static fixtures; when no generated file exists this is just MOCK_SPACES.
@@ -103,12 +88,19 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const [postsToday, setPostsToday] = useState<Record<string, number>>({})
   const [engagedPeople, setEngagedPeople] = useState<string[]>([])
   const [likedProfiles, setLikedProfiles] = useState<string[]>([])
+  const [pendingLikes, setPendingLikes] = useState<PendingLike[]>([])
+  const [newMatch, setNewMatch] = useState<NewMatch | null>(null)
   const [myAnswerBySpace, setMyAnswerBySpace] = useState<Record<string, string>>({})
   const [premiumUnlocked, setPremiumUnlocked] = useState(false)
+  const [spacesIntroSeen, setSpacesIntroSeen] = useState(false)
 
   const [chats, setChats] = useState<ChatThreadData[]>(() => structuredClone(MOCK_CHATS))
 
   const [toast, setToast] = useState<{ message: string; visible: boolean } | null>(null)
+
+  // Latest pending likes, readable from inside timers without re-scheduling.
+  const pendingRef = useRef<PendingLike[]>([])
+  pendingRef.current = pendingLikes
 
   // --- navigation ---
   const push = useCallback((entry: NavStackEntry) => setNavStack((s) => [...s, entry]), [])
@@ -123,27 +115,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, [])
   const dismissToast = useCallback(() => setToast((t) => (t ? { ...t, visible: false } : t)), [])
 
-  // --- daily question ---
-  const dismissDailyInterstitial = useCallback(() => setShowDailyInterstitial(false), [])
-  const reopenDailyInterstitial = useCallback(() => setShowDailyInterstitial(true), [])
-  const answerDailyQuestion = useCallback(
-    (_answer: string, _visibility: 'private' | 'public') => {
-      setDailyQuestion((dq) => ({
-        ...dq,
-        answeredToday: true,
-        lastAnsweredDate: TODAY,
-        streak: dq.streak + 1,
-      }))
-      setShowDailyInterstitial(false)
-      showToast('Got it — thanks for sharing 🔥')
-    },
-    [showToast]
-  )
-  const skipDailyQuestion = useCallback(() => {
-    setShowDailyInterstitial(false)
-  }, [])
-
   // --- spaces ---
+  const markSpacesIntroSeen = useCallback(() => setSpacesIntroSeen(true), [])
+
   const toggleSpaceWaitlist = useCallback((spaceId: string) => {
     setSpaces((prev) =>
       prev.map((s) => (s.id === spaceId ? { ...s, status: 'active', activityLabel: 'active now' } : s))
@@ -195,35 +169,32 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     [engageWith]
   )
 
-  const addPost = useCallback(
-    (spaceId: string, text: string) => {
-      setPostsToday((prev) => ({ ...prev, [spaceId]: (prev[spaceId] ?? 0) + 1 }))
-      setSpaces((prev) =>
-        prev.map((s) =>
-          s.id !== spaceId
-            ? s
-            : {
-                ...s,
-                posts: [
-                  {
-                    id: nextId('post'),
-                    personId: 'me',
-                    text,
-                    likeCount: 0,
-                    liked: false,
-                    timestampLabel: 'just now',
-                    replyCount: 0,
-                    replies: [],
-                    reported: false,
-                  },
-                  ...s.posts,
-                ],
-              }
-        )
+  const addPost = useCallback((spaceId: string, text: string) => {
+    setPostsToday((prev) => ({ ...prev, [spaceId]: (prev[spaceId] ?? 0) + 1 }))
+    setSpaces((prev) =>
+      prev.map((s) =>
+        s.id !== spaceId
+          ? s
+          : {
+              ...s,
+              posts: [
+                {
+                  id: nextId('post'),
+                  personId: 'me',
+                  text,
+                  likeCount: 0,
+                  liked: false,
+                  timestampLabel: 'just now',
+                  replyCount: 0,
+                  replies: [],
+                  reported: false,
+                },
+                ...s.posts,
+              ],
+            }
       )
-    },
-    []
-  )
+    )
+  }, [])
 
   const reportPost = useCallback(
     (spaceId: string, postId: string, _reason: string) => {
@@ -237,7 +208,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     [showToast]
   )
 
-  // --- space daily question + contextual discovery ---
+  // --- space question + contextual discovery ---
   const likeSpaceAnswer = useCallback(
     (spaceId: string, answerId: string) => {
       setSpaces((prev) =>
@@ -307,16 +278,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     [engageWith]
   )
 
-  // A like on the actual profile (from the profile pop) — this is what would
-  // surface in the other person's "Likes You".
-  const likeProfile = useCallback(
-    (personId: string, personName: string) => {
-      setLikedProfiles((prev) => (prev.includes(personId) ? prev : [...prev, personId]))
-      showToast(`Like sent to ${personName} 💌`)
-    },
-    [showToast]
-  )
-
   // Contribution gate: you unlock profile-viewing in a space by writing
   // ANYTHING there — an answer, a post, a comment on someone's answer, or a
   // reply to someone's post. Any of these takes you out of "quiet mode".
@@ -352,6 +313,64 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     )
   }, [])
 
+  // --- like → match → chat (the end-to-end story) ---
+
+  /**
+   * They like me back: promotes a pending like into a real conversation,
+   * seeded with the space context and my like-message if I attached one.
+   */
+  const matchWith = useCallback(
+    (personId: string) => {
+      const pending = pendingRef.current.find((p) => p.personId === personId)
+      const person = personById(personId)
+      const space = pending?.spaceId ? spaces.find((s) => s.id === pending.spaceId) : undefined
+      const chatId = `match-${personId}`
+
+      setChats((prev) => {
+        if (prev.some((c) => c.id === chatId)) return prev
+        return [
+          {
+            id: chatId,
+            personId,
+            matchName: person.name,
+            matchPhoto: portraitAvatar(person),
+            spaceOriginLabel: space ? `${space.emoji} You matched in ${space.title}` : undefined,
+            sharedSpaceId: space?.id,
+            messages: pending?.message
+              ? [{ id: nextId('msg'), sender: 'me', text: pending.message, kind: 'text' }]
+              : [],
+          },
+          ...prev,
+        ]
+      })
+
+      setPendingLikes((prev) => prev.filter((p) => p.personId !== personId))
+      setNewMatch({ personId, spaceId: pending?.spaceId, chatId })
+    },
+    [spaces]
+  )
+
+  /**
+   * A like on the actual profile. When it comes from a Space, they like you
+   * back shortly after — the beat that turns a Space into a conversation.
+   */
+  const likeProfile = useCallback(
+    (personId: string, personName: string, spaceId?: string, message?: string) => {
+      setLikedProfiles((prev) => (prev.includes(personId) ? prev : [...prev, personId]))
+      setPendingLikes((prev) =>
+        prev.some((p) => p.personId === personId) ? prev : [...prev, { personId, spaceId, message }]
+      )
+      showToast(message ? `Like and message sent to ${personName} 💌` : `Like sent to ${personName} 💌`)
+
+      if (spaceId) {
+        setTimeout(() => matchWith(personId), RECIPROCAL_LIKE_MS)
+      }
+    },
+    [showToast, matchWith]
+  )
+
+  const dismissNewMatch = useCallback(() => setNewMatch(null), [])
+
   // --- premium ---
   const unlockPremium = useCallback(() => {
     setPremiumUnlocked(true)
@@ -367,85 +386,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     )
   }, [])
 
-  const startBattleCard = useCallback((chatId: string, tier: 'light' | 'deep') => {
-    setChats((prev) =>
-      prev.map((c) => {
-        if (c.id !== chatId) return c
-        const pool = getBattleCardQuestions(tier)
-        const question = pool[Math.floor(Math.random() * pool.length)]
-        return {
-          ...c,
-          battleCard: { status: 'invited', tier, question },
-          messages: [
-            ...c.messages,
-            { id: nextId('msg'), sender: 'me', text: `You invited ${c.matchName} to play a card 🎴`, kind: 'battle-card-invite' },
-          ],
-        }
-      })
-    )
-  }, [])
-
-  // Fired when the other side accepts my invite (via the debug bar in a live
-  // demo): the face-down card flips to 'accepted' with the fixed demo
-  // question, and the private answer input takes over the compose bar.
-  const acceptBattleCard = useCallback((chatId: string) => {
-    setChats((prev) =>
-      prev.map((c) =>
-        c.id !== chatId
-          ? c
-          : {
-              ...c,
-              battleCard: { ...c.battleCard, status: 'accepted', question: DEMO_BATTLE_CARD_QUESTION },
-              messages: [
-                ...c.messages,
-                { id: nextId('msg'), sender: 'them', text: `${c.matchName} accepted your Battle Card 🎴`, kind: 'system' },
-              ],
-            }
-      )
-    )
-  }, [])
-
-  const answerBattleCard = useCallback((chatId: string, answer: string) => {
-    setChats((prev) =>
-      prev.map((c) =>
-        c.id !== chatId ? c : { ...c, battleCard: { ...c.battleCard, status: 'awaiting-other', myAnswer: answer } }
-      )
-    )
-  }, [])
-
-  const ignoreBattleCard = useCallback((chatId: string) => {
-    setChats((prev) => prev.map((c) => (c.id !== chatId ? c : { ...c, battleCard: { status: 'expired' } })))
-  }, [])
-
-  const simulateOtherAnswered = useCallback((chatId: string) => {
-    setChats((prev) =>
-      prev.map((c) => {
-        if (c.id !== chatId) return c
-        return { ...c, battleCard: { ...c.battleCard, status: 'revealed', theirAnswer: DEMO_BATTLE_CARD_ANSWERS.theirs } }
-      })
-    )
-  }, [])
-
-  const requestDateReadiness = useCallback((chatId: string) => {
-    setChats((prev) => prev.map((c) => (c.id !== chatId ? c : { ...c, dateReadiness: { ...c.dateReadiness, me: true } })))
-  }, [])
-
-  // The mutual state renders as the MutualReadinessCard in the thread —
-  // no system message needed.
-  const simulateOtherReady = useCallback((chatId: string) => {
-    setChats((prev) =>
-      prev.map((c) => (c.id !== chatId ? c : { ...c, dateReadiness: { ...c.dateReadiness, them: true } }))
-    )
-  }, [])
-
-  // Selection is displayed inside the mutual-readiness celebration card
-  // itself rather than posted as a buried system message.
-  const selectAvailabilityTag = useCallback((chatId: string, tag: string) => {
-    setChats((prev) =>
-      prev.map((c) => (c.id !== chatId ? c : { ...c, dateReadiness: { ...c.dateReadiness, availabilityTagSelected: tag } }))
-    )
-  }, [])
-
   const value = useMemo<AppState>(
     () => ({
       navStack,
@@ -455,13 +395,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       pop,
       goToTab,
 
-      dailyQuestion,
-      showDailyInterstitial,
-      dismissDailyInterstitial,
-      reopenDailyInterstitial,
-      answerDailyQuestion,
-      skipDailyQuestion,
-
       spaces,
       postsToday,
       toggleSpaceWaitlist,
@@ -470,29 +403,29 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       addPost,
       reportPost,
 
+      spacesIntroSeen,
+      markSpacesIntroSeen,
+
       engagedPeople,
-      likedProfiles,
       myAnswerBySpace,
       hasContributed,
       likeSpaceAnswer,
       commentOnSpaceAnswer,
       replyToPost,
-      likeProfile,
       answerSpaceQuestion,
+
+      pendingLikes,
+      likedProfiles,
+      likeProfile,
+      matchWith,
+      newMatch,
+      dismissNewMatch,
 
       premiumUnlocked,
       unlockPremium,
 
       chats,
       sendMessage,
-      startBattleCard,
-      acceptBattleCard,
-      ignoreBattleCard,
-      answerBattleCard,
-      simulateOtherAnswered,
-      requestDateReadiness,
-      simulateOtherReady,
-      selectAvailabilityTag,
 
       toast,
       showToast,
@@ -504,12 +437,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       push,
       pop,
       goToTab,
-      dailyQuestion,
-      showDailyInterstitial,
-      dismissDailyInterstitial,
-      reopenDailyInterstitial,
-      answerDailyQuestion,
-      skipDailyQuestion,
       spaces,
       postsToday,
       toggleSpaceWaitlist,
@@ -517,27 +444,25 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       likePost,
       addPost,
       reportPost,
+      spacesIntroSeen,
+      markSpacesIntroSeen,
       engagedPeople,
-      likedProfiles,
       myAnswerBySpace,
       hasContributed,
       likeSpaceAnswer,
       commentOnSpaceAnswer,
       replyToPost,
-      likeProfile,
       answerSpaceQuestion,
+      pendingLikes,
+      likedProfiles,
+      likeProfile,
+      matchWith,
+      newMatch,
+      dismissNewMatch,
       premiumUnlocked,
       unlockPremium,
       chats,
       sendMessage,
-      startBattleCard,
-      acceptBattleCard,
-      ignoreBattleCard,
-      answerBattleCard,
-      simulateOtherAnswered,
-      requestDateReadiness,
-      simulateOtherReady,
-      selectAvailabilityTag,
       toast,
       showToast,
       dismissToast,

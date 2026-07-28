@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Avatar } from '../../components/Avatar'
 import { ProfilePeekSheet } from './ProfilePeekSheet'
 import { ThreeMatchSheet } from './ThreeMatchSheet'
-import { personById, portraitAvatar } from '../../data/people'
+import { isMatchable, personById, portraitAvatar } from '../../data/people'
 import { placeholderPhoto } from '../../data/placeholders'
 import type { SpaceAnswer } from '../../data/mockData'
 import { useAppState } from '../../state/AppStateContext'
@@ -19,6 +19,7 @@ export function SpaceQuestionScreen() {
     currentParams,
     pop,
     engagedPeople,
+    likedProfiles,
     hasContributed,
     myAnswerBySpace,
     likeSpaceAnswer,
@@ -33,23 +34,26 @@ export function SpaceQuestionScreen() {
   const [expandedAnswerId, setExpandedAnswerId] = useState<string | null>(null)
   const [commentDraft, setCommentDraft] = useState('')
   const [matchSheetOpen, setMatchSheetOpen] = useState(false)
+  const matchSheetShown = useRef(false)
 
   const myAnswer = space ? myAnswerBySpace[space.id] : undefined
   const contributed = space ? hasContributed(space.id) : false
 
-  // The 3-match curation: top-liked answers by other people.
+  // The 3-match curation: top-liked answers by people you could match with
+  // (Spaces are mixed-gender; matches follow your feed preference).
   const matchCandidates = useMemo<SpaceAnswer[]>(() => {
     if (!space) return []
     return space.dailyQuestion.answers
-      .filter((a) => a.personId !== 'me')
+      .filter((a) => a.personId !== 'me' && isMatchable(a.personId))
       .sort((a, b) => b.likeCount - a.likeCount)
       .slice(0, 3)
   }, [space])
 
-  // Offer the 3 matches shortly after answering (skip when there's no one
-  // to suggest yet, e.g. a freshly generated space with zero answers).
+  // Offer the 3 matches shortly after answering — once. (Skipped when there's
+  // nobody to suggest yet, e.g. a freshly generated space with zero answers.)
   useEffect(() => {
-    if (!myAnswer || matchCandidates.length === 0) return
+    if (!myAnswer || matchCandidates.length === 0 || matchSheetShown.current) return
+    matchSheetShown.current = true
     const t = setTimeout(() => setMatchSheetOpen(true), 1500)
     return () => clearTimeout(t)
   }, [myAnswer, matchCandidates.length])
@@ -98,6 +102,7 @@ export function SpaceQuestionScreen() {
           <p className="mt-3 text-caption text-hinge-grey">
             {space.dailyQuestion.answers.length} answers · like or comment on someone to open their profile
           </p>
+          <p className="mt-1.5 text-[11px] text-hinge-grey">🛡 Answers are visible to this Space only</p>
         </div>
 
         {/* Contribution nudge — profiles stay locked space-wide until you join in */}
@@ -148,6 +153,7 @@ export function SpaceQuestionScreen() {
             const isMe = answer.personId === 'me'
             const engaged = engagedPeople.includes(answer.personId)
             const expanded = expandedAnswerId === answer.id
+            const likeSent = likedProfiles.includes(answer.personId)
             return (
               <div key={answer.id} className="rounded-card border border-hinge-grey-light bg-hinge-white p-4">
                 <div className="flex items-start justify-between gap-2">
@@ -160,14 +166,22 @@ export function SpaceQuestionScreen() {
                     <Avatar name={author.name} photoUrl={author.photoUrl} size="sm" ringColor={engaged && !isMe ? 'accent' : 'none'} />
                     <p className="text-[14px] font-bold text-hinge-black">{author.name}</p>
                   </button>
-                  {!isMe && engaged && contributed && (
-                    <button
-                      type="button"
-                      onClick={() => openPerson(answer.personId, answer.id, answer.text)}
-                      className="rounded-pill bg-hinge-accent-soft px-3.5 py-1.5 text-[12px] font-bold text-hinge-accent"
-                    >
-                      View profile
-                    </button>
+                  {!isMe && likeSent ? (
+                    <span className="rounded-pill bg-hinge-accent px-3.5 py-1.5 text-[12px] font-bold text-hinge-white">
+                      Liked ✓
+                    </span>
+                  ) : (
+                    !isMe &&
+                    engaged &&
+                    contributed && (
+                      <button
+                        type="button"
+                        onClick={() => openPerson(answer.personId, answer.id, answer.text)}
+                        className="rounded-pill bg-hinge-accent-soft px-3.5 py-1.5 text-[12px] font-bold text-hinge-accent"
+                      >
+                        View profile
+                      </button>
+                    )
                   )}
                 </div>
                 <p className="mt-2 text-body text-hinge-black">{answer.text}</p>

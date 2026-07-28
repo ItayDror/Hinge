@@ -142,6 +142,9 @@ export function SpaceDetailScreen() {
         {!hasContributed(space.id) && (
           <div className="mb-3 rounded-pill bg-hinge-accent-soft px-4 py-2.5 text-center text-[13px] font-semibold text-hinge-accent">
             You're browsing quietly — answer or post to unlock profiles 💬
+            <span className="mt-0.5 block text-[11px] font-normal text-hinge-accent/70">
+              Your profile stays private until you join in
+            </span>
           </div>
         )}
         <div className="flex flex-col gap-3">

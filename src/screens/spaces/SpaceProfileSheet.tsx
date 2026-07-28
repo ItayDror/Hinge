@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { PhotoCard } from '../../components/ProfileCard'
+import { LikeSheet } from '../../components/LikeSheet'
 import { PromptCard } from '../../components/PromptCard'
 import { VitalsCard } from '../../components/VitalsCard'
 import { CircleButton, XIcon } from '../../components/CircleButton'
@@ -24,13 +26,15 @@ function secondPhoto(photoId: string): string {
  */
 export function SpaceProfileSheet({ personId, space, onClose }: SpaceProfileSheetProps) {
   const { likeProfile, likedProfiles } = useAppState()
+  const [likeSheetOpen, setLikeSheetOpen] = useState(false)
   const person = personById(personId)
   const alreadyLiked = likedProfiles.includes(personId)
 
-  const heart = () => {
-    likeProfile(person.id, person.name)
-    onClose()
-  }
+  const heart = () => setLikeSheetOpen(true)
+
+  // Their answer in this Space, if they've given one — the context the like
+  // is really being sent through.
+  const theirAnswer = space.dailyQuestion.answers.find((a) => a.personId === personId)?.text
 
   return (
     <div className="absolute inset-0 z-40 flex flex-col bg-hinge-bg animate-[sheet-up_0.22s_ease-out]">
@@ -84,6 +88,18 @@ export function SpaceProfileSheet({ personId, space, onClose }: SpaceProfileShee
           <XIcon size={26} />
         </CircleButton>
       </div>
+
+      {likeSheetOpen && (
+        <LikeSheet
+          personId={personId}
+          onClose={() => setLikeSheetOpen(false)}
+          context={theirAnswer ? { label: `Their answer in ${space.title}`, text: theirAnswer } : undefined}
+          onSend={(message) => {
+            likeProfile(person.id, person.name, space.id, message)
+            onClose()
+          }}
+        />
+      )}
 
       <style>{`
         @keyframes sheet-up {

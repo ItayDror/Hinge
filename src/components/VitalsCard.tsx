@@ -45,7 +45,7 @@ export function VitalsCard({ person }: VitalsCardProps) {
         </span>
         <span className="h-5 w-px bg-hinge-grey-light" />
         <span className="flex items-center gap-2 px-4 text-[15px] text-hinge-black">
-          <PersonIcon /> {['maya', 'riley', 'morgan', 'quinn', 'kendall', 'val', 'sofia', 'elena', 'priya', 'zoe'].includes(person.id) ? 'Woman' : 'Man'}
+          <PersonIcon /> {person.gender === 'woman' ? 'Woman' : 'Man'}
         </span>
       </div>
       <div className="mx-4 h-px bg-hinge-grey-light" />

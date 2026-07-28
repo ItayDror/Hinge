@@ -3,8 +3,9 @@ import { BottomNav } from './components/shell/BottomNav'
 import { ToastBanner } from './components/ToastBanner'
 import { DebugSimulateBar } from './components/DebugSimulateBar'
 import { ScreenRouter } from './ScreenRouter'
-import { DailyQuestionInterstitial } from './screens/dailyquestion/DailyQuestionInterstitial'
+import { MatchCelebrationSheet } from './screens/spaces/MatchCelebrationSheet'
 import { AppStateProvider, useAppState } from './state/AppStateContext'
+import { MOCK_LIKES } from './data/mockData'
 import { TAB_SCREENS, type TabScreen } from './state/navTypes'
 
 function Shell() {
@@ -20,12 +21,12 @@ function Shell() {
           active={currentScreen as TabScreen}
           onNavigate={goToTab}
           spacesHasActivity={spacesHasActivity}
-          likesCount={1}
+          likesCount={MOCK_LIKES.length}
           chatsCount={chats.length}
         />
       )}
       {toast && <ToastBanner message={toast.message} visible={toast.visible} onDismiss={dismissToast} />}
-      <DailyQuestionInterstitial />
+      <MatchCelebrationSheet />
     </MobileFrame>
   )
 }
