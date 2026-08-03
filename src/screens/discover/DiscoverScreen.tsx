@@ -18,7 +18,7 @@ function secondPhoto(photoId: string): string {
 }
 
 export function DiscoverScreen() {
-  const { spaces, push, likeProfile, premiumUnlocked } = useAppState()
+  const { spaces, chats, push, likeProfile, premiumUnlocked } = useAppState()
   const [cursor, setCursor] = useState(0)
   const [likeTarget, setLikeTarget] = useState<string | null>(null)
 
@@ -26,10 +26,15 @@ export function DiscoverScreen() {
   // Hinge+ shelf, not in the deck).
   const promoSpaces = useMemo(() => spaces.filter((s) => !s.premium || premiumUnlocked), [spaces, premiumUnlocked])
 
+  // People you've already matched with leave the feed — you talk to them in
+  // Messages, you don't keep discovering them.
+  const matchedIds = useMemo(() => new Set(chats.map((c) => c.personId)), [chats])
+  const profiles = useMemo(() => MOCK_PROFILES.filter((p) => !matchedIds.has(p.personId)), [matchedIds])
+
   const deck = useMemo<DeckItem[]>(() => {
     const items: DeckItem[] = []
     let spaceCursor = 0
-    MOCK_PROFILES.forEach((_, i) => {
+    profiles.forEach((_, i) => {
       items.push({ kind: 'profile', index: i })
       // In-feed Space promo card every 5th card (within PRD's 4-6 range)
       if ((i + 1) % 5 === 0 && promoSpaces.length > 0) {
@@ -38,7 +43,7 @@ export function DiscoverScreen() {
       }
     })
     return items
-  }, [promoSpaces.length])
+  }, [profiles, promoSpaces.length])
 
   const current = deck[cursor]
 
@@ -52,7 +57,7 @@ export function DiscoverScreen() {
         {current ? (
           current.kind === 'profile' ? (
             (() => {
-              const profile = MOCK_PROFILES[current.index]
+              const profile = profiles[current.index]
               const person = personById(profile.personId)
               const sharedSpace = profile.sharedSpaceId ? spaces.find((s) => s.id === profile.sharedSpaceId) : undefined
               return (
