@@ -1,34 +1,34 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-13T22:40:57.095Z",
+  "generatedAt": "2026-08-04T16:27:35.962Z",
   "generator": "space-curator@1",
   "spaces": [
     {
-      "id": "gs-20260713-new-york-jay-z-s-bronx-farewell",
-      "title": "Jay-Z's Bronx Farewell",
-      "emoji": "🎤",
-      "category": "Music",
+      "id": "gs-20260804-new-york-mystery-soulmate-photobooth",
+      "title": "Mystery Soulmate Photobooth",
+      "emoji": "📸",
+      "category": "Culture",
       "location": {
-        "name": "Yankee Stadium, New York, NY",
+        "name": "New York, NY",
         "lat": 40.7128,
         "lng": -74.006,
         "radiusKm": 15
       },
-      "closesInDays": 4,
+      "closesInDays": 6,
       "premiumSuggested": true,
       "seedDailyQuestion": {
-        "text": "Were you in the crowd (or locked outside) for Jay-Z's last Yankee Stadium night? What's the one moment you'll never forget?",
-        "tone": "light"
+        "text": "If a machine paired you with a stranger tonight, what one detail would you want it to match you on?",
+        "tone": "deep"
       },
-      "whyNow": "Jay-Z closed his Yankee Stadium residency last night with Beyoncé, Rihanna and Usher after a chaotic lockdown stranded fans outside.",
+      "whyNow": "A viral NYC photobooth that pairs strangers with a 'mystery soulmate' is the missed-connections experiment the whole city is talking about this week.",
       "sourceUrls": [
-        "https://gothamist.com/news/chaos-and-confusion-at-jay-z-finale-after-lockdown-strands-crowd-outside-yankee-stadium"
+        "https://www.businessinsider.com/missed-connections-photobooth-nyc-matchbox-dating-compatable-singles-irl-social-2026-8"
       ]
     },
     {
-      "id": "gs-20260713-los-angeles-erewhon-s-12-sacred-water",
-      "title": "Erewhon's $12 Sacred Water",
-      "emoji": "💧",
+      "id": "gs-20260804-los-angeles-8-night-market-season",
+      "title": "$8 Night Market Season",
+      "emoji": "🥟",
       "category": "Food & Drink",
       "location": {
         "name": "Los Angeles, CA",
@@ -39,43 +39,43 @@
       "closesInDays": 6,
       "premiumSuggested": false,
       "seedDailyQuestion": {
-        "text": "$12 'Sacred Water' — genius or crime? What's the most LA thing you've ever paid too much for?",
+        "text": "You get one night market stall for dinner and one for dessert — what are you ordering?",
         "tone": "light"
       },
-      "whyNow": "The internet is roasting Erewhon's new $12 'Sacred Water' as a 'crime' during LA's hottest stretch of the summer.",
+      "whyNow": "LA's biggest night market is back this month with $8 admission, and everyone is arguing over which stalls are worth the line.",
       "sourceUrls": [
-        "https://www.thetakeout.com/2214080/erewhon-new-sacred-water-price-internet-reaction/"
+        "https://timebulletin.us/las-biggest-night-market-is-back-and-admission-is-just-8/"
       ]
     },
     {
-      "id": "gs-20260713-chicago-mulaney-makes-wrigley-history",
-      "title": "Mulaney Makes Wrigley History",
-      "emoji": "🎙️",
-      "category": "Culture",
+      "id": "gs-20260804-chicago-ariana-s-3-nights-in-chi",
+      "title": "Ariana's 3 Nights in Chi",
+      "emoji": "🫧",
+      "category": "Music",
       "location": {
-        "name": "Wrigley Field, Chicago, IL",
+        "name": "United Center, Chicago, IL",
         "lat": 41.8781,
         "lng": -87.6298,
         "radiusKm": 25
       },
       "closesInDays": 4,
-      "premiumSuggested": false,
+      "premiumSuggested": true,
       "seedDailyQuestion": {
-        "text": "Mulaney just became the first comic to headline Wrigley — who's the one comedian you'd fill a stadium to see?",
-        "tone": "light"
+        "text": "Eternal Sunshine question: would you erase a past relationship if you could?",
+        "tone": "deep"
       },
-      "whyNow": "John Mulaney made Wrigley Field history Saturday night as the first comic to headline the ballpark, a hometown milestone.",
+      "whyNow": "Ariana Grande added a third United Center date and spoke to Chicago fans about stepping back, with shows running Wednesday and Thursday.",
       "sourceUrls": [
-        "https://www.spinmagazine.com/2026/07/john-mulaney-wrigley-field/"
+        "https://www.nbcchicago.com/news/local/ariana-grande-addresses-fans-in-chicago-after-news-shes-stepping-back-from-public-eye/3970298/"
       ]
     },
     {
-      "id": "gs-20260713-austin-singin-at-zilker-hillside",
-      "title": "Singin' at Zilker Hillside",
-      "emoji": "☔",
-      "category": "Culture",
+      "id": "gs-20260804-austin-mcconaughey-s-own-theater",
+      "title": "McConaughey's Own Theater",
+      "emoji": "🎬",
+      "category": "Film & TV",
       "location": {
-        "name": "Zilker Park, Austin, TX",
+        "name": "Austin, TX",
         "lat": 30.2672,
         "lng": -97.7431,
         "radiusKm": 25
@@ -83,21 +83,21 @@
       "closesInDays": 7,
       "premiumSuggested": false,
       "seedDailyQuestion": {
-        "text": "Blanket on the Zilker hillside for a free summer musical — what's your ideal Austin date under the stars?",
-        "tone": "deep"
+        "text": "Alright alright alright — what movie would you program for opening night at your own theater?",
+        "tone": "light"
       },
-      "whyNow": "Austin's free Zilker Summer Musical returned this week with 'Singin' in the Rain' on the Hillside Theater.",
+      "whyNow": "Alamo Drafthouse is renaming its Mueller theater for Matthew McConaughey, and Austin film people have opinions.",
       "sourceUrls": [
-        "https://cbsaustin.com/news/local/austins-free-zilker-summer-musical-returns-july-10-with-singin-in-the-rain"
+        "https://www.statesman.com/entertainment/article/matthew-mcconaughey-alamo-austin-mueller-22371588.php"
       ]
     },
     {
-      "id": "gs-20260713-new-york-40-ft-trojan-horse-on-the-uws",
-      "title": "40-Ft Trojan Horse on the UWS",
-      "emoji": "🐴",
-      "category": "Local Events",
+      "id": "gs-20260804-new-york-aaliyah-in-prospect-park",
+      "title": "Aaliyah in Prospect Park",
+      "emoji": "🎤",
+      "category": "Music",
       "location": {
-        "name": "Upper West Side, New York, NY",
+        "name": "Prospect Park, New York, NY",
         "lat": 40.7128,
         "lng": -74.006,
         "radiusKm": 15
@@ -105,43 +105,43 @@
       "closesInDays": 5,
       "premiumSuggested": false,
       "seedDailyQuestion": {
-        "text": "A giant Trojan Horse just showed up outside your local theater — what's the most absurd NYC street sight you've stumbled onto?",
+        "text": "Which Aaliyah song would you put on if you wanted someone to fall for you?",
         "tone": "light"
       },
-      "whyNow": "A 40-foot Trojan Horse statue was just erected in front of an Upper West Side movie theater, drawing crowds and confusion.",
+      "whyNow": "BRIC celebrates Aaliyah: One in a Million free at the Prospect Park Bandshell on Sat Aug 8, 3–8:30pm.",
       "sourceUrls": [
-        "https://www.westsiderag.com/2026/07/13/40-foot-trojan-horse-statue-erected-in-front-of-upper-west-side-movie-theater"
+        "https://www.nycthings.com/events/bric-celebrates-aaliyah-one-in-a-million-20260808/"
       ]
     },
     {
-      "id": "gs-20260713-los-angeles-ohtani-at-dodger-stadium",
-      "title": "Ohtani at Dodger Stadium",
-      "emoji": "⚾",
-      "category": "Sports",
+      "id": "gs-20260804-los-angeles-riverfest-on-the-la-river",
+      "title": "Riverfest on the LA River",
+      "emoji": "🌊",
+      "category": "Outdoors",
       "location": {
-        "name": "Dodger Stadium, Los Angeles, CA",
+        "name": "LA State Historic Park, Los Angeles, CA",
         "lat": 34.0522,
         "lng": -118.2437,
         "radiusKm": 40
       },
       "closesInDays": 5,
-      "premiumSuggested": true,
+      "premiumSuggested": false,
       "seedDailyQuestion": {
-        "text": "Ohtani ball at the game or the Ohtani section of the store — where do you drop your money first?",
+        "text": "What's the most underrated outdoor spot in LA you'd take a date to?",
         "tone": "light"
       },
-      "whyNow": "Shohei Ohtani mania has 10x'd sales in one area of Dodger Stadium as the Dodgers roll through their summer homestand.",
+      "whyNow": "FoLAR Riverfest lands at LA State Historic Park, turning the LA River into this week's outdoor gathering point.",
       "sourceUrls": [
-        "https://www.si.com/mlb/dodgers/onsi/shohei-ohtani-increased-sales-10x-one-area-dodger-stadium"
+        "https://www.kcrw.com/events/folar-riverfest-at-la-state-historic-park"
       ]
     },
     {
-      "id": "gs-20260713-chicago-chicago-s-concrete-beach",
-      "title": "Chicago's Concrete Beach",
-      "emoji": "🏖️",
-      "category": "Outdoors",
+      "id": "gs-20260804-chicago-sky-vs-fever-at-the-uc",
+      "title": "Sky vs Fever at the UC",
+      "emoji": "🏀",
+      "category": "Sports",
       "location": {
-        "name": "Chicago, IL",
+        "name": "United Center, Chicago, IL",
         "lat": 41.8781,
         "lng": -87.6298,
         "radiusKm": 25
@@ -149,34 +149,34 @@
       "closesInDays": 5,
       "premiumSuggested": false,
       "seedDailyQuestion": {
-        "text": "The world is roasting our concrete 'beach' — where's your real go-to spot to soak up a Chicago summer day?",
+        "text": "Courtside seats or the loud upper deck with someone you like — which is the better date?",
         "tone": "light"
       },
-      "whyNow": "A photo of Chicagoans sunbathing on the concrete lakefront went viral, triggering the internet during this week's heat wave.",
+      "whyNow": "Chicago Sky host the Indiana Fever at the United Center on Aug 8 at 2:30pm, the WNBA matchup the city circled all summer.",
       "sourceUrls": [
-        "https://www.barstoolsports.com/blog/3573281/nothing-gets-the-internet-more-triggered-than-the-concrete-beach-in-chicago"
+        "https://www.unitedcenter.com/events/2026/08/08/chicago-sky-indiana-fever/"
       ]
     },
     {
-      "id": "gs-20260713-austin-kurt-vile-at-acl-live",
-      "title": "Kurt Vile at ACL Live",
-      "emoji": "🎸",
-      "category": "Music",
+      "id": "gs-20260804-austin-korean-tofu-on-the-drag",
+      "title": "Korean Tofu on the Drag",
+      "emoji": "🥢",
+      "category": "Food & Drink",
       "location": {
-        "name": "ACL Live, Austin, TX",
+        "name": "The Drag, Austin, TX",
         "lat": 30.2672,
         "lng": -97.7431,
         "radiusKm": 25
       },
-      "closesInDays": 4,
+      "closesInDays": 7,
       "premiumSuggested": false,
       "seedDailyQuestion": {
-        "text": "Kurt Vile at the Moody tonight — what's the song you always want the encore to be?",
+        "text": "What's your go-to order at a brand-new spot: the safe bet or the weirdest thing on the menu?",
         "tone": "light"
       },
-      "whyNow": "Kurt Vile and The Violators play ACL Live at the Moody Theater tonight, kicking off a hot week of Austin shows.",
+      "whyNow": "Neko Yubu's Korean stuffed tofu shop just opened its first Austin location on the Drag, and the line is already a thing.",
       "sourceUrls": [
-        "https://www.acllive.com/event/2026-07-13-kurt-vile-the-violators-at-8-pm"
+        "https://austin.culturemap.com/news/restaurants-bars/neko-yubu-opening-the-drag/"
       ]
     }
   ]
