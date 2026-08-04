@@ -146,8 +146,7 @@ export function SpaceDetailScreen() {
 
       {hookOpen && space.hook && (
         <div className="mx-5 mb-3 shrink-0 rounded-card bg-hinge-accent-soft p-3.5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-hinge-accent">Why this room, now</p>
-          <p className="mt-1.5 text-[13px] leading-snug text-hinge-black">{space.hook.detail}</p>
+          <p className="text-[13px] leading-snug text-hinge-black">{space.hook.detail}</p>
           {space.hook.sourceLabel && (
             <p className="mt-1.5 text-[11px] text-hinge-grey">Source: {space.hook.sourceLabel}</p>
           )}
@@ -310,7 +309,7 @@ export function SpaceDetailScreen() {
               className="flex items-center gap-3 px-4 py-3.5 text-left"
             >
               <span className="text-[18px]">✍️</span>
-              <span className="text-body font-semibold text-hinge-black">Post an answer</span>
+              <span className="text-body font-semibold text-hinge-black">Post</span>
             </button>
             <div className="h-px bg-hinge-grey-light" />
             <button
