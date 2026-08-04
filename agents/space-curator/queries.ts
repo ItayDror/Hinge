@@ -1,13 +1,11 @@
 import { monthYear, weekOf } from '../question-curator/queries'
 
-export function citySpaceQueries(city: string): string[] {
+/** Four NYC-focused searches — enough signal, fast enough to run live on stage. */
+export function nycQueries(): string[] {
   return [
-    `${city} events festivals concerts next two weeks ${monthYear()}`,
-    `${city} sports schedule games ${monthYear()}`,
-    `what is ${city} obsessed with right now ${monthYear()}`,
+    `New York City events concerts festivals ${weekOf()} ${monthYear()}`,
+    `NYC sports games this week ${monthYear()}`,
+    `what New Yorkers are talking about right now ${monthYear()}`,
+    `new restaurant bar opening New York City ${monthYear()}`,
   ]
-}
-
-export function globalSpaceQueries(): string[] {
-  return [`nationwide cultural moments premieres releases ${weekOf()}`]
 }

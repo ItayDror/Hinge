@@ -1,0 +1,218 @@
+{
+  "version": 2,
+  "generatedAt": "2026-08-04T16:40:08.810Z",
+  "generator": "space-curator@2 (ideate + critique)",
+  "city": "New York, NY",
+  "spaces": [
+    {
+      "id": "gs-20260804-astor-place-detour-diaries",
+      "title": "The Astor Place Workaround",
+      "emoji": "🚇",
+      "kind": "timely",
+      "category": "Local Events",
+      "location": {
+        "name": "East Village, New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 12
+      },
+      "closesInDays": 4,
+      "spaceQuestion": {
+        "text": "Your train is dead at Astor Place and you're already late — walk it, bus it, or eat the $34 car? Defend your choice.",
+        "tone": "light"
+      },
+      "whyNow": "An early-morning train fire at Astor Place injured a dozen and left the 6 line limping all week, so half of downtown is improvising a commute right now.",
+      "sourceUrls": [
+        "https://gothamist.com/news/subway-delays-linger-after-early-morning-astor-place-train-fire-injures-12"
+      ],
+      "critique": {
+        "verdict": "revise",
+        "note": "Title reads like a Netflix doc. Kept the premise — the commute-improv question is genuinely good.",
+        "originalTitle": "Astor Place Detour Diaries",
+        "originalQuestion": "Your train is dead at Astor Place and you're already late — do you walk it, bus it, or spend $34 on a car, and what does that choice say about you?"
+      }
+    },
+    {
+      "id": "gs-20260804-park-ave-with-no-cars",
+      "title": "Park Ave With No Cars",
+      "emoji": "🛼",
+      "kind": "timely",
+      "category": "Outdoors",
+      "location": {
+        "name": "Park Avenue, New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 15
+      },
+      "closesInDays": 5,
+      "spaceQuestion": {
+        "text": "Park Avenue is car-free for exactly seven hours — talk me through your ideal route, including the stop you'd make that has nothing to do with exercise.",
+        "tone": "light"
+      },
+      "whyNow": "Summer Streets is handing New Yorkers a car-free Park Avenue again this weekend, the one morning a year the middle of the road is a legitimate place to meet someone.",
+      "sourceUrls": [
+        "https://gothamist.com/news/heavy-police-presence-at-summer-streets-marks-latest-nypd-surge-under-mamdani"
+      ],
+      "critique": {
+        "verdict": "pass",
+        "note": "Title is flat and factual in the right way, and \"the stop that has nothing to do with exercise\" is the whole flirt."
+      }
+    },
+    {
+      "id": "gs-20260804-harlem-week-all-free",
+      "title": "Harlem Week, All Free",
+      "emoji": "🎺",
+      "kind": "timely",
+      "category": "Culture",
+      "location": {
+        "name": "Harlem, New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 10
+      },
+      "closesInDays": 7,
+      "spaceQuestion": {
+        "text": "Harlem Week is free all week — what are you actually showing up to, and who have you failed to drag along three years running?",
+        "tone": "light"
+      },
+      "whyNow": "Harlem Week just kicked off with free concerts, outdoor movies, and a full block of programming that costs nothing to say yes to.",
+      "sourceUrls": [
+        "https://patch.com/new-york/harlem/harlem-week-back-month-heres-lineup"
+      ],
+      "critique": {
+        "verdict": "revise",
+        "note": "\"Stacked\" is trying too hard. Trimmed to the part people actually answer.",
+        "originalQuestion": "Harlem Week is stacked and free — which one thing are you actually showing up to, and who in your life have you failed to drag to it three years running?"
+      }
+    },
+    {
+      "id": "gs-20260804-aaliyah-at-the-bandshell",
+      "title": "Aaliyah at the Bandshell",
+      "emoji": "🕯️",
+      "kind": "timely",
+      "category": "Music",
+      "location": {
+        "name": "Prospect Park, New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 12
+      },
+      "closesInDays": 5,
+      "spaceQuestion": {
+        "text": "One in a Million comes on at the Bandshell on Saturday — which Aaliyah song ruins you a little, and what were you doing the first time you heard it?",
+        "tone": "deep"
+      },
+      "whyNow": "BRIC is throwing a free Aaliyah tribute at the Prospect Park Bandshell this Saturday, which means a few thousand Brooklynites are about to get emotional in the same field.",
+      "sourceUrls": [
+        "https://www.nycthings.com/events/bric-celebrates-aaliyah-one-in-a-million-20260808/"
+      ],
+      "critique": {
+        "verdict": "pass",
+        "note": "Specific, emotional, and dated to a real Saturday. \"Ruins you a little\" is exactly the register."
+      }
+    },
+    {
+      "id": "gs-20260804-bleacher-seats-cardinals",
+      "title": "Bleacher Seats, Cardinals",
+      "emoji": "⚾️",
+      "kind": "timely",
+      "category": "Sports",
+      "location": {
+        "name": "Yankee Stadium, New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 15
+      },
+      "closesInDays": 4,
+      "spaceQuestion": {
+        "text": "Sell me on your ballpark ritual — the seat, the beer, the inning you always leave by — and why you're right about all three.",
+        "tone": "light"
+      },
+      "whyNow": "The Cardinals are at Yankee Stadium tonight with the Yanks holding a comfortable division lead, so the Bronx is loud and cheap seats are still findable.",
+      "sourceUrls": [
+        "https://www.baseball-reference.com/previews/2026/NYA202608040.shtml"
+      ],
+      "critique": {
+        "verdict": "revise",
+        "note": "Question was a three-part form. One ritual, one opinion — easier to answer, funnier to argue with.",
+        "originalQuestion": "Yankees are up on the Cardinals tonight — sell me on your ballpark ritual: the seat, the beer, the inning you always leave by, and why you're right about all three."
+      }
+    },
+    {
+      "id": "gs-20260804-every-drink-under-11",
+      "title": "The Most You've Paid For A Drink",
+      "emoji": "🍸",
+      "kind": "timely",
+      "category": "Food & Drink",
+      "location": {
+        "name": "Union Square, New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 10
+      },
+      "closesInDays": 6,
+      "spaceQuestion": {
+        "text": "A new Union Square bar put nearly everything under $11. So: what's the most you've ever paid for a drink, and were you showing off?",
+        "tone": "light"
+      },
+      "whyNow": "Bernie and Herb's opened this week in the old Union Square coffee shop space with most drinks under $11, which in 2026 Manhattan qualifies as breaking news.",
+      "sourceUrls": [
+        "https://ny.eater.com/news/413021/union-square-bernie-and-herbs-coffee-shop-opening"
+      ],
+      "critique": {
+        "verdict": "revise",
+        "note": "Title was a price tag. The bar is just the excuse; the real question is the dumb expensive drink.",
+        "originalTitle": "Every Drink Under $11",
+        "originalQuestion": "A new Union Square bar just put nearly everything under $11 — what's the most you've ever paid for a drink, and was it worth it or were you just showing off?"
+      }
+    },
+    {
+      "id": "gs-20260804-runs-that-aren-t-about-running",
+      "title": "Runs That Aren't About Running",
+      "emoji": "👟",
+      "kind": "general",
+      "category": "Fitness",
+      "location": {
+        "name": "New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 15
+      },
+      "closesInDays": 7,
+      "spaceQuestion": {
+        "text": "What's the thought you only ever finish thinking somewhere around mile three, and where in the city are you usually standing when it lands?",
+        "tone": "deep"
+      },
+      "whyNow": "For people whose real relationship with this city happens at 7am on a bridge or a loop, not at a bar.",
+      "sourceUrls": [],
+      "critique": {
+        "verdict": "pass",
+        "note": "Title undercuts the fitness-post cliché, and \"mile three\" gives runners something real to confess."
+      }
+    },
+    {
+      "id": "gs-20260804-your-3am-rewatch",
+      "title": "Your 3AM Rewatch",
+      "emoji": "📺",
+      "kind": "general",
+      "category": "Film & TV",
+      "location": {
+        "name": "New York, NY",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "radiusKm": 15
+      },
+      "closesInDays": 6,
+      "spaceQuestion": {
+        "text": "Name the movie you've rewatched so many times you fall asleep to it — then tell me the exact scene you always wake up for.",
+        "tone": "deep"
+      },
+      "whyNow": "For the people who live alone in a small apartment and have one film doing quiet emotional maintenance in the background.",
+      "sourceUrls": [],
+      "critique": {
+        "verdict": "pass",
+        "note": "The wake-up-for scene is a great tell — it turns a list answer into a small confession."
+      }
+    }
+  ]
+}

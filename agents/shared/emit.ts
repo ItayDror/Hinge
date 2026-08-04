@@ -2,7 +2,9 @@ import { mkdirSync, renameSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const OUTPUT_DIR = join(import.meta.dirname, '..', 'output')
-const GENERATED_DIR = join(import.meta.dirname, '..', '..', 'src', 'data', 'generated')
+// The agents are a standalone demo — they deliberately never write into the
+// app's source. Final artifacts land next to the pipeline itself.
+const GENERATED_DIR = join(import.meta.dirname, '..')
 
 function timestamp(): string {
   return new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
@@ -16,7 +18,7 @@ export function writeRawArtifact(agent: 'questions' | 'spaces', stage: string, d
   return path
 }
 
-/** App-consumable output — atomic write (tmp + rename), committed to git. */
+/** Final pipeline output — atomic write (tmp + rename), committed to git. */
 export function writeGenerated(file: 'questions.json' | 'spaces.json', payload: object): string {
   mkdirSync(GENERATED_DIR, { recursive: true })
   const tmp = join(GENERATED_DIR, `.tmp-${file}`)

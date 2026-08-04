@@ -2,7 +2,6 @@ import { createContext, useCallback, useContext, useMemo, useRef, useState, type
 import type { NavStackEntry, Screen, TabScreen } from './navTypes'
 import { MOCK_CHATS, MOCK_SPACES, type ChatThreadData, type SpaceData } from '../data/mockData'
 import { personById, portraitAvatar } from '../data/people'
-import { getGeneratedSpaces } from '../data/generatedContent'
 import { nextId } from '../utils/id'
 
 /** A like I've sent that hasn't been reciprocated yet. */
@@ -79,12 +78,9 @@ const RECIPROCAL_LIKE_MS = 4000
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const [navStack, setNavStack] = useState<NavStackEntry[]>([{ screen: 'discover' }])
 
-  // Agent-generated spaces (space-curator pipeline) render alongside the
-  // static fixtures; when no generated file exists this is just MOCK_SPACES.
-  const [spaces, setSpaces] = useState<SpaceData[]>(() => [
-    ...structuredClone(MOCK_SPACES),
-    ...getGeneratedSpaces(),
-  ])
+  // The app runs purely on its authored fixtures. The curation agents are a
+  // separate demo (see agents/) and deliberately never write into the UI.
+  const [spaces, setSpaces] = useState<SpaceData[]>(() => structuredClone(MOCK_SPACES))
   const [postsToday, setPostsToday] = useState<Record<string, number>>({})
   const [engagedPeople, setEngagedPeople] = useState<string[]>([])
   const [likedProfiles, setLikedProfiles] = useState<string[]>([])

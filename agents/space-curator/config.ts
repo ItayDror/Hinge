@@ -1,16 +1,13 @@
-export interface CityConfig {
-  name: string
-  lat: number
-  lng: number
-  defaultRadiusKm: number
-}
-
-export const CITIES: CityConfig[] = [
-  { name: 'New York, NY', lat: 40.7128, lng: -74.006, defaultRadiusKm: 15 },
-  { name: 'Los Angeles, CA', lat: 34.0522, lng: -118.2437, defaultRadiusKm: 40 },
-  { name: 'Chicago, IL', lat: 41.8781, lng: -87.6298, defaultRadiusKm: 25 },
-  { name: 'Austin, TX', lat: 30.2672, lng: -97.7431, defaultRadiusKm: 25 },
-]
+/**
+ * The Spaces demo is NYC-only — one city, so the pipeline stays fast and the
+ * output is all directly relevant to the presentation.
+ */
+export const CITY = {
+  name: 'New York, NY',
+  lat: 40.7128,
+  lng: -74.006,
+  defaultRadiusKm: 15,
+} as const
 
 export const INTEREST_TAXONOMY = [
   'Sports',
@@ -24,6 +21,7 @@ export const INTEREST_TAXONOMY = [
   'Film & TV',
 ] as const
 
-export const TARGET_SPACES = 8
-export const MAX_PREMIUM = 2
+/** 6 anchored to something happening right now, 2 evergreen interest rooms. */
+export const TIMELY_COUNT = 6
+export const GENERAL_COUNT = 2
 export const MAX_PER_CATEGORY = 2

@@ -1,64 +1,58 @@
 /**
- * Space Curator agent — on-demand pipeline:
- *   trends (Exa) → synthesis (claude CLI) → validate → dedupe → rank → emit
+ * Space Curator — a two-agent pipeline for NYC Spaces.
  *
- * Every proposed Space has two dimensions: a location (city + radius —
- * users whose radius covers it are eligible) and an interest category.
+ *   trends (Exa)
+ *     → Agent 1: ideate    6 timely + 2 general-interest Spaces
+ *     → Agent 2: critique   voice / question quality / premise, revising as needed
+ *     → emit                agents/spaces.json + agents/report.html
+ *
+ * This is a standalone demo — it never writes into the app's source.
  *
  * Usage:
- *   npm run agent:spaces                       # full run
- *   npm run agent:spaces -- --dry-run          # no writes to src/data/generated
- *   npm run agent:spaces -- --city "Austin, TX" --tavily
+ *   npm run agent:spaces               # full run
+ *   npm run agent:spaces -- --dry-run  # no writes, just the console summary
+ *   npm run agent:spaces -- --tavily   # add Tavily (x402) alongside Exa
  */
-import { existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
 import { z } from 'zod'
 import { exaSearchBatch } from '../shared/exa'
 import { tavilySearch } from '../shared/tavily'
 import { generateValidated } from '../shared/validate'
-import { dedupeByText } from '../shared/dedupe'
 import { writeGenerated, writeRawArtifact } from '../shared/emit'
 import { buildReport } from '../shared/report'
 import type { SpaceProposal, TrendHit } from '../shared/types'
-import { MOCK_SPACES } from '../../src/data/mockData'
-import { CITIES, INTEREST_TAXONOMY, MAX_PER_CATEGORY, MAX_PREMIUM, TARGET_SPACES } from './config'
-import { citySpaceQueries, globalSpaceQueries } from './queries'
-import { buildSpacePrompt } from './prompt'
+import { CITY, GENERAL_COUNT, INTEREST_TAXONOMY, MAX_PER_CATEGORY, TIMELY_COUNT } from './config'
+import { nycQueries } from './queries'
+import { buildCritiquePrompt, buildIdeationPrompt } from './prompt'
 
-const GENERATED_PATH = join(import.meta.dirname, '..', '..', 'src', 'data', 'generated', 'spaces.json')
-
-const RawItemSchema = z.object({
+const IdeaSchema = z.object({
   title: z.string().min(3).max(34),
   emoji: z.string().min(1).max(8),
+  kind: z.enum(['timely', 'general']),
   category: z.enum(INTEREST_TAXONOMY),
   locationName: z.string().min(3),
   radiusKm: z.number().min(5).max(50),
   closesInDays: z.number().int().min(4).max(7),
-  premiumSuggested: z.boolean(),
-  seedDailyQuestion: z.object({ text: z.string().min(10).max(220), tone: z.enum(['light', 'deep']) }),
+  spaceQuestion: z.object({ text: z.string().min(10).max(220), tone: z.enum(['light', 'deep']) }),
   whyNow: z.string().min(10).max(220),
   evidenceIndex: z.number().int().nullable(),
 })
-type RawItem = z.infer<typeof RawItemSchema>
+type Idea = z.infer<typeof IdeaSchema>
+
+const CritiqueSchema = z.object({
+  index: z.number().int(),
+  verdict: z.enum(['pass', 'revise', 'cut']),
+  note: z.string().min(3).max(200),
+  title: z.string().min(3).max(34).nullable().optional(),
+  spaceQuestion: z
+    .object({ text: z.string().min(10).max(220), tone: z.enum(['light', 'deep']) })
+    .nullable()
+    .optional(),
+})
+type CritiqueItem = z.infer<typeof CritiqueSchema>
 
 function parseArgs() {
   const args = process.argv.slice(2)
-  const flag = (f: string) => args.includes(f)
-  const value = (f: string) => {
-    const i = args.indexOf(f)
-    return i !== -1 && args[i + 1] ? args[i + 1] : undefined
-  }
-  return { dryRun: flag('--dry-run'), tavily: flag('--tavily'), city: value('--city'), count: value('--count') }
-}
-
-function previousGenerated(): SpaceProposal[] {
-  if (!existsSync(GENERATED_PATH)) return []
-  try {
-    const parsed = JSON.parse(readFileSync(GENERATED_PATH, 'utf8'))
-    return Array.isArray(parsed.spaces) ? parsed.spaces : []
-  } catch {
-    return []
-  }
+  return { dryRun: args.includes('--dry-run'), tavily: args.includes('--tavily') }
 }
 
 function slugify(text: string): string {
@@ -66,100 +60,111 @@ function slugify(text: string): string {
 }
 
 async function main() {
-  const { dryRun, tavily, city, count } = parseArgs()
-  const cities = city ? CITIES.filter((c) => c.name === city) : CITIES
-  if (cities.length === 0) throw new Error(`Unknown city "${city}". Configured: ${CITIES.map((c) => c.name).join(', ')}`)
-  const target = count ? parseInt(count, 10) : TARGET_SPACES
+  const { dryRun, tavily } = parseArgs()
+  const total = TIMELY_COUNT + GENERAL_COUNT
 
-  // Stage 1 — trend gathering
-  console.log(`\n📡 Stage 1: gathering local trends for ${cities.map((c) => c.name).join(', ')}`)
-  const queries = [...cities.flatMap((c) => citySpaceQueries(c.name)), ...globalSpaceQueries()]
-  const hits: TrendHit[] = await exaSearchBatch(queries)
+  // ---- Stage 1: what's happening in NYC right now ----
+  console.log(`\n📡 Stage 1 · trends — ${CITY.name}`)
+  const hits: TrendHit[] = await exaSearchBatch(nycQueries())
   if (tavily) {
-    for (const c of cities) {
-      const extra = await tavilySearch(`${c.name} events this weekend`)
-      if (extra) hits.push(...extra)
-    }
+    const extra = await tavilySearch(`${CITY.name} events this weekend`)
+    if (extra) hits.push(...extra)
   }
-  if (hits.length === 0) throw new Error('All trend queries failed — aborting before LLM stage.')
+  if (hits.length === 0) throw new Error('All trend queries failed — aborting before the LLM stages.')
   writeRawArtifact('spaces', 'trends', hits)
-  console.log(`  → ${hits.length} trend hits`)
+  console.log(`   ${hits.length} trend hits`)
 
-  // Stage 2 — LLM synthesis
-  console.log('\n🧠 Stage 2: proposing spaces via claude CLI (this can take a minute)')
-  const existingSpaces = [
-    ...MOCK_SPACES.map((s) => ({ title: s.title, category: s.category })),
-    ...previousGenerated().map((s) => ({ title: s.title, category: s.category })),
-  ]
-  const prompt = buildSpacePrompt({ hits, cities, taxonomy: INTEREST_TAXONOMY, existingSpaces, target, maxPremium: MAX_PREMIUM })
-  const { items: rawItems, salvaged } = await generateValidated<RawItem>(prompt, RawItemSchema)
-  if (salvaged) console.warn(`  ⚠ Ran in salvage mode — kept ${rawItems.length} valid items`)
-  console.log(`  → ${rawItems.length} candidate spaces`)
+  // ---- Stage 2: Agent 1 proposes ----
+  console.log(`\n🧠 Agent 1 · ideating ${TIMELY_COUNT} timely + ${GENERAL_COUNT} general Spaces`)
+  const ideaPrompt = buildIdeationPrompt({
+    hits,
+    cityName: CITY.name,
+    taxonomy: INTEREST_TAXONOMY,
+    timelyCount: TIMELY_COUNT,
+    generalCount: GENERAL_COUNT,
+  })
+  const { items: ideas, salvaged } = await generateValidated<Idea>(ideaPrompt, IdeaSchema)
+  if (salvaged) console.warn(`   ⚠ salvage mode — kept ${ideas.length} valid items`)
+  if (ideas.length === 0) throw new Error('Agent 1 produced no usable ideas.')
+  console.log(`   ${ideas.length} proposals (${ideas.filter((i) => i.kind === 'timely').length} timely)`)
 
-  // Stage 3 — resolve locations + ids, map evidence
   const dateSlug = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-  const candidates: SpaceProposal[] = rawItems.map((item) => {
-    const cityCfg = cities.find((c) => item.locationName.includes(c.name.split(',')[0])) ?? cities[0]
+  let proposals: SpaceProposal[] = ideas.map((item) => {
     const hit = item.evidenceIndex !== null && hits[item.evidenceIndex] ? hits[item.evidenceIndex] : null
     return {
-      id: `gs-${dateSlug}-${slugify(cityCfg.name.split(',')[0])}-${slugify(item.title)}`,
+      id: `gs-${dateSlug}-${slugify(item.title)}`,
       title: item.title,
       emoji: item.emoji,
+      kind: item.kind,
       category: item.category,
-      location: { name: item.locationName, lat: cityCfg.lat, lng: cityCfg.lng, radiusKm: item.radiusKm },
+      location: { name: item.locationName, lat: CITY.lat, lng: CITY.lng, radiusKm: item.radiusKm },
       closesInDays: item.closesInDays,
-      premiumSuggested: item.premiumSuggested,
-      seedDailyQuestion: item.seedDailyQuestion,
+      spaceQuestion: item.spaceQuestion,
       whyNow: item.whyNow,
       sourceUrls: hit ? [hit.url] : [],
     }
   })
 
-  // Stage 4 — dedupe + rank (city coverage first, then category diversity)
-  console.log('\n🧹 Stage 3/4: dedupe + rank')
-  const existingTexts = existingSpaces.map((s) => s.title)
-  const { kept, dropped } = dedupeByText(candidates, (s) => s.title, existingTexts, 0.5)
-  console.log(`  → kept ${kept.length}, dropped ${dropped.length} as near-duplicates`)
+  // ---- Stage 3: Agent 2 critiques (voice, question quality, premise) ----
+  console.log('\n🎯 Agent 2 · reviewing voice, question quality, and premise')
+  const { items: critiques } = await generateValidated<CritiqueItem>(buildCritiquePrompt({ proposals }), CritiqueSchema)
 
-  const selected: SpaceProposal[] = []
+  let revised = 0
+  let cut = 0
+  proposals = proposals
+    .map((p, i) => {
+      const c = critiques.find((x) => x.index === i)
+      if (!c) return p
+      if (c.verdict === 'revise') {
+        revised++
+        return {
+          ...p,
+          title: c.title ?? p.title,
+          spaceQuestion: c.spaceQuestion ?? p.spaceQuestion,
+          critique: {
+            verdict: c.verdict,
+            note: c.note,
+            originalTitle: c.title && c.title !== p.title ? p.title : undefined,
+            originalQuestion:
+              c.spaceQuestion && c.spaceQuestion.text !== p.spaceQuestion.text ? p.spaceQuestion.text : undefined,
+          },
+        }
+      }
+      if (c.verdict === 'cut') cut++
+      return { ...p, critique: { verdict: c.verdict, note: c.note } }
+    })
+    .filter((p) => p.critique?.verdict !== 'cut')
+  console.log(`   ${critiques.length} reviewed · ${revised} revised · ${cut} cut`)
+
+  // ---- Stage 4: keep the mix balanced, then emit ----
   const byCategory: Record<string, number> = {}
-  // ensure ≥1 per city first
-  for (const c of cities) {
-    const match = kept.find((s) => s.location.name.includes(c.name.split(',')[0]) && !selected.includes(s))
-    if (match) {
-      selected.push(match)
-      byCategory[match.category] = (byCategory[match.category] ?? 0) + 1
-    }
-  }
-  for (const s of kept) {
-    if (selected.length >= target) break
-    if (selected.includes(s)) continue
-    if ((byCategory[s.category] ?? 0) >= MAX_PER_CATEGORY) continue
-    selected.push(s)
-    byCategory[s.category] = (byCategory[s.category] ?? 0) + 1
-  }
-  // clamp premium count
-  let premiumCount = 0
-  for (const s of selected) {
-    if (s.premiumSuggested && ++premiumCount > MAX_PREMIUM) s.premiumSuggested = false
-  }
+  const selected = proposals.filter((p) => {
+    if ((byCategory[p.category] ?? 0) >= MAX_PER_CATEGORY) return false
+    byCategory[p.category] = (byCategory[p.category] ?? 0) + 1
+    return true
+  })
 
-  if (selected.length === 0) {
-    console.warn('\n⚠ Everything was deduped away — keeping the previous generated file untouched.')
-    return
+  const payload = {
+    version: 2,
+    generatedAt: new Date().toISOString(),
+    generator: 'space-curator@2 (ideate + critique)',
+    city: CITY.name,
+    spaces: selected.slice(0, total),
   }
-
-  const payload = { version: 1, generatedAt: new Date().toISOString(), generator: 'space-curator@1', spaces: selected }
   writeRawArtifact('spaces', 'final', payload)
+
   if (dryRun) {
-    console.log(`\n✅ Dry run complete — ${selected.length} spaces validated (no writes to src/data/generated).`)
+    console.log(`\n✅ Dry run — ${payload.spaces.length} Spaces validated, nothing written.`)
   } else {
-    const path = writeGenerated('spaces.json', payload)
-    console.log(`\n✅ Wrote ${selected.length} spaces → ${path}`)
-    console.log(`📄 Report refreshed → ${buildReport()}`)
+    console.log(`\n✅ ${payload.spaces.length} Spaces → ${writeGenerated('spaces.json', payload)}`)
+    console.log(`📄 Report → ${buildReport()}`)
   }
-  for (const s of selected) {
-    console.log(`   ${s.emoji} ${s.title} — ${s.category} @ ${s.location.name} (closes ${s.closesInDays}d${s.premiumSuggested ? ', premium' : ''})`)
+
+  for (const s of payload.spaces) {
+    const mark = s.critique?.verdict === 'revise' ? '✎' : '✓'
+    console.log(`   ${mark} ${s.emoji} ${s.title} — ${s.category} · ${s.kind} · closes ${s.closesInDays}d`)
+    console.log(`      Q: ${s.spaceQuestion.text}`)
+    if (s.critique) console.log(`      ${s.critique.verdict}: ${s.critique.note}`)
   }
 }
 

@@ -5,7 +5,7 @@
  * Usage:
  *   npm run agent:questions                    # full run
  *   npm run agent:questions -- --seed-only     # write the 50-question seed bank, zero API calls
- *   npm run agent:questions -- --dry-run       # full run but no writes to src/data/generated
+ *   npm run agent:questions -- --dry-run       # full run but no writes
  *   npm run agent:questions -- --city "New York, NY" --tavily
  */
 import { existsSync, readFileSync } from 'node:fs'
@@ -24,7 +24,7 @@ import { CITIES, DEDUPE_THRESHOLD, LIGHT_RATIO, TARGET } from './config'
 import { cityQueries, globalTimeQueries } from './queries'
 import { buildQuestionPrompt } from './prompt'
 
-const GENERATED_PATH = join(import.meta.dirname, '..', '..', 'src', 'data', 'generated', 'questions.json')
+const GENERATED_PATH = join(import.meta.dirname, '..', 'questions.json')
 
 const RawItemSchema = z.object({
   text: z.string().min(15).max(220),
@@ -63,7 +63,7 @@ function emit(questions: GeneratedQuestion[], dryRun: boolean) {
   const payload = { version: 1, generatedAt: new Date().toISOString(), generator: 'question-curator@1', questions }
   writeRawArtifact('questions', 'final', payload)
   if (dryRun) {
-    console.log(`\n✅ Dry run complete — ${questions.length} questions validated (no writes to src/data/generated).`)
+    console.log(`\n✅ Dry run complete — ${questions.length} questions validated (no writes).`)
   } else {
     const path = writeGenerated('questions.json', payload)
     console.log(`\n✅ Wrote ${questions.length} questions → ${path}`)
