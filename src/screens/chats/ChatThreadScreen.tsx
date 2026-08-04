@@ -28,7 +28,7 @@ export function ChatThreadScreen() {
   }
 
   // Where you met — the only extra signal in an otherwise pure conversation.
-  const originLabel = chat.spaceOriginLabel ?? (sharedSpace ? `${sharedSpace.emoji} You're both in ${sharedSpace.title}` : null)
+  const originLabel = chat.spaceOriginLabel ?? (sharedSpace ? `${sharedSpace.emoji} You're both in “${sharedSpace.question}”` : null)
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col">
@@ -78,7 +78,7 @@ export function ChatThreadScreen() {
         <div className="flex flex-col gap-2">
           {chat.messages.length === 0 && (
             <p className="mt-6 text-center text-body text-hinge-grey">
-              You matched — say something about {sharedSpace ? sharedSpace.title : 'what you both showed up for'} ✨
+              You matched — say something about {sharedSpace ? `“${sharedSpace.question}”` : 'what you both showed up for'} ✨
             </p>
           )}
           {chat.messages.map((m) => {

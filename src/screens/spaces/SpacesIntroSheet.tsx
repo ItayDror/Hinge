@@ -4,7 +4,7 @@ interface SpacesIntroSheetProps {
 
 const STEPS = [
   { emoji: '💬', title: 'Join a conversation', body: 'Short-lived rooms around what’s happening near you right now.' },
-  { emoji: '✍️', title: 'Answer the daily question', body: 'One question per Space — your answer is how people find you.' },
+  { emoji: '✍️', title: 'Answer the question', body: 'Every Space is one question — your answer is how people find you.' },
   { emoji: '💜', title: 'Like what someone said', body: 'Profiles open through the conversation, not the photo.' },
 ]
 

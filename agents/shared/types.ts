@@ -26,21 +26,23 @@ export type Verdict = 'pass' | 'revise' | 'cut'
 export interface Critique {
   verdict: Verdict
   note: string
-  /** What the critic changed, when it revised. */
-  originalTitle?: string
+  /** The question as Agent 1 wrote it, when the critic rewrote it. */
   originalQuestion?: string
 }
 
 export interface SpaceProposal {
   id: string
-  title: string
+  /**
+   * The Space's question — and its only name. It is the title in the Spaces
+   * list and the header of the room, so it is deliberately kept short.
+   */
+  question: string
+  tone: Tone
   emoji: string
   kind: SpaceKind
   category: string
   location: { name: string; lat?: number; lng?: number; radiusKm: number }
   closesInDays: number
-  /** The room's single icebreaker — a space question, not a daily question. */
-  spaceQuestion: { text: string; tone: Tone }
   whyNow: string
   sourceUrls: string[]
   critique?: Critique

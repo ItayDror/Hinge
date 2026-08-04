@@ -22,7 +22,7 @@ export function ReportSheet({ open, onClose, onSubmit }: ReportSheetProps) {
   }
 
   return (
-    <BottomSheet open={open} onClose={onClose} title="Report this post">
+    <BottomSheet open={open} onClose={onClose} title="Report this answer">
       <div className="flex flex-col gap-1">
         {REASONS.map((r) => (
           <button

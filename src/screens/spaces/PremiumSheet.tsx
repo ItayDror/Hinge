@@ -28,7 +28,7 @@ export function PremiumSheet({ open, onClose, onUpgrade }: PremiumSheetProps) {
         </span>
         <p className="mt-3 text-[20px] font-bold text-hinge-black">Unlock every Space</p>
         <p className="mt-1 text-body text-hinge-grey">
-          Join unlimited Spaces, see everyone's daily answers, and never miss a moment before it closes.
+          Join unlimited Spaces, see everyone's answers, and never miss a room before it closes.
         </p>
       </div>
 

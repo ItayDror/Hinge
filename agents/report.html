@@ -37,15 +37,12 @@
   .head { display:flex; gap:14px; align-items:flex-start; }
   .emoji { font-size:30px; line-height:1; }
   .headtext { flex:1; min-width:0; }
-  .title { font-size:19px; font-weight:700; margin:0; }
-  .meta { font-size:12px; color:var(--grey); margin:4px 0 0; }
+  .meta { font-size:12px; color:var(--grey); margin:6px 0 0; }
   .kind { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; padding:5px 10px; border-radius:9999px; white-space:nowrap; }
   .kind.timely { background: var(--accent); color:#fff; }
   .kind.general { background: var(--sage); color: var(--black); }
 
-  .question { background: var(--accent-soft); border-radius:14px; padding:14px 16px; margin-top:16px; }
-  .qtext { font-family: Fraunces, Georgia, serif; font-size:20px; line-height:1.25; margin:6px 0 10px; }
-  .tone { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; background:#fff; color:var(--accent); padding:4px 9px; border-radius:9999px; }
+  .qtext { font-family: Fraunces, Georgia, serif; font-size:22px; line-height:1.25; margin:0; letter-spacing:-.01em; }
 
   .label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:4px; }
   .why { background: var(--section); border-radius:14px; padding:12px 14px; margin-top:10px; font-size:13px; }
@@ -66,7 +63,7 @@
 <div class="wrap">
   <div class="hero">
     <h1>Spaces, curated by two agents</h1>
-    <p>New York, NY · generated Aug 4, 2026, 12:40 PM</p>
+    <p>New York, NY · generated Aug 4, 2026, 2:04 PM</p>
     <div class="pipeline">
       <span class="stage">📡 Live NYC trends</span>
       <span class="stage"><b>Agent 1</b> · ideate</span>
@@ -84,197 +81,149 @@
   </div>
 
   <h2>The rooms</h2>
-  <p class="sub">Every Space is one place, one interest, and one <b>space question</b> — the single icebreaker the whole room answers, and the thing people match on. Agent 2's verdict is shown under each.</p>
+  <p class="sub">A Space has no name apart from its <b>question</b>. It is the title in the list, the header of the room, and the one thing every member answers — so it has to be short enough to read as a name and good enough to answer. Agent 2's verdict is shown under each.</p>
 
   <div class="card">
     <div class="head">
-      <span class="emoji">🚇</span>
+      <span class="emoji">⚾</span>
       <div class="headtext">
-        <p class="title">The Astor Place Workaround</p>
-        <p class="meta">Local Events · East Village, New York, NY · 12km radius · closes in 4d</p>
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">Cardinals at the Stadium tonight — bleachers or bar?</p>
+        <p class="meta">Sports · Yankee Stadium, New York, NY · 15km radius · closes in 4d · 52 chars</p>
       </div>
       <span class="kind timely">Timely</span>
     </div>
 
-    <div class="question">
-      <span class="label">Space question</span>
-      <p class="qtext">“Your train is dead at Astor Place and you're already late — walk it, bus it, or eat the $34 car? Defend your choice.”</p>
-      <span class="tone light">light</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>An early-morning train fire at Astor Place injured a dozen and left the 6 line limping all week, so half of downtown is improvising a commute right now. <a href="https://gothamist.com/news/subway-delays-linger-after-early-morning-astor-place-train-fire-injures-12" target="_blank">source ↗</a></div>
-    <div class="critique revise">
-         <span class="verdict">✎ revised</span>
-         <span class="note">Title reads like a Netflix doc. Kept the premise — the commute-improv question is genuinely good.</span>
-         <div class="diff"><span class="was">was:</span> Astor Place Detour Diaries</div>
-         <div class="diff"><span class="was">question was:</span> “Your train is dead at Astor Place and you're already late — do you walk it, bus it, or spend $34 on a car, and what does that choice say about you?”</div>
+    <div class="why"><span class="label">Why this room</span>The Cardinals are at Yankee Stadium tonight and the series runs through midweek. <a href="https://www.baseball-reference.com/previews/2026/NYA202608040.shtml" target="_blank">source ↗</a></div>
+    <div class="critique pass">
+         <span class="verdict">✓ passed</span>
+         <span class="note">Real choice, real timing, and 'bleachers or bar' tells you what kind of night someone wants. Ships.</span>
+         
        </div>
   </div>
 <div class="card">
     <div class="head">
-      <span class="emoji">🛼</span>
+      <span class="emoji">🚇</span>
       <div class="headtext">
-        <p class="title">Park Ave With No Cars</p>
-        <p class="meta">Outdoors · Park Avenue, New York, NY · 15km radius · closes in 5d</p>
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">What's your worst subway story?</p>
+        <p class="meta">Local Events · New York, NY · 15km radius · closes in 4d · 31 chars</p>
       </div>
       <span class="kind timely">Timely</span>
     </div>
 
-    <div class="question">
-      <span class="label">Space question</span>
-      <p class="qtext">“Park Avenue is car-free for exactly seven hours — talk me through your ideal route, including the stop you'd make that has nothing to do with exercise.”</p>
-      <span class="tone light">light</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>Summer Streets is handing New Yorkers a car-free Park Avenue again this weekend, the one morning a year the middle of the road is a legitimate place to meet someone. <a href="https://gothamist.com/news/heavy-police-presence-at-summer-streets-marks-latest-nypd-surge-under-mamdani" target="_blank">source ↗</a></div>
-    <div class="critique pass">
-         <span class="verdict">✓ passed</span>
-         <span class="note">Title is flat and factual in the right way, and &quot;the stop that has nothing to do with exercise&quot; is the whole flirt.</span>
-         
-         
+    <div class="why"><span class="label">Why this room</span>A train fire at Astor Place injured 12 and delays are still rippling across the system today. <a href="https://gothamist.com/news/subway-delays-linger-after-early-morning-astor-place-train-fire-injures-12" target="_blank">source ↗</a></div>
+    <div class="critique revise">
+         <span class="verdict">✎ revised</span>
+         <span class="note">Twelve people got hurt this morning — we can't hang a flirting room on it. Kept the commute question, dropped the peg.</span>
+         <div class="diff"><span class="was">was:</span> “Astor Place fire: what's your worst commute story?”</div>
        </div>
   </div>
 <div class="card">
     <div class="head">
       <span class="emoji">🎺</span>
       <div class="headtext">
-        <p class="title">Harlem Week, All Free</p>
-        <p class="meta">Culture · Harlem, New York, NY · 10km radius · closes in 7d</p>
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">Which Harlem Week night are you actually going to?</p>
+        <p class="meta">Local Events · Harlem, New York, NY · 15km radius · closes in 7d · 50 chars</p>
       </div>
       <span class="kind timely">Timely</span>
     </div>
 
-    <div class="question">
-      <span class="label">Space question</span>
-      <p class="qtext">“Harlem Week is free all week — what are you actually showing up to, and who have you failed to drag along three years running?”</p>
-      <span class="tone light">light</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>Harlem Week just kicked off with free concerts, outdoor movies, and a full block of programming that costs nothing to say yes to. <a href="https://patch.com/new-york/harlem/harlem-week-back-month-heres-lineup" target="_blank">source ↗</a></div>
-    <div class="critique revise">
-         <span class="verdict">✎ revised</span>
-         <span class="note">&quot;Stacked&quot; is trying too hard. Trimmed to the part people actually answer.</span>
-         
-         <div class="diff"><span class="was">question was:</span> “Harlem Week is stacked and free — which one thing are you actually showing up to, and who in your life have you failed to drag to it three years running?”</div>
-       </div>
-  </div>
-<div class="card">
-    <div class="head">
-      <span class="emoji">🕯️</span>
-      <div class="headtext">
-        <p class="title">Aaliyah at the Bandshell</p>
-        <p class="meta">Music · Prospect Park, New York, NY · 12km radius · closes in 5d</p>
-      </div>
-      <span class="kind timely">Timely</span>
-    </div>
-
-    <div class="question">
-      <span class="label">Space question</span>
-      <p class="qtext">“One in a Million comes on at the Bandshell on Saturday — which Aaliyah song ruins you a little, and what were you doing the first time you heard it?”</p>
-      <span class="tone deep">deep</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>BRIC is throwing a free Aaliyah tribute at the Prospect Park Bandshell this Saturday, which means a few thousand Brooklynites are about to get emotional in the same field. <a href="https://www.nycthings.com/events/bric-celebrates-aaliyah-one-in-a-million-20260808/" target="_blank">source ↗</a></div>
+    <div class="why"><span class="label">Why this room</span>Harlem Week just kicked off with 16 days of free concerts, movies and street events. <a href="https://patch.com/new-york/harlem/harlem-week-back-month-heres-lineup" target="_blank">source ↗</a></div>
     <div class="critique pass">
          <span class="verdict">✓ passed</span>
-         <span class="note">Specific, emotional, and dated to a real Saturday. &quot;Ruins you a little&quot; is exactly the register.</span>
+         <span class="note">'Actually' is doing the work — it turns a listing into an admission. Nice and dry.</span>
          
-         
-       </div>
-  </div>
-<div class="card">
-    <div class="head">
-      <span class="emoji">⚾️</span>
-      <div class="headtext">
-        <p class="title">Bleacher Seats, Cardinals</p>
-        <p class="meta">Sports · Yankee Stadium, New York, NY · 15km radius · closes in 4d</p>
-      </div>
-      <span class="kind timely">Timely</span>
-    </div>
-
-    <div class="question">
-      <span class="label">Space question</span>
-      <p class="qtext">“Sell me on your ballpark ritual — the seat, the beer, the inning you always leave by — and why you're right about all three.”</p>
-      <span class="tone light">light</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>The Cardinals are at Yankee Stadium tonight with the Yanks holding a comfortable division lead, so the Bronx is loud and cheap seats are still findable. <a href="https://www.baseball-reference.com/previews/2026/NYA202608040.shtml" target="_blank">source ↗</a></div>
-    <div class="critique revise">
-         <span class="verdict">✎ revised</span>
-         <span class="note">Question was a three-part form. One ritual, one opinion — easier to answer, funnier to argue with.</span>
-         
-         <div class="diff"><span class="was">question was:</span> “Yankees are up on the Cardinals tonight — sell me on your ballpark ritual: the seat, the beer, the inning you always leave by, and why you're right about all three.”</div>
        </div>
   </div>
 <div class="card">
     <div class="head">
       <span class="emoji">🍸</span>
       <div class="headtext">
-        <p class="title">The Most You've Paid For A Drink</p>
-        <p class="meta">Food &amp; Drink · Union Square, New York, NY · 10km radius · closes in 6d</p>
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">Best drink under $11 in this city — where is it?</p>
+        <p class="meta">Food &amp; Drink · Union Square, New York, NY · 15km radius · closes in 5d · 48 chars</p>
       </div>
       <span class="kind timely">Timely</span>
     </div>
 
-    <div class="question">
-      <span class="label">Space question</span>
-      <p class="qtext">“A new Union Square bar put nearly everything under $11. So: what's the most you've ever paid for a drink, and were you showing off?”</p>
-      <span class="tone light">light</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>Bernie and Herb's opened this week in the old Union Square coffee shop space with most drinks under $11, which in 2026 Manhattan qualifies as breaking news. <a href="https://ny.eater.com/news/413021/union-square-bernie-and-herbs-coffee-shop-opening" target="_blank">source ↗</a></div>
+    <div class="why"><span class="label">Why this room</span>Bernie and Herb's opened this week in the old Union Square coffee shop with nearly everything under $11. <a href="https://ny.eater.com/news/413021/union-square-bernie-and-herbs-coffee-shop-opening" target="_blank">source ↗</a></div>
     <div class="critique revise">
          <span class="verdict">✎ revised</span>
-         <span class="note">Title was a price tag. The bar is just the excuse; the real question is the dumb expensive drink.</span>
-         <div class="diff"><span class="was">was:</span> Every Drink Under $11</div>
-         <div class="diff"><span class="was">question was:</span> “A new Union Square bar just put nearly everything under $11 — what's the most you've ever paid for a drink, and was it worth it or were you just showing off?”</div>
+         <span class="note">The original is a bar's press release with a question mark. Made it about the answer's cheap drink, not this week's opening.</span>
+         <div class="diff"><span class="was">was:</span> “Drinks under $11 in Union Square — worth the line?”</div>
        </div>
   </div>
 <div class="card">
     <div class="head">
-      <span class="emoji">👟</span>
+      <span class="emoji">🌳</span>
       <div class="headtext">
-        <p class="title">Runs That Aren't About Running</p>
-        <p class="meta">Fitness · New York, NY · 15km radius · closes in 7d</p>
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">Prospect Park show: blanket on the lawn or up front?</p>
+        <p class="meta">Music · Prospect Park, New York, NY · 15km radius · closes in 5d · 52 chars</p>
+      </div>
+      <span class="kind timely">Timely</span>
+    </div>
+
+    <div class="why"><span class="label">Why this room</span>BRIC Celebrate Brooklyn! has a free Prospect Park show this Saturday, Aug 8. <a href="https://www.prospectpark.org/event/bric-celebrate-brooklyn-8/2026-08-08/" target="_blank">source ↗</a></div>
+    <div class="critique revise">
+         <span class="verdict">✎ revised</span>
+         <span class="note">The branded colon reads like a flyer. Same choice, said like a person.</span>
+         <div class="diff"><span class="was">was:</span> “Celebrate Brooklyn: blanket on the lawn or up front?”</div>
+       </div>
+  </div>
+<div class="card">
+    <div class="head">
+      <span class="emoji">🍽️</span>
+      <div class="headtext">
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">Last new restaurant you loved — what'd you order?</p>
+        <p class="meta">Food &amp; Drink · New York, NY · 15km radius · closes in 6d · 49 chars</p>
+      </div>
+      <span class="kind timely">Timely</span>
+    </div>
+
+    <div class="why"><span class="label">Why this room</span>Three big NYC restaurants opened within days of each other and nobody's been to all three yet. <a href="https://ny.eater.com/news/412994/elder-nyc-restaurant-open-british-indian-chophouse-sujan-sarkar" target="_blank">source ↗</a></div>
+    <div class="critique revise">
+         <span class="verdict">✎ revised</span>
+         <span class="note">A poll about three places nobody's been to has no answers in it. Asked for a meal they actually ate.</span>
+         <div class="diff"><span class="was">was:</span> “Best new opening this month: Elder, Noury or LIBA?”</div>
+       </div>
+  </div>
+<div class="card">
+    <div class="head">
+      <span class="emoji">🔑</span>
+      <div class="headtext">
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">What did your last apartment teach you about NYC?</p>
+        <p class="meta">Culture · New York, NY · 15km radius · closes in 6d · 49 chars</p>
       </div>
       <span class="kind general">Always on</span>
     </div>
 
-    <div class="question">
-      <span class="label">Space question</span>
-      <p class="qtext">“What's the thought you only ever finish thinking somewhere around mile three, and where in the city are you usually standing when it lands?”</p>
-      <span class="tone deep">deep</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>For people whose real relationship with this city happens at 7am on a bridge or a loop, not at a bar. </div>
+    <div class="why"><span class="label">Why this room</span>For anyone who's moved boroughs at least once and has opinions about it. </div>
     <div class="critique pass">
          <span class="verdict">✓ passed</span>
-         <span class="note">Title undercuts the fitness-post cliché, and &quot;mile three&quot; gives runners something real to confess.</span>
-         
+         <span class="note">Everyone's got a landlord and a lesson. Impossible to answer briefly, easy to answer well.</span>
          
        </div>
   </div>
 <div class="card">
     <div class="head">
-      <span class="emoji">📺</span>
+      <span class="emoji">🌗</span>
       <div class="headtext">
-        <p class="title">Your 3AM Rewatch</p>
-        <p class="meta">Film &amp; TV · New York, NY · 15km radius · closes in 6d</p>
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">6am run or midnight walk — when is the city yours?</p>
+        <p class="meta">Outdoors · New York, NY · 15km radius · closes in 6d · 50 chars</p>
       </div>
       <span class="kind general">Always on</span>
     </div>
 
-    <div class="question">
-      <span class="label">Space question</span>
-      <p class="qtext">“Name the movie you've rewatched so many times you fall asleep to it — then tell me the exact scene you always wake up for.”</p>
-      <span class="tone deep">deep</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>For the people who live alone in a small apartment and have one film doing quiet emotional maintenance in the background. </div>
+    <div class="why"><span class="label">Why this room</span>For early risers and night walkers who both swear their hour is the real one. </div>
     <div class="critique pass">
          <span class="verdict">✓ passed</span>
-         <span class="note">The wake-up-for scene is a great tell — it turns a list answer into a small confession.</span>
-         
+         <span class="note">Two camps, both smug, both willing to explain themselves. That's a room.</span>
          
        </div>
   </div>

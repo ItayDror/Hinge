@@ -16,13 +16,14 @@ export function SpaceCard({ space, onOpen, onJoinWaitlist }: SpaceCardProps) {
       <button type="button" onClick={onOpen} className="w-full text-left" disabled={isWaitlist}>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[17px] font-bold text-hinge-black">
-              {space.title} {space.emoji}
+            {/* The Space's name is its question — set in serif, like a Hinge prompt. */}
+            <p className="font-serif text-[18px] leading-snug text-hinge-black">
+              {space.emoji} {space.question}
             </p>
-            <p className="mt-1 text-caption text-hinge-grey">
+            <p className="mt-1.5 text-caption text-hinge-grey">
               {isWaitlist
                 ? `${space.waitlistCount} people interested · opens at ${space.waitlistThreshold}`
-                : `${space.memberCount.toLocaleString()} in this space · ${space.activityLabel}`}
+                : `${space.answers.length} answers · ${space.memberCount.toLocaleString()} in this space · ${space.activityLabel}`}
             </p>
             <p className="mt-0.5 text-caption font-semibold text-hinge-warn">
               ⏳ Closes in {space.closesInDays} days{space.endingLabel ? ` · ${space.endingLabel}` : ''}

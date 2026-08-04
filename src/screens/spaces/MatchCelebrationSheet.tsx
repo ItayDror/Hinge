@@ -54,7 +54,7 @@ export function MatchCelebrationSheet() {
 
           {space && (
             <span className="mt-4 inline-block rounded-pill bg-white/15 px-4 py-2 text-[13px] font-semibold text-white backdrop-blur">
-              {space.emoji} You met in {space.title}
+              {space.emoji} You met in “{space.question}”
             </span>
           )}
 

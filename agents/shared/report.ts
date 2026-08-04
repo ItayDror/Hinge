@@ -41,13 +41,8 @@ function spaceCard(s: SpaceProposal): string {
          <span class="verdict">${c.verdict === 'revise' ? '✎ revised' : '✓ passed'}</span>
          <span class="note">${esc(c.note)}</span>
          ${
-           c.originalTitle
-             ? `<div class="diff"><span class="was">was:</span> ${esc(c.originalTitle)}</div>`
-             : ''
-         }
-         ${
            c.originalQuestion
-             ? `<div class="diff"><span class="was">question was:</span> “${esc(c.originalQuestion)}”</div>`
+             ? `<div class="diff"><span class="was">was:</span> “${esc(c.originalQuestion)}”</div>`
              : ''
          }
        </div>`
@@ -57,16 +52,11 @@ function spaceCard(s: SpaceProposal): string {
     <div class="head">
       <span class="emoji">${s.emoji}</span>
       <div class="headtext">
-        <p class="title">${esc(s.title)}</p>
-        <p class="meta">${esc(s.category)} · ${esc(s.location.name)} · ${s.location.radiusKm}km radius · closes in ${s.closesInDays}d</p>
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">${esc(s.question)}</p>
+        <p class="meta">${esc(s.category)} · ${esc(s.location.name)} · ${s.location.radiusKm}km radius · closes in ${s.closesInDays}d · ${s.question.length} chars</p>
       </div>
       <span class="kind ${s.kind}">${s.kind === 'timely' ? 'Timely' : 'Always on'}</span>
-    </div>
-
-    <div class="question">
-      <span class="label">Space question</span>
-      <p class="qtext">“${esc(s.spaceQuestion.text)}”</p>
-      <span class="tone ${s.spaceQuestion.tone}">${s.spaceQuestion.tone}</span>
     </div>
 
     <div class="why"><span class="label">Why this room</span>${esc(s.whyNow)} ${links}</div>
@@ -120,15 +110,12 @@ export function buildReport(): string {
   .head { display:flex; gap:14px; align-items:flex-start; }
   .emoji { font-size:30px; line-height:1; }
   .headtext { flex:1; min-width:0; }
-  .title { font-size:19px; font-weight:700; margin:0; }
-  .meta { font-size:12px; color:var(--grey); margin:4px 0 0; }
+  .meta { font-size:12px; color:var(--grey); margin:6px 0 0; }
   .kind { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; padding:5px 10px; border-radius:9999px; white-space:nowrap; }
   .kind.timely { background: var(--accent); color:#fff; }
   .kind.general { background: var(--sage); color: var(--black); }
 
-  .question { background: var(--accent-soft); border-radius:14px; padding:14px 16px; margin-top:16px; }
-  .qtext { font-family: Fraunces, Georgia, serif; font-size:20px; line-height:1.25; margin:6px 0 10px; }
-  .tone { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; background:#fff; color:var(--accent); padding:4px 9px; border-radius:9999px; }
+  .qtext { font-family: Fraunces, Georgia, serif; font-size:22px; line-height:1.25; margin:0; letter-spacing:-.01em; }
 
   .label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:4px; }
   .why { background: var(--section); border-radius:14px; padding:12px 14px; margin-top:10px; font-size:13px; }
@@ -167,7 +154,7 @@ export function buildReport(): string {
   </div>
 
   <h2>The rooms</h2>
-  <p class="sub">Every Space is one place, one interest, and one <b>space question</b> — the single icebreaker the whole room answers, and the thing people match on. Agent 2's verdict is shown under each.</p>
+  <p class="sub">A Space has no name apart from its <b>question</b>. It is the title in the list, the header of the room, and the one thing every member answers — so it has to be short enough to read as a name and good enough to answer. Agent 2's verdict is shown under each.</p>
 
   ${spaces.length ? spaces.map(spaceCard).join('\n') : '<p class="empty">No Spaces generated yet — run <code>npm run agent:spaces</code>.</p>'}
 

@@ -17,7 +17,7 @@ export function SpacePromoCard({ space, onPeek, onSkip }: SpacePromoCardProps) {
       </div>
       <div className="p-5">
         <p className="font-serif text-serif-answer text-hinge-black">
-          {space.memberCount.toLocaleString()} people are talking about {space.title} {space.emoji}
+          {space.memberCount.toLocaleString()} people are answering {space.emoji} “{space.question}”
         </p>
         <div className="mt-4 flex items-center justify-between">
           <div className="flex -space-x-2">

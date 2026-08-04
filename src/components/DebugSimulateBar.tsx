@@ -19,7 +19,7 @@ export function DebugSimulateBar() {
   spaces
     .filter((s) => s.status === 'waitlist')
     .forEach((s) => {
-      actions.push({ label: `Simulate: cross waitlist threshold (${s.title})`, onClick: () => toggleSpaceWaitlist(s.id) })
+      actions.push({ label: `Simulate: cross waitlist threshold (${s.question})`, onClick: () => toggleSpaceWaitlist(s.id) })
     })
 
   return (

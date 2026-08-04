@@ -15,8 +15,8 @@ function LockedSpaceCard({ space, onTap }: { space: SpaceData; onTap: () => void
     <button type="button" onClick={onTap} className="w-full rounded-card border border-hinge-grey-light bg-hinge-white p-4 text-left">
       <div className="flex items-start justify-between gap-3 opacity-60">
         <div>
-          <p className="text-[17px] font-bold text-hinge-black">
-            {space.title} {space.emoji}
+          <p className="font-serif text-[18px] leading-snug text-hinge-black">
+            {space.emoji} {space.question}
           </p>
           <p className="mt-1 text-caption text-hinge-grey">
             {space.memberCount.toLocaleString()} in this space · closes in {space.closesInDays}d

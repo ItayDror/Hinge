@@ -40,7 +40,7 @@ export function ChatListScreen() {
           {chats.map((chat) => {
             const lastMessage = chat.messages[chat.messages.length - 1]
             const originSpace = chat.spaceOriginLabel || chat.sharedSpaceId
-              ? spaces.find((s) => s.id === chat.sharedSpaceId || (chat.spaceOriginLabel ?? '').includes(s.title))
+              ? spaces.find((s) => s.id === chat.sharedSpaceId || (chat.spaceOriginLabel ?? '').includes(s.question))
               : undefined
             return (
               <button

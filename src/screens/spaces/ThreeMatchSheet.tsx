@@ -7,16 +7,16 @@ import { useAppState } from '../../state/AppStateContext'
 interface ThreeMatchSheetProps {
   open: boolean
   onClose: () => void
-  spaceTitle: string
+  spaceQuestion: string
   spaceId: string
   candidates: SpaceAnswer[] // top 3 answers by other people
   onOpenPerson: (personId: string, answerId: string, answerText: string) => void
 }
 
-// Offered on top of the daily question, not instead of it: after you answer,
+// Offered on top of the Space's question, not instead of it: after you answer,
 // Hinge surfaces 3 people whose answers resonate with yours. Liking an answer
 // engages (unlocks) that person; tapping them then pops their full profile.
-export function ThreeMatchSheet({ open, onClose, spaceTitle, spaceId, candidates, onOpenPerson }: ThreeMatchSheetProps) {
+export function ThreeMatchSheet({ open, onClose, spaceQuestion, spaceId, candidates, onOpenPerson }: ThreeMatchSheetProps) {
   const { engagedPeople, likeSpaceAnswer } = useAppState()
 
   return (
@@ -25,7 +25,7 @@ export function ThreeMatchSheet({ open, onClose, spaceTitle, spaceId, candidates
         <span className="text-[28px]">✨</span>
         <p className="mt-1 text-[20px] font-bold text-hinge-black">3 people whose answers click with yours</p>
         <p className="mt-0.5 text-caption text-hinge-grey">
-          Based on your answer in {spaceTitle} · like an answer, then tap to view their profile
+          Based on your answer to “{spaceQuestion}” · like an answer, then tap to view their profile
         </p>
       </div>
       <div className="flex flex-col gap-2.5 pb-2">

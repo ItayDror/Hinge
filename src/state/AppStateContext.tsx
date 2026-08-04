@@ -28,12 +28,8 @@ interface AppState {
 
   // spaces
   spaces: SpaceData[]
-  postsToday: Record<string, number>
   toggleSpaceWaitlist: (spaceId: string) => void
   joinWaitlist: (spaceId: string) => void
-  likePost: (spaceId: string, postId: string) => void
-  addPost: (spaceId: string, text: string) => void
-  reportPost: (spaceId: string, postId: string, reason: string) => void
 
   // spaces intro (shown once per session)
   spacesIntroSeen: boolean
@@ -45,7 +41,7 @@ interface AppState {
   hasContributed: (spaceId: string) => boolean
   likeSpaceAnswer: (spaceId: string, answerId: string) => void
   commentOnSpaceAnswer: (spaceId: string, answerId: string, text: string) => void
-  replyToPost: (spaceId: string, postId: string, text: string) => void
+  reportAnswer: (spaceId: string, answerId: string, reason: string) => void
   answerSpaceQuestion: (spaceId: string, text: string) => void
 
   // like → match → chat
@@ -81,7 +77,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   // The app runs purely on its authored fixtures. The curation agents are a
   // separate demo (see agents/) and deliberately never write into the UI.
   const [spaces, setSpaces] = useState<SpaceData[]>(() => structuredClone(MOCK_SPACES))
-  const [postsToday, setPostsToday] = useState<Record<string, number>>({})
   const [engagedPeople, setEngagedPeople] = useState<string[]>([])
   const [likedProfiles, setLikedProfiles] = useState<string[]>([])
   const [pendingLikes, setPendingLikes] = useState<PendingLike[]>([])
@@ -146,145 +141,65 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setEngagedPeople((prev) => (prev.includes(personId) ? prev : [...prev, personId]))
   }, [])
 
-  const likePost = useCallback(
-    (spaceId: string, postId: string) => {
-      setSpaces((prev) =>
-        prev.map((s) => {
-          if (s.id !== spaceId) return s
-          const post = s.posts.find((p) => p.id === postId)
-          if (post && !post.liked) engageWith(post.personId)
-          return {
-            ...s,
-            posts: s.posts.map((p) =>
-              p.id === postId ? { ...p, liked: !p.liked, likeCount: p.likeCount + (p.liked ? -1 : 1) } : p
-            ),
-          }
-        })
-      )
-    },
-    [engageWith]
-  )
-
-  const addPost = useCallback((spaceId: string, text: string) => {
-    setPostsToday((prev) => ({ ...prev, [spaceId]: (prev[spaceId] ?? 0) + 1 }))
-    setSpaces((prev) =>
-      prev.map((s) =>
-        s.id !== spaceId
-          ? s
-          : {
-              ...s,
-              posts: [
-                {
-                  id: nextId('post'),
-                  personId: 'me',
-                  text,
-                  likeCount: 0,
-                  liked: false,
-                  timestampLabel: 'just now',
-                  replyCount: 0,
-                  replies: [],
-                  reported: false,
-                },
-                ...s.posts,
-              ],
-            }
-      )
-    )
-  }, [])
-
-  const reportPost = useCallback(
-    (spaceId: string, postId: string, _reason: string) => {
+  /** Update one answer inside one space. */
+  const updateAnswer = useCallback(
+    (spaceId: string, answerId: string, fn: (a: SpaceData['answers'][number]) => SpaceData['answers'][number]) => {
       setSpaces((prev) =>
         prev.map((s) =>
-          s.id !== spaceId ? s : { ...s, posts: s.posts.map((p) => (p.id === postId ? { ...p, reported: true } : p)) }
+          s.id !== spaceId ? s : { ...s, answers: s.answers.map((a) => (a.id === answerId ? fn(a) : a)) }
         )
       )
-      showToast('Reported and hidden. Thanks for keeping Spaces safe.')
     },
-    [showToast]
+    []
   )
 
-  // --- space question + contextual discovery ---
+  const answerOf = useCallback(
+    (spaceId: string, answerId: string) => spaces.find((s) => s.id === spaceId)?.answers.find((a) => a.id === answerId),
+    [spaces]
+  )
+
+  // --- the single feed: answers to the Space's question ---
   const likeSpaceAnswer = useCallback(
     (spaceId: string, answerId: string) => {
-      setSpaces((prev) =>
-        prev.map((s) => {
-          if (s.id !== spaceId) return s
-          const answer = s.dailyQuestion.answers.find((a) => a.id === answerId)
-          if (answer && !answer.likedByMe) engageWith(answer.personId)
-          return {
-            ...s,
-            dailyQuestion: {
-              ...s.dailyQuestion,
-              answers: s.dailyQuestion.answers.map((a) =>
-                a.id === answerId
-                  ? { ...a, likedByMe: !a.likedByMe, likeCount: a.likeCount + (a.likedByMe ? -1 : 1) }
-                  : a
-              ),
-            },
-          }
-        })
-      )
+      const answer = answerOf(spaceId, answerId)
+      if (answer && !answer.likedByMe) engageWith(answer.personId)
+      updateAnswer(spaceId, answerId, (a) => ({
+        ...a,
+        likedByMe: !a.likedByMe,
+        likeCount: a.likeCount + (a.likedByMe ? -1 : 1),
+      }))
     },
-    [engageWith]
+    [answerOf, engageWith, updateAnswer]
   )
 
   const commentOnSpaceAnswer = useCallback(
     (spaceId: string, answerId: string, text: string) => {
-      setSpaces((prev) =>
-        prev.map((s) => {
-          if (s.id !== spaceId) return s
-          const answer = s.dailyQuestion.answers.find((a) => a.id === answerId)
-          if (answer) engageWith(answer.personId)
-          return {
-            ...s,
-            dailyQuestion: {
-              ...s.dailyQuestion,
-              answers: s.dailyQuestion.answers.map((a) =>
-                a.id === answerId
-                  ? { ...a, comments: [...a.comments, { id: nextId('ac'), personId: 'me', text }] }
-                  : a
-              ),
-            },
-          }
-        })
-      )
+      const answer = answerOf(spaceId, answerId)
+      if (answer) engageWith(answer.personId)
+      updateAnswer(spaceId, answerId, (a) => ({
+        ...a,
+        comments: [...a.comments, { id: nextId('ac'), personId: 'me', text }],
+      }))
     },
-    [engageWith]
+    [answerOf, engageWith, updateAnswer]
   )
 
-  const replyToPost = useCallback(
-    (spaceId: string, postId: string, text: string) => {
-      setSpaces((prev) =>
-        prev.map((s) => {
-          if (s.id !== spaceId) return s
-          const post = s.posts.find((p) => p.id === postId)
-          if (post) engageWith(post.personId)
-          return {
-            ...s,
-            posts: s.posts.map((p) =>
-              p.id === postId
-                ? { ...p, replyCount: p.replyCount + 1, replies: [...p.replies, { id: nextId('r'), personId: 'me', text }] }
-                : p
-            ),
-          }
-        })
-      )
+  const reportAnswer = useCallback(
+    (spaceId: string, answerId: string, _reason: string) => {
+      updateAnswer(spaceId, answerId, (a) => ({ ...a, reported: true }))
+      showToast('Reported and hidden. Thanks for keeping Spaces safe.')
     },
-    [engageWith]
+    [showToast, updateAnswer]
   )
 
   // Contribution gate: you unlock profile-viewing in a space by writing
-  // ANYTHING there — an answer, a post, a comment on someone's answer, or a
-  // reply to someone's post. Any of these takes you out of "quiet mode".
+  // anything there — your own answer, or a comment on someone else's. Either
+  // one takes you out of "quiet mode".
   const hasContributed = useCallback(
     (spaceId: string) => {
       const s = spaces.find((sp) => sp.id === spaceId)
       if (!s) return false
-      return (
-        s.dailyQuestion.answers.some((a) => a.personId === 'me' || a.comments.some((c) => c.personId === 'me')) ||
-        s.posts.some((p) => p.personId === 'me' || p.replies.some((r) => r.personId === 'me'))
-      )
+      return s.answers.some((a) => a.personId === 'me' || a.comments.some((c) => c.personId === 'me'))
     },
     [spaces]
   )
@@ -297,13 +212,18 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
           ? s
           : {
               ...s,
-              dailyQuestion: {
-                ...s.dailyQuestion,
-                answers: [
-                  { id: nextId('ans'), personId: 'me', text, likeCount: 0, likedByMe: false, comments: [] },
-                  ...s.dailyQuestion.answers,
-                ],
-              },
+              answers: [
+                {
+                  id: nextId('ans'),
+                  personId: 'me',
+                  text,
+                  likeCount: 0,
+                  likedByMe: false,
+                  timestampLabel: 'just now',
+                  comments: [],
+                },
+                ...s.answers,
+              ],
             }
       )
     )
@@ -330,7 +250,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             personId,
             matchName: person.name,
             matchPhoto: portraitAvatar(person),
-            spaceOriginLabel: space ? `${space.emoji} You matched in ${space.title}` : undefined,
+            spaceOriginLabel: space ? `${space.emoji} You matched in “${space.question}”` : undefined,
             sharedSpaceId: space?.id,
             messages: pending?.message
               ? [{ id: nextId('msg'), sender: 'me', text: pending.message, kind: 'text' }]
@@ -392,12 +312,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       goToTab,
 
       spaces,
-      postsToday,
       toggleSpaceWaitlist,
       joinWaitlist,
-      likePost,
-      addPost,
-      reportPost,
+      reportAnswer,
 
       spacesIntroSeen,
       markSpacesIntroSeen,
@@ -407,7 +324,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       hasContributed,
       likeSpaceAnswer,
       commentOnSpaceAnswer,
-      replyToPost,
       answerSpaceQuestion,
 
       pendingLikes,
@@ -434,12 +350,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       pop,
       goToTab,
       spaces,
-      postsToday,
       toggleSpaceWaitlist,
       joinWaitlist,
-      likePost,
-      addPost,
-      reportPost,
+      reportAnswer,
       spacesIntroSeen,
       markSpacesIntroSeen,
       engagedPeople,
@@ -447,7 +360,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       hasContributed,
       likeSpaceAnswer,
       commentOnSpaceAnswer,
-      replyToPost,
       answerSpaceQuestion,
       pendingLikes,
       likedProfiles,

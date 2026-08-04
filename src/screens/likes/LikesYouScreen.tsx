@@ -56,7 +56,7 @@ export function LikesYouScreen() {
               onClick={() => setSelected(like)}
               className="rounded-card bg-hinge-white p-4 text-left shadow-card"
             >
-              <SpeechBubbleTag text={space ? `Liked you via ${space.title} ${space.emoji}` : 'Liked your photo'} />
+              <SpeechBubbleTag text={space ? `Liked you via ${space.emoji} “${space.question}”` : 'Liked your photo'} />
               <p className="mb-3 mt-3 text-[22px] font-bold text-hinge-black">{person.name}</p>
               <img
                 src={portraitCard(person)}
@@ -102,7 +102,7 @@ export function LikesYouScreen() {
                 </p>
                 {space && (
                   <span className="rounded-pill bg-hinge-accent-soft px-3 py-1.5 text-[12px] font-bold text-hinge-accent">
-                    {space.emoji} Liked you via {space.title}
+                    {space.emoji} Liked you via “{space.question}”
                   </span>
                 )}
                 <div className="w-full rounded-card bg-hinge-white p-4 text-left shadow-card">

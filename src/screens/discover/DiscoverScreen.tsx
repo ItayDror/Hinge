@@ -89,7 +89,7 @@ export function DiscoverScreen() {
                     </p>
                     {sharedSpace && (
                       <span className="mt-2 inline-block rounded-pill bg-hinge-accent-soft px-3 py-1 text-[12px] font-bold text-hinge-accent">
-                        {sharedSpace.emoji} Also in {sharedSpace.title}
+                        {sharedSpace.emoji} Also in “{sharedSpace.question}”
                       </span>
                     )}
                   </div>

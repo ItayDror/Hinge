@@ -25,3 +25,6 @@ export const INTEREST_TAXONOMY = [
 export const TIMELY_COUNT = 6
 export const GENERAL_COUNT = 2
 export const MAX_PER_CATEGORY = 2
+
+/** The question doubles as the room's name, so it has to fit on two phone lines. */
+export const MAX_QUESTION_CHARS = 52

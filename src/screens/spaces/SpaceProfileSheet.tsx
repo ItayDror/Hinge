@@ -34,7 +34,7 @@ export function SpaceProfileSheet({ personId, space, onClose }: SpaceProfileShee
 
   // Their answer in this Space, if they've given one — the context the like
   // is really being sent through.
-  const theirAnswer = space.dailyQuestion.answers.find((a) => a.personId === personId)?.text
+  const theirAnswer = space.answers.find((a) => a.personId === personId)?.text
 
   return (
     <div className="absolute inset-0 z-40 flex flex-col bg-hinge-bg animate-[sheet-up_0.22s_ease-out]">
@@ -65,7 +65,7 @@ export function SpaceProfileSheet({ personId, space, onClose }: SpaceProfileShee
           Verified
         </p>
         <span className="mt-2 inline-block rounded-pill bg-hinge-accent-soft px-3 py-1 text-[12px] font-bold text-hinge-accent">
-          {space.emoji} From {space.title}
+          {space.emoji} From “{space.question}”
         </span>
 
         <div className="mt-3 flex flex-col gap-3">
@@ -93,7 +93,7 @@ export function SpaceProfileSheet({ personId, space, onClose }: SpaceProfileShee
         <LikeSheet
           personId={personId}
           onClose={() => setLikeSheetOpen(false)}
-          context={theirAnswer ? { label: `Their answer in ${space.title}`, text: theirAnswer } : undefined}
+          context={theirAnswer ? { label: 'Their answer', text: theirAnswer } : undefined}
           onSend={(message) => {
             likeProfile(person.id, person.name, space.id, message)
             onClose()

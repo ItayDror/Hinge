@@ -13,18 +13,27 @@ interface ProfilePeekSheetProps {
   /** The answer the person is being viewed through, if any — enables the Gate B shortcut. */
   contextAnswerId?: string
   contextAnswerText?: string
+  /** Opens the answer composer — the only way past Gate A. */
+  onAnswer?: () => void
 }
 
 /**
  * The Spaces access rules, made visible:
- *  Gate A — you haven't contributed to this space yet (no answer, no post):
+ *  Gate A — you haven't contributed to this space yet (no answer, no comment):
  *           profiles are locked space-wide; friendly nudge to join in.
  *  Gate B — you've contributed, but haven't liked/commented on THIS person's
  *           content yet: their profile stays locked until you engage.
  *  Both pass — the full profile pops (SpaceProfileSheet).
  */
-export function ProfilePeekSheet({ personId, space, onClose, contextAnswerId, contextAnswerText }: ProfilePeekSheetProps) {
-  const { hasContributed, engagedPeople, likeSpaceAnswer, push } = useAppState()
+export function ProfilePeekSheet({
+  personId,
+  space,
+  onClose,
+  contextAnswerId,
+  contextAnswerText,
+  onAnswer,
+}: ProfilePeekSheetProps) {
+  const { hasContributed, engagedPeople, likeSpaceAnswer } = useAppState()
 
   if (!personId) return null
   const person = personById(personId)
@@ -51,14 +60,13 @@ export function ProfilePeekSheet({ personId, space, onClose, contextAnswerId, co
           {BlurredPhoto}
           <p className="text-[20px] font-bold text-hinge-black">👋 Join in first</p>
           <p className="max-w-[280px] text-body text-hinge-grey">
-            Spaces work conversation-first: answer today's question or post something in {space.title} — then you can
-            start meeting the people here.
+            Spaces work conversation-first: answer the room's question — then you can start meeting the people here.
           </p>
           <PrimaryButton
-            label="Answer today's question"
+            label="Answer the question"
             onClick={() => {
               onClose()
-              push({ screen: 'space-question', params: { spaceId: space.id } })
+              onAnswer?.()
             }}
           />
         </div>
@@ -73,7 +81,7 @@ export function ProfilePeekSheet({ personId, space, onClose, contextAnswerId, co
         {BlurredPhoto}
         <p className="text-[20px] font-bold text-hinge-black">{initial}. is one like away</p>
         <p className="max-w-[280px] text-body text-hinge-grey">
-          Like or comment on {initial}.'s posts to open their profile — that's how Spaces work: conversation first.
+          Like or comment on {initial}.'s answer to open their profile — that's how Spaces work: conversation first.
         </p>
         {contextAnswerText && (
           <div className="w-full rounded-card bg-hinge-white p-4 text-left shadow-card">
