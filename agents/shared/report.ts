@@ -4,8 +4,8 @@ import type { SpaceProposal } from './types'
 
 const AGENTS_DIR = join(import.meta.dirname, '..')
 const REPORT_PATH = join(AGENTS_DIR, 'report.html')
-// Also published with the app at /cration so the pipeline output is shareable.
-const PUBLISHED_PATH = join(AGENTS_DIR, '..', 'public', 'cration', 'index.html')
+// Also published with the app at /creation so the pipeline output is shareable.
+const PUBLISHED_PATH = join(AGENTS_DIR, '..', 'public', 'creation', 'index.html')
 
 interface SpacesFile {
   generatedAt: string
