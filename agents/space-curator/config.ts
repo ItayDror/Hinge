@@ -28,3 +28,9 @@ export const MAX_PER_CATEGORY = 2
 
 /** The question doubles as the room's name, so it has to fit on two phone lines. */
 export const MAX_QUESTION_CHARS = 52
+
+/**
+ * The timeliness chip shown under the question ("Astor Place fire · today").
+ * It carries the anchor so the question itself can stay short and human.
+ */
+export const MAX_HOOK_CHARS = 38

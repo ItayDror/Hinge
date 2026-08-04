@@ -54,12 +54,13 @@ function spaceCard(s: SpaceProposal): string {
       <div class="headtext">
         <!-- The question IS the room's name — there is no separate title. -->
         <p class="qtext">${esc(s.question)}</p>
+        ${s.hook ? `<span class="hook">${esc(s.hook.label)}</span>` : ''}
         <p class="meta">${esc(s.category)} · ${esc(s.location.name)} · ${s.location.radiusKm}km radius · closes in ${s.closesInDays}d · ${s.question.length} chars</p>
       </div>
       <span class="kind ${s.kind}">${s.kind === 'timely' ? 'Timely' : 'Always on'}</span>
     </div>
 
-    <div class="why"><span class="label">Why this room</span>${esc(s.whyNow)} ${links}</div>
+    <div class="why"><span class="label">Why this room, now</span>${esc(s.whyNow)} ${links}</div>
     ${critiqueBlock}
   </div>`
 }
@@ -116,6 +117,7 @@ export function buildReport(): string {
   .kind.general { background: var(--sage); color: var(--black); }
 
   .qtext { font-family: Fraunces, Georgia, serif; font-size:22px; line-height:1.25; margin:0; letter-spacing:-.01em; }
+  .hook { display:inline-block; margin-top:8px; background: var(--accent-soft); color: var(--accent); font-size:11px; font-weight:600; padding:4px 10px; border-radius:9999px; }
 
   .label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:4px; }
   .why { background: var(--section); border-radius:14px; padding:12px 14px; margin-top:10px; font-size:13px; }
@@ -154,7 +156,7 @@ export function buildReport(): string {
   </div>
 
   <h2>The rooms</h2>
-  <p class="sub">A Space has no name apart from its <b>question</b>. It is the title in the list, the header of the room, and the one thing every member answers — so it has to be short enough to read as a name and good enough to answer. Agent 2's verdict is shown under each.</p>
+  <p class="sub">A Space has no name apart from its <b>question</b> — it is the title in the list, the header of the room, and the one thing every member answers. Timely rooms carry a <b>hook chip</b> naming the real event, which is what lets a question stay short and human instead of cramming the news into the title. Agent 2's verdict is shown under each.</p>
 
   ${spaces.length ? spaces.map(spaceCard).join('\n') : '<p class="empty">No Spaces generated yet — run <code>npm run agent:spaces</code>.</p>'}
 

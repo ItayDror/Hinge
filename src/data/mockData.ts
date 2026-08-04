@@ -64,8 +64,19 @@ export interface SpaceData {
   waitlistThreshold?: number
   avatarPreviewUrls: string[]
   answers: SpaceAnswer[]
-  /** Optional rationale line for agent-generated spaces ("why now"). */
-  whyNow?: string
+  /**
+   * What's happening that makes this room exist right now. A short question
+   * can stay short and human ("What's your worst subway story?") because the
+   * real-world anchor lives here instead of being crammed into the title.
+   * Evergreen rooms have no hook.
+   */
+  hook?: {
+    /** One glanceable line, shown under the question. */
+    label: string
+    /** The full story, revealed by the ⓘ. */
+    detail: string
+    sourceLabel?: string
+  }
 }
 
 const av = (pid: string) => portraitAvatar(personById(pid))
@@ -152,6 +163,11 @@ export const MOCK_SPACES: SpaceData[] = [
     location: { name: 'New York, NY', radiusKm: 15 },
     avatarPreviewUrls: [av('casey'), av('elena'), av('alex')],
     question: "Where are you going for Restaurant Week?",
+    hook: {
+      label: "NYC Restaurant Week · ends Sunday",
+      detail: "Restaurant Week runs through Sunday — 600+ prix fixe menus across the five boroughs, and everyone is quietly panic-booking.",
+      sourceLabel: "Eater NY",
+    },
     tone: 'light',
     answers: [
       {
@@ -216,7 +232,12 @@ export const MOCK_SPACES: SpaceData[] = [
     premium: false,
     location: { name: 'New York, NY', radiusKm: 15 },
     avatarPreviewUrls: [av('kendall'), av('marcus'), av('sofia')],
-    question: 'Game 7 seats or courtside on a Tuesday?',
+    question: "Game 7 seats or courtside on a Tuesday?",
+    hook: {
+      label: "Knicks–Celtics Game 5 · tonight",
+      detail: "The Knicks are back at the Garden tonight up 3-1, and the city has fully lost the plot about it.",
+      sourceLabel: "The Athletic",
+    },
     tone: 'light',
     answers: [
       {
@@ -282,7 +303,12 @@ export const MOCK_SPACES: SpaceData[] = [
     waitlistCount: 47,
     waitlistThreshold: 75,
     avatarPreviewUrls: [av('elena'), av('noah'), av('zoe')],
-    question: 'What does your perfect 4th look like?',
+    question: "What does your perfect 4th look like?",
+    hook: {
+      label: "4th of July · this Saturday",
+      detail: "Macy's is putting the fireworks on the East River again this year, which reopens the annual rooftop-versus-beach argument.",
+      sourceLabel: "NYC Parks",
+    },
     tone: 'light',
     answers: [
       {
@@ -335,7 +361,12 @@ export const MOCK_SPACES: SpaceData[] = [
     premium: true,
     location: { name: 'New York, NY', radiusKm: 25 },
     avatarPreviewUrls: [av('val'), av('alex'), av('morgan')],
-    question: 'One song worth the GA pit?',
+    question: "One song worth the GA pit?",
+    hook: {
+      label: "Summer Concert Series · ends Jul 5",
+      detail: "The free summer series wraps up next weekend — six nights left in Prospect Park before it's over for the year.",
+      sourceLabel: "BRIC",
+    },
     tone: 'light',
     answers: [
       {
@@ -400,7 +431,7 @@ export const MOCK_SPACES: SpaceData[] = [
     premium: true,
     location: { name: 'New York, NY', radiusKm: 30 },
     avatarPreviewUrls: [av('taylor'), av('quinn'), av('casey')],
-    question: 'Which board game tested a friendship?',
+    question: "Which board game tested a friendship?",
     tone: 'light',
     answers: [
       {
@@ -443,7 +474,7 @@ export const MOCK_SPACES: SpaceData[] = [
     premium: true,
     location: { name: 'New York, NY', radiusKm: 10 },
     avatarPreviewUrls: [av('jordan'), av('maya'), av('leo')],
-    question: 'Post-run: fancy coffee or unhinged breakfast?',
+    question: "Post-run: fancy coffee or unhinged breakfast?",
     tone: 'light',
     answers: [
       {
@@ -486,7 +517,7 @@ export const MOCK_SPACES: SpaceData[] = [
     premium: true,
     location: { name: 'New York, NY', radiusKm: 15 },
     avatarPreviewUrls: [av('zoe'), av('james'), av('elena')],
-    question: 'What movie will you defend forever?',
+    question: "What movie will you defend forever?",
     tone: 'light',
     answers: [
       {

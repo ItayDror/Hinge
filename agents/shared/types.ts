@@ -43,6 +43,14 @@ export interface SpaceProposal {
   category: string
   location: { name: string; lat?: number; lng?: number; radiusKm: number }
   closesInDays: number
+  /**
+   * The real-world anchor. A short question is allowed to sound generic
+   * ("What's your worst subway story?") precisely because this carries the
+   * timeliness instead — shown as a chip under the question, expandable to
+   * the full line. Null for evergreen rooms.
+   */
+  hook: { label: string; detail: string } | null
+  /** Always present: why this room is worth existing (who it's for, or what's happening). */
   whyNow: string
   sourceUrls: string[]
   critique?: Critique

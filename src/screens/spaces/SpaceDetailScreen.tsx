@@ -44,6 +44,8 @@ export function SpaceDetailScreen() {
   const [reportTarget, setReportTarget] = useState<SpaceAnswer | null>(null)
   const [peek, setPeek] = useState<{ personId: string; answerId?: string; answerText?: string } | null>(null)
   const [matchSheetOpen, setMatchSheetOpen] = useState(false)
+  const [fabOpen, setFabOpen] = useState(false)
+  const [hookOpen, setHookOpen] = useState(false)
   const matchSheetShown = useRef(false)
 
   const myAnswer = space ? myAnswerBySpace[space.id] : undefined
@@ -95,6 +97,17 @@ export function SpaceDetailScreen() {
           <p className="font-serif text-[19px] leading-snug text-hinge-black">
             {space.emoji} {space.question}
           </p>
+          {/* The question stays short and human; the real-world anchor lives here. */}
+          {space.hook && (
+            <button
+              type="button"
+              onClick={() => setHookOpen((v) => !v)}
+              className="mt-1.5 inline-flex max-w-full items-center gap-1 rounded-pill bg-hinge-accent-soft px-2.5 py-1 text-[11px] font-semibold text-hinge-accent"
+            >
+              <span className="truncate">{space.hook.label}</span>
+              <span className="shrink-0 opacity-70">ⓘ</span>
+            </button>
+          )}
           <p className="mt-1 text-caption text-hinge-grey">
             {answers.length} answers · {space.memberCount.toLocaleString()} members · closes in {space.closesInDays}d
           </p>
@@ -128,6 +141,16 @@ export function SpaceDetailScreen() {
           >
             Leave space
           </button>
+        </div>
+      )}
+
+      {hookOpen && space.hook && (
+        <div className="mx-5 mb-3 shrink-0 rounded-card bg-hinge-accent-soft p-3.5">
+          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-hinge-accent">Why this room, now</p>
+          <p className="mt-1.5 text-[13px] leading-snug text-hinge-black">{space.hook.detail}</p>
+          {space.hook.sourceLabel && (
+            <p className="mt-1.5 text-[11px] text-hinge-grey">Source: {space.hook.sourceLabel}</p>
+          )}
         </div>
       )}
 
@@ -267,27 +290,64 @@ export function SpaceDetailScreen() {
         </div>
       </div>
 
-      {/* Once you've answered, the same button becomes the way back to your matches. */}
-      {myAnswer ? (
-        <button
-          type="button"
-          onClick={() => setMatchSheetOpen(true)}
-          className="absolute bottom-5 right-5 flex h-14 items-center gap-1.5 rounded-pill bg-hinge-accent px-5 text-[14px] font-bold text-hinge-white shadow-card"
-        >
-          ✨ Your matches
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setComposerOpen(true)}
-          className="absolute bottom-5 right-5 flex h-14 items-center gap-2 rounded-pill bg-hinge-black px-5 text-[14px] font-bold text-hinge-white shadow-card"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-          </svg>
-          Answer
-        </button>
+      {/* One permanent + button. Posting never goes away; matches get a home
+          next to it once you've earned them. */}
+      {fabOpen && (
+        <>
+          <button
+            type="button"
+            aria-label="Close menu"
+            onClick={() => setFabOpen(false)}
+            className="absolute inset-0 z-20 bg-black/20"
+          />
+          <div className="absolute bottom-24 right-5 z-30 flex w-60 flex-col overflow-hidden rounded-card bg-hinge-white shadow-card">
+            <button
+              type="button"
+              onClick={() => {
+                setFabOpen(false)
+                setComposerOpen(true)
+              }}
+              className="flex items-center gap-3 px-4 py-3.5 text-left"
+            >
+              <span className="text-[18px]">✍️</span>
+              <span className="text-body font-semibold text-hinge-black">Post an answer</span>
+            </button>
+            <div className="h-px bg-hinge-grey-light" />
+            <button
+              type="button"
+              disabled={!myAnswer}
+              onClick={() => {
+                setFabOpen(false)
+                setMatchSheetOpen(true)
+              }}
+              className="flex items-center gap-3 px-4 py-3.5 text-left disabled:opacity-40"
+            >
+              <span className="text-[18px]">✨</span>
+              <span className="min-w-0">
+                <span className="block text-body font-semibold text-hinge-accent">Suggested matches</span>
+                {!myAnswer && <span className="block text-caption text-hinge-grey">Post an answer to unlock</span>}
+              </span>
+            </button>
+          </div>
+        </>
       )}
+
+      <button
+        type="button"
+        aria-label={fabOpen ? 'Close menu' : 'Open menu'}
+        onClick={() => setFabOpen((v) => !v)}
+        className="absolute bottom-5 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-pill bg-hinge-black text-hinge-white shadow-card"
+      >
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          className={fabOpen ? 'rotate-45 transition-transform' : 'transition-transform'}
+        >
+          <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+        </svg>
+      </button>
 
       <AnswerComposerSheet
         open={composerOpen}

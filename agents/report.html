@@ -43,6 +43,7 @@
   .kind.general { background: var(--sage); color: var(--black); }
 
   .qtext { font-family: Fraunces, Georgia, serif; font-size:22px; line-height:1.25; margin:0; letter-spacing:-.01em; }
+  .hook { display:inline-block; margin-top:8px; background: var(--accent-soft); color: var(--accent); font-size:11px; font-weight:600; padding:4px 10px; border-radius:9999px; }
 
   .label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:4px; }
   .why { background: var(--section); border-radius:14px; padding:12px 14px; margin-top:10px; font-size:13px; }
@@ -63,7 +64,7 @@
 <div class="wrap">
   <div class="hero">
     <h1>Spaces, curated by two agents</h1>
-    <p>New York, NY · generated Aug 4, 2026, 2:04 PM</p>
+    <p>New York, NY · generated Aug 4, 2026, 3:24 PM</p>
     <div class="pipeline">
       <span class="stage">📡 Live NYC trends</span>
       <span class="stage"><b>Agent 1</b> · ideate</span>
@@ -77,46 +78,29 @@
     <div class="stat"><b>6</b><span>tied to this week</span></div>
     <div class="stat"><b>2</b><span>always-on rooms</span></div>
     <div class="stat"><b>6</b><span>with a real source</span></div>
-    <div class="stat"><b>4</b><span>revised by Agent 2</span></div>
+    <div class="stat"><b>3</b><span>revised by Agent 2</span></div>
   </div>
 
   <h2>The rooms</h2>
-  <p class="sub">A Space has no name apart from its <b>question</b>. It is the title in the list, the header of the room, and the one thing every member answers — so it has to be short enough to read as a name and good enough to answer. Agent 2's verdict is shown under each.</p>
+  <p class="sub">A Space has no name apart from its <b>question</b> — it is the title in the list, the header of the room, and the one thing every member answers. Timely rooms carry a <b>hook chip</b> naming the real event, which is what lets a question stay short and human instead of cramming the news into the title. Agent 2's verdict is shown under each.</p>
 
   <div class="card">
-    <div class="head">
-      <span class="emoji">⚾</span>
-      <div class="headtext">
-        <!-- The question IS the room's name — there is no separate title. -->
-        <p class="qtext">Cardinals at the Stadium tonight — bleachers or bar?</p>
-        <p class="meta">Sports · Yankee Stadium, New York, NY · 15km radius · closes in 4d · 52 chars</p>
-      </div>
-      <span class="kind timely">Timely</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>The Cardinals are at Yankee Stadium tonight and the series runs through midweek. <a href="https://www.baseball-reference.com/previews/2026/NYA202608040.shtml" target="_blank">source ↗</a></div>
-    <div class="critique pass">
-         <span class="verdict">✓ passed</span>
-         <span class="note">Real choice, real timing, and 'bleachers or bar' tells you what kind of night someone wants. Ships.</span>
-         
-       </div>
-  </div>
-<div class="card">
     <div class="head">
       <span class="emoji">🚇</span>
       <div class="headtext">
         <!-- The question IS the room's name — there is no separate title. -->
         <p class="qtext">What's your worst subway story?</p>
+        <span class="hook">Lexington Ave delays · today</span>
         <p class="meta">Local Events · New York, NY · 15km radius · closes in 4d · 31 chars</p>
       </div>
       <span class="kind timely">Timely</span>
     </div>
 
-    <div class="why"><span class="label">Why this room</span>A train fire at Astor Place injured 12 and delays are still rippling across the system today. <a href="https://gothamist.com/news/subway-delays-linger-after-early-morning-astor-place-train-fire-injures-12" target="_blank">source ↗</a></div>
+    <div class="why"><span class="label">Why this room, now</span>A train fire at Astor Place early this morning injured 14 firefighters and MTA workers, and delays are still rippling through the Lexington Avenue lines — half the city spent today comparing commutes. <a href="https://gothamist.com/news/subway-delays-linger-after-early-morning-astor-place-train-fire-injures-12" target="_blank">source ↗</a></div>
     <div class="critique revise">
          <span class="verdict">✎ revised</span>
-         <span class="note">Twelve people got hurt this morning — we can't hang a flirting room on it. Kept the commute question, dropped the peg.</span>
-         <div class="diff"><span class="was">was:</span> “Astor Place fire: what's your worst commute story?”</div>
+         <span class="note">Question's a keeper. Pulled the fire out of the chip — 14 people got hurt this morning, that's not a flirting prompt.</span>
+         
        </div>
   </div>
 <div class="card">
@@ -124,16 +108,55 @@
       <span class="emoji">🎺</span>
       <div class="headtext">
         <!-- The question IS the room's name — there is no separate title. -->
-        <p class="qtext">Which Harlem Week night are you actually going to?</p>
-        <p class="meta">Local Events · Harlem, New York, NY · 15km radius · closes in 7d · 50 chars</p>
+        <p class="qtext">Where are you taking someone in Harlem?</p>
+        <span class="hook">Harlem Week · through Sunday</span>
+        <p class="meta">Local Events · Harlem, New York, NY · 15km radius · closes in 6d · 39 chars</p>
       </div>
       <span class="kind timely">Timely</span>
     </div>
 
-    <div class="why"><span class="label">Why this room</span>Harlem Week just kicked off with 16 days of free concerts, movies and street events. <a href="https://patch.com/new-york/harlem/harlem-week-back-month-heres-lineup" target="_blank">source ↗</a></div>
+    <div class="why"><span class="label">Why this room, now</span>Harlem Week is running again with free concerts, outdoor movies and a job fair, so there's a full week of reasons to be uptown with someone. <a href="https://patch.com/new-york/harlem/harlem-week-back-month-heres-lineup" target="_blank">source ↗</a></div>
     <div class="critique pass">
          <span class="verdict">✓ passed</span>
-         <span class="note">'Actually' is doing the work — it turns a listing into an admission. Nice and dry.</span>
+         <span class="note">Reads like a plan, not a listing. Chip carries the week so the question doesn't have to.</span>
+         
+       </div>
+  </div>
+<div class="card">
+    <div class="head">
+      <span class="emoji">⚾</span>
+      <div class="headtext">
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">Where do you actually sit at a ballgame?</p>
+        <span class="hook">Cardinals at the Stadium · tonight</span>
+        <p class="meta">Sports · The Bronx, New York, NY · 15km radius · closes in 4d · 40 chars</p>
+      </div>
+      <span class="kind timely">Timely</span>
+    </div>
+
+    <div class="why"><span class="label">Why this room, now</span>The Cardinals are at Yankee Stadium tonight in a short home stretch, and everyone who goes has strong opinions about where in that building you should sit. <a href="https://www.espn.com/mlb/game/_/gameId/401816389/cardinals-yankees" target="_blank">source ↗</a></div>
+    <div class="critique revise">
+         <span class="verdict">✎ revised</span>
+         <span class="note">A/B picks die in one word. Opened it up so people can defend their seat instead of just naming it.</span>
+         <div class="diff"><span class="was">was:</span> “Bleacher seats or behind home plate?”</div>
+       </div>
+  </div>
+<div class="card">
+    <div class="head">
+      <span class="emoji">🎶</span>
+      <div class="headtext">
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">Which Aaliyah song still owns you?</p>
+        <span class="hook">Aaliyah tribute, Prospect Park · Sat</span>
+        <p class="meta">Music · Prospect Park, New York, NY · 15km radius · closes in 5d · 34 chars</p>
+      </div>
+      <span class="kind timely">Timely</span>
+    </div>
+
+    <div class="why"><span class="label">Why this room, now</span>BRIC is throwing a free Aaliyah tribute at the Prospect Park Bandshell on Saturday afternoon, and people are already arguing about which era of hers hits hardest. <a href="https://www.nycthings.com/events/bric-celebrates-aaliyah-one-in-a-million-20260808/" target="_blank">source ↗</a></div>
+    <div class="critique pass">
+         <span class="verdict">✓ passed</span>
+         <span class="note">&quot;Still owns you&quot; does the work — specific, a little dramatic, easy to answer at length.</span>
          
        </div>
   </div>
@@ -142,17 +165,37 @@
       <span class="emoji">🍸</span>
       <div class="headtext">
         <!-- The question IS the room's name — there is no separate title. -->
-        <p class="qtext">Best drink under $11 in this city — where is it?</p>
-        <p class="meta">Food &amp; Drink · Union Square, New York, NY · 15km radius · closes in 5d · 48 chars</p>
+        <p class="qtext">Where do you take someone on $20 total?</p>
+        <span class="hook">New Union Square bar · drinks $11</span>
+        <p class="meta">Food &amp; Drink · Union Square, New York, NY · 15km radius · closes in 6d · 39 chars</p>
       </div>
       <span class="kind timely">Timely</span>
     </div>
 
-    <div class="why"><span class="label">Why this room</span>Bernie and Herb's opened this week in the old Union Square coffee shop with nearly everything under $11. <a href="https://ny.eater.com/news/413021/union-square-bernie-and-herbs-coffee-shop-opening" target="_blank">source ↗</a></div>
-    <div class="critique revise">
-         <span class="verdict">✎ revised</span>
-         <span class="note">The original is a bar's press release with a question mark. Made it about the answer's cheap drink, not this week's opening.</span>
-         <div class="diff"><span class="was">was:</span> “Drinks under $11 in Union Square — worth the line?”</div>
+    <div class="why"><span class="label">Why this room, now</span>A new bar just opened in the old coffee shop space on Union Square with most drinks under $11, which is enough of a shock right now to restart the cheap-date argument. <a href="https://ny.eater.com/news/413021/union-square-bernie-and-herbs-coffee-shop-opening" target="_blank">source ↗</a></div>
+    <div class="critique pass">
+         <span class="verdict">✓ passed</span>
+         <span class="note">Real constraint, real answer, and the chip explains why now without the question straining.</span>
+         
+       </div>
+  </div>
+<div class="card">
+    <div class="head">
+      <span class="emoji">🎤</span>
+      <div class="headtext">
+        <!-- The question IS the room's name — there is no separate title. -->
+        <p class="qtext">Which live show ruined others for you?</p>
+        <span class="hook">Talib Kweli at Blue Note · tonight</span>
+        <p class="meta">Music · Greenwich Village, New York, NY · 15km radius · closes in 5d · 38 chars</p>
+      </div>
+      <span class="kind timely">Timely</span>
+    </div>
+
+    <div class="why"><span class="label">Why this room, now</span>Talib Kweli is playing the Blue Note tonight, a rapper in a 200-seat jazz room, which is the kind of show people bring up years later. <a href="https://concerts.consequence.net/events/talib-kweli-at-blue-note-jazz-club-on-2026-08-04-20-00" target="_blank">source ↗</a></div>
+    <div class="critique pass">
+         <span class="verdict">✓ passed</span>
+         <span class="note">Great premise — everyone has this show, and nobody answers it briefly.</span>
+         
        </div>
   </div>
 <div class="card">
@@ -160,71 +203,37 @@
       <span class="emoji">🌳</span>
       <div class="headtext">
         <!-- The question IS the room's name — there is no separate title. -->
-        <p class="qtext">Prospect Park show: blanket on the lawn or up front?</p>
-        <p class="meta">Music · Prospect Park, New York, NY · 15km radius · closes in 5d · 52 chars</p>
-      </div>
-      <span class="kind timely">Timely</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>BRIC Celebrate Brooklyn! has a free Prospect Park show this Saturday, Aug 8. <a href="https://www.prospectpark.org/event/bric-celebrate-brooklyn-8/2026-08-08/" target="_blank">source ↗</a></div>
-    <div class="critique revise">
-         <span class="verdict">✎ revised</span>
-         <span class="note">The branded colon reads like a flyer. Same choice, said like a person.</span>
-         <div class="diff"><span class="was">was:</span> “Celebrate Brooklyn: blanket on the lawn or up front?”</div>
-       </div>
-  </div>
-<div class="card">
-    <div class="head">
-      <span class="emoji">🍽️</span>
-      <div class="headtext">
-        <!-- The question IS the room's name — there is no separate title. -->
-        <p class="qtext">Last new restaurant you loved — what'd you order?</p>
-        <p class="meta">Food &amp; Drink · New York, NY · 15km radius · closes in 6d · 49 chars</p>
-      </div>
-      <span class="kind timely">Timely</span>
-    </div>
-
-    <div class="why"><span class="label">Why this room</span>Three big NYC restaurants opened within days of each other and nobody's been to all three yet. <a href="https://ny.eater.com/news/412994/elder-nyc-restaurant-open-british-indian-chophouse-sujan-sarkar" target="_blank">source ↗</a></div>
-    <div class="critique revise">
-         <span class="verdict">✎ revised</span>
-         <span class="note">A poll about three places nobody's been to has no answers in it. Asked for a meal they actually ate.</span>
-         <div class="diff"><span class="was">was:</span> “Best new opening this month: Elder, Noury or LIBA?”</div>
-       </div>
-  </div>
-<div class="card">
-    <div class="head">
-      <span class="emoji">🔑</span>
-      <div class="headtext">
-        <!-- The question IS the room's name — there is no separate title. -->
-        <p class="qtext">What did your last apartment teach you about NYC?</p>
-        <p class="meta">Culture · New York, NY · 15km radius · closes in 6d · 49 chars</p>
+        <p class="qtext">Where do you go here to be alone?</p>
+        
+        <p class="meta">Outdoors · New York, NY · 15km radius · closes in 7d · 33 chars</p>
       </div>
       <span class="kind general">Always on</span>
     </div>
 
-    <div class="why"><span class="label">Why this room</span>For anyone who's moved boroughs at least once and has opinions about it. </div>
+    <div class="why"><span class="label">Why this room, now</span>For people who love this city and still need one hour a week away from all of it. </div>
     <div class="critique pass">
          <span class="verdict">✓ passed</span>
-         <span class="note">Everyone's got a landlord and a lesson. Impossible to answer briefly, easy to answer well.</span>
+         <span class="note">Quiet and a little sad in the right way. Best evergreen one here.</span>
          
        </div>
   </div>
 <div class="card">
     <div class="head">
-      <span class="emoji">🌗</span>
+      <span class="emoji">👟</span>
       <div class="headtext">
         <!-- The question IS the room's name — there is no separate title. -->
-        <p class="qtext">6am run or midnight walk — when is the city yours?</p>
-        <p class="meta">Outdoors · New York, NY · 15km radius · closes in 6d · 50 chars</p>
+        <p class="qtext">What's the run you never skip?</p>
+        
+        <p class="meta">Fitness · New York, NY · 15km radius · closes in 7d · 30 chars</p>
       </div>
       <span class="kind general">Always on</span>
     </div>
 
-    <div class="why"><span class="label">Why this room</span>For early risers and night walkers who both swear their hour is the real one. </div>
-    <div class="critique pass">
-         <span class="verdict">✓ passed</span>
-         <span class="note">Two camps, both smug, both willing to explain themselves. That's a room.</span>
-         
+    <div class="why"><span class="label">Why this room, now</span>For bridge runners, loop people, and anyone whose week has one route in it they refuse to give up. </div>
+    <div class="critique revise">
+         <span class="verdict">✎ revised</span>
+         <span class="note">Cut &quot;in this city&quot; — the room is already New York. Shorter lands harder.</span>
+         <div class="diff"><span class="was">was:</span> “What run do you never skip in this city?”</div>
        </div>
   </div>
 

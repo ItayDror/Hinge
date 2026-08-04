@@ -20,7 +20,15 @@ import { generateValidated } from '../shared/validate'
 import { writeGenerated, writeRawArtifact } from '../shared/emit'
 import { buildReport } from '../shared/report'
 import type { SpaceProposal, TrendHit } from '../shared/types'
-import { CITY, GENERAL_COUNT, INTEREST_TAXONOMY, MAX_PER_CATEGORY, MAX_QUESTION_CHARS, TIMELY_COUNT } from './config'
+import {
+  CITY,
+  GENERAL_COUNT,
+  INTEREST_TAXONOMY,
+  MAX_HOOK_CHARS,
+  MAX_PER_CATEGORY,
+  MAX_QUESTION_CHARS,
+  TIMELY_COUNT,
+} from './config'
 import { nycQueries } from './queries'
 import { buildCritiquePrompt, buildIdeationPrompt } from './prompt'
 
@@ -38,6 +46,8 @@ const IdeaSchema = z.object({
   radiusKm: z.number().min(5).max(50),
   closesInDays: z.number().int().min(4).max(7),
   whyNow: z.string().min(10).max(220),
+  /** Glanceable anchor chip, e.g. "Astor Place fire · today". Null when evergreen. */
+  hookLabel: z.string().min(4).max(MAX_HOOK_CHARS).nullable(),
   evidenceIndex: z.number().int().nullable(),
 })
 type Idea = z.infer<typeof IdeaSchema>
@@ -48,6 +58,7 @@ const CritiqueSchema = z.object({
   note: z.string().min(3).max(200),
   question: QuestionSchema.nullable().optional(),
   tone: z.enum(['light', 'deep']).nullable().optional(),
+  hookLabel: z.string().min(4).max(MAX_HOOK_CHARS).nullable().optional(),
 })
 type CritiqueItem = z.infer<typeof CritiqueSchema>
 
@@ -86,6 +97,7 @@ async function main() {
     timelyCount: TIMELY_COUNT + SPARES,
     generalCount: GENERAL_COUNT + SPARES,
     maxQuestionChars: MAX_QUESTION_CHARS,
+    maxHookChars: MAX_HOOK_CHARS,
   })
   const { items: ideas, salvaged } = await generateValidated<Idea>(ideaPrompt, IdeaSchema)
   if (salvaged) console.warn(`   ⚠ salvage mode — kept ${ideas.length} valid items`)
@@ -104,6 +116,7 @@ async function main() {
       category: item.category,
       location: { name: item.locationName, lat: CITY.lat, lng: CITY.lng, radiusKm: item.radiusKm },
       closesInDays: item.closesInDays,
+      hook: item.hookLabel ? { label: item.hookLabel, detail: item.whyNow } : null,
       whyNow: item.whyNow,
       sourceUrls: hit ? [hit.url] : [],
     }
@@ -111,7 +124,7 @@ async function main() {
 
   // ---- Stage 3: Agent 2 critiques (voice, question quality, premise) ----
   console.log('\n🎯 Agent 2 · reviewing voice, question quality, and premise')
-  const { items: critiques } = await generateValidated<CritiqueItem>(buildCritiquePrompt({ proposals, maxQuestionChars: MAX_QUESTION_CHARS }), CritiqueSchema)
+  const { items: critiques } = await generateValidated<CritiqueItem>(buildCritiquePrompt({ proposals, maxQuestionChars: MAX_QUESTION_CHARS, maxHookChars: MAX_HOOK_CHARS }), CritiqueSchema)
 
   let revised = 0
   let cut = 0
@@ -125,6 +138,7 @@ async function main() {
           ...p,
           question: c.question ?? p.question,
           tone: c.tone ?? p.tone,
+          hook: c.hookLabel ? { label: c.hookLabel, detail: p.whyNow } : p.hook,
           critique: {
             verdict: c.verdict,
             note: c.note,

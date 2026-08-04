@@ -28,7 +28,13 @@ export function SpaceCard({ space, onOpen, onJoinWaitlist }: SpaceCardProps) {
             <p className="mt-0.5 text-caption font-semibold text-hinge-warn">
               ⏳ Closes in {space.closesInDays} days{space.endingLabel ? ` · ${space.endingLabel}` : ''}
             </p>
-            {space.whyNow && <p className="mt-0.5 text-caption italic text-hinge-grey">{space.whyNow}</p>}
+            {/* What's happening that makes this room exist — the timeliness a
+                short question can't carry on its own. */}
+            {space.hook && (
+              <span className="mt-1.5 inline-block rounded-pill bg-hinge-accent-soft px-2.5 py-1 text-[11px] font-semibold text-hinge-accent">
+                {space.hook.label}
+              </span>
+            )}
           </div>
           <div className="flex -space-x-2">
             {space.avatarPreviewUrls.map((url, i) => (
